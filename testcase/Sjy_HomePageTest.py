@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding:utf-8
 import unittest
-from time import sleep, asctime
+from time import sleep,strftime,localtime
 from pages.Page_Home import HomePage
 from parts.login_ps import publicLogin
 from parts.homePage_ps import createProject
@@ -18,7 +18,8 @@ class HomeTest(unittest.TestCase):
         self.username = '14500000005'
         self.password = '123456'
         self.HomePage = HomePage(base_url=url)
-        self.projectName = '自动化测试项目-{0}'.format(asctime())
+        self._nowtime = strftime("%Y-%m-%d %H:%M:%S", localtime())
+        self.projectName = '自动化测试项目-{0}'.format(self._nowtime)
 
     def tearDown(self) -> None:
         self.HomePage.driver.quit()

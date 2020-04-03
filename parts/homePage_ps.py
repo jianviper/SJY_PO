@@ -32,5 +32,6 @@ def public_delProject(pageObject):
     pageObject.find_element(*delMenuButton_loc).click()
     pageObject.find_element(*inputProjectName_loc).send_keys(pageObject.find_element(*delProjectName_loc).text)
     pageObject.find_element(*delSubmitButton_loc).click()
+    sleep(1)
 
     return pageObject.find_element(*Tips_loc).text

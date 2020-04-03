@@ -2,6 +2,7 @@
 from selenium.webdriver.common.by import By
 from common.BasePage import BasePage
 from time import sleep
+from parts.pageTools import *
 '''
 Create on 2020-3-17
 author:linjian
@@ -38,5 +39,6 @@ class LoginPage(BasePage):
         self.find_element(*self.loginSubmit_loc).click()
 
     def get_loginTips(self):
+        wait_tips(self)
         return self.find_element(*self.loginTips_loc).text
 

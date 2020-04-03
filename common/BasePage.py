@@ -39,6 +39,7 @@ class BasePage(object):
             return self.driver.find_element(*loc)
         except:
             print(u"%s 页面中未找到%s元素" % (self, loc))
+
     '''
     def find_elements(self, *loc):
         try:
