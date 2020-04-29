@@ -32,23 +32,22 @@ class BasePage(object):
         self._open(self.baseurl)
 
     #重写元素定位方法
-    def find_element(self, *loc):
+    def find_element(self, *loc, waitsec=10, check=''):
         try:
-            WebDriverWait(self.driver, 10).until(lambda driver: driver.find_element(*loc).is_displayed())
+            WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
             #WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(loc))
             return self.driver.find_element(*loc)
         except:
-            print(u"%s 页面中未找到%s元素" % (self, loc))
+            print(u"%s%s 页面中未找到%s元素" % (check, self, loc))
 
-    '''
-    def find_elements(self, *loc):
+    def find_elements(self, *loc, waitsec=10,check=''):
         try:
-            WebDriverWait(self.driver, 10).until(lambda driver: driver.find_elements(*loc).is_displayed())
+            WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
             #WebDriverWait(self.driver, 10).until(EC.visibility_of_all_elements_located(*loc))
             return self.driver.find_elements(*loc)
         except:
-            print(u"%s 页面中未找到%s元素" % (self, loc))
-    '''
+            print(u"%s%s 页面中未找到%s元素" % (check,self, loc))
+
     #重写定义send_keys方法
     def send_keys(self, loc, value, clear_first=True, click_first=True):
         try:

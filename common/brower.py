@@ -24,6 +24,8 @@ class BrowerSet(object):
         if self.brower_option == 'chrome':
             options = webdriver.ChromeOptions()
             options.add_argument('lang=zh_CN.UTF-8')
+            # options.add_argument('--headless')
+            # options.add_argument('--disable-gpu')
             # mobileEmulation = {'deviceName': self.mobileEmulations}
             # options.add_experimental_option('mobileEmulation', mobileEmulation)
             return webdriver.Chrome(executable_path=self.executable_path, options=options)
