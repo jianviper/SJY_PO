@@ -3,7 +3,7 @@
 import unittest
 from time import strftime, localtime
 from pages.Page_worker import WorkerPage
-from parts.pageTools import *
+from parts.tool_page import *
 
 '''
 Create on 2020-3-17

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import unittest
 from pages.Page_login import LoginPage
-from parts.pageTools import public_check
+from parts.tool_page import public_check
 '''
 Create on 2020-3-17
 author:linjian

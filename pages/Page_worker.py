@@ -4,9 +4,8 @@
 import pyautogui
 from random import randint
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from common.BasePage import BasePage
-from parts.pageTools import *
+from parts.tool_page import *
 
 '''
 Create on 2020-3-24
@@ -24,7 +23,8 @@ class WorkerPage(BasePage):
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
     loginTips_loc = (By.XPATH, '//*[@class="ant-message"]/span//span')
     msg_loc = (By.CLASS_NAME, 'message_img')
-    imgTest_loc=(By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
+    headless_multiImg_loc=(By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
+    headless_img_loc=(By.CSS_SELECTOR,'.home_content.clearfix>div:nth-child(2)')
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')

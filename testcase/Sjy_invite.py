@@ -3,7 +3,7 @@
 import unittest
 from time import strftime, localtime
 from pages.Page_invite import InvitePage
-from parts.pageTools import *
+from parts.tool_page import *
 
 '''
 Create on 2020-4-7

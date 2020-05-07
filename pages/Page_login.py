@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from common.BasePage import BasePage
-from parts.pageTools import *
+from parts.tool_page import *
 
 '''
 Create on 2020-3-17
