@@ -19,21 +19,20 @@ class HomePage(BasePage):
     num_project_loc = (By.CSS_SELECTOR, '.home_content.clearfix>div')  #项目数量
     firstProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')  #第一个项目
     win_bind_loc = (By.CLASS_NAME, 'ant-modal-body')  #
-    input_projectName_loc = (By.CLASS_NAME, 'ant-input')
-    input_delPJName_loc = (By.CSS_SELECTOR, '.form_item.form-line>input')
+    input_projectName_loc = (By.CSS_SELECTOR, '.form-line.iteminput')
 
     btn_help_loc = (By.CLASS_NAME, 'guideHelp')
     btn_user_loc = (By.CSS_SELECTOR, '.menu_user.mouse_hover')
-    btn_createProject_loc = (By.CSS_SELECTOR, '.header_add.ant-btn')
+    btn_createProject_loc = (By.CSS_SELECTOR, '.home_header>.sure-btn.submit-info')
     #CRD:创建，重命名，删除 按钮
-    btn_CRD_loc = (By.CSS_SELECTOR, '.sure-btn.ant-btn')
+    btn_CRD_loc = (By.CSS_SELECTOR, '.add_footer>.sure-btn.submit-info')
     btn_projectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_set>img')
     btn_menu_rename_loc = (By.CSS_SELECTOR, '.item_menu>li:first-child')
     btn_menu_del_loc = (By.CSS_SELECTOR, '.item_menu>li:last-child')
     btn_closeBind_loc = (By.CLASS_NAME, 'closeBtn')
 
     lastProjectName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
-    lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set>img')
+    lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
@@ -84,8 +83,6 @@ class HomePage(BasePage):
         name = name
         if name == '' and d:
             name = self.find_element(*self.delProjectName_loc).text
-            self.find_element(*self.input_delPJName_loc).send_keys(name)
-            return True
         # print(name)
         self.find_element(*self.input_projectName_loc).send_keys(name)
 

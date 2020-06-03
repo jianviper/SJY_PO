@@ -22,12 +22,18 @@ class WorkerTextNote(BasePage):
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
     tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(4)')
     tool_textfont_loc = (By.CSS_SELECTOR, '.tool_item:first-child>img')
+    tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work>div')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_textNoteText_loc = (By.CLASS_NAME, 'text_content')
+    el_imgDIV_loc = (By.CSS_SELECTOR, '.work_image.work_element')
+    el_img_loc = (By.CLASS_NAME, 'img')
+    el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
 
     btn_jianqie_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
+    btn_copy_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
     btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
 
@@ -44,12 +50,13 @@ class WorkerTextNote(BasePage):
         jss = '''
         var ds=document.getElementsByClassName('text_content'); 
         for(i=0;i<ds.length;i++){
-            ds[i].parentNode.style.border='5px solid red';
+            ds[i].parentNode.style.border='3px solid red';
             ds[i].append("%s");
         }
         ''' % text
         self.driver.execute_script(jss)
-        for e in self.find_elements(*self.el_textNote_loc):
-            e.click()
-            sleep(1)
-            left_click(self, 50, -80, self.tool_mouse_loc)
+        if len(self.find_elements(*self.el_textNote_loc)) > 0:
+            for e in self.find_elements(*self.el_textNote_loc):
+                e.click()
+                sleep(1)
+                left_click(self, 50, -80, self.tool_mouse_loc)

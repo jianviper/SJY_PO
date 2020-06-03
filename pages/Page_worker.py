@@ -23,8 +23,8 @@ class WorkerPage(BasePage):
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
     loginTips_loc = (By.XPATH, '//*[@class="ant-message"]/span//span')
     msg_loc = (By.CLASS_NAME, 'message_img')
-    headless_multiImg_loc=(By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
-    headless_img_loc=(By.CSS_SELECTOR,'.home_content.clearfix>div:nth-child(2)')
+    headless_multiImg_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
+    headless_img_loc = (By.CSS_SELECTOR, '.home_content.clearfix>div:nth-child(2)')
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
@@ -35,24 +35,29 @@ class WorkerPage(BasePage):
     tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
     tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
     tool_recovery_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
+    tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work>div')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_textNoteText_loc = (By.CLASS_NAME, 'text_content')
     el_line_loc = (By.CLASS_NAME, 'content_path')
     el_imgDIV_loc = (By.CSS_SELECTOR, '.work_image.work_element')
-    el_img_loc = (By.CLASS_NAME, 'img')
+    el_img_loc = (By.CLASS_NAME, 'img')  #图片
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
     el_trashEL_loc = (By.CSS_SELECTOR, '.item_list>li')
+    el_linkPoint_loc = (By.CLASS_NAME, 'relation_bottom')
+    el_temp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>div:first-child')
 
-    #btn_del_loc = (By.XPATH, '//*[@class="text_menu"]/*[text()="删除"]')
     btn_imgupload_loc = (By.CLASS_NAME, 'box_img')
     btn_jianqie_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
     btn_fjianqie_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(1)')
+    btn_copy_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(2)')
+    btn_fcopy_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
     btn_fdel_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(3)')
     btn_tihuan_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(5)')
     btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
+    btn_useTemp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>.sure-btn.is-plain.use-tpl')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
@@ -71,7 +76,7 @@ class WorkerPage(BasePage):
         else:
             return self.find_element(*el, waitsec=5, check='【check】')
 
-    def click_intoProject(self,el=lastProject_loc):
+    def click_intoProject(self, el=lastProject_loc):
         self.find_element(*el).click()
         sleep(2)
 
@@ -141,52 +146,9 @@ class WorkerPage(BasePage):
             action.click(self.find_element(*el)).perform()
         sleep(1.5)
 
-    def rightClick_action(self, x=0, y=0, el=None, actionEL=None):
-        '''右键点击,可以指定元素及其相对位置，也可右键菜单操作'''
-        action = ActionChains(self.driver)
-        if x and y and el:  #在指定元素的相对位置
-            action.move_to_element_with_offset(self.find_element(*el), x, y).context_click().perform()
-        elif el:  #在指定元素上
-            action.context_click(self.find_element(*el)).perform()
-        else:  #在鼠标当前位置
-            action.context_click().perform()
-        sleep(1.0)
-        if actionEL:
-            self.find_element(*actionEL).click()
-            sleep(1.5)
-        if actionEL == self.btn_del_loc:
-            wait_tips(self)
-
     def click_imgUpload(self, el=el_imgDIV_loc):
         self.find_element(*el).click()
         sleep(1.5)
 
     def get_imgSrc(self):
         return self.find_element(*self.el_img_loc).get_attribute('src')
-
-    def get_selectPosition(self, el):
-        #获取设置指定元素的选取范围
-        x, y = [], []
-        for e in self.find_elements(*el):
-            x.append(e.location['x'])
-            y.append(e.location['y'])
-        print(x, y)
-        return ((min(x) - 20, min(y) - 20), (max(x) + 20, max(y) + 20))
-        # return (self.find_element(*el).location, self.find_element(*el).location_once_scrolled_into_view)
-
-    def selection(self, el):
-        '''根据需求多选元素'''
-        SP = self.get_selectPosition(el)
-        action = ActionChains(self.driver)
-        action.move_to_element_with_offset(self.find_element(*self.svg_loc), SP[0][0], SP[0][1])
-        action.click_and_hold().move_by_offset(SP[1][0], SP[1][1]).release().perform()
-
-    def click_trash(self):
-        self.find_element(*self.tool_recovery_loc).click()
-
-    def recovery(self):
-        '''恢复删除的元素'''
-        for el in self.find_elements(*self.el_trashEL_loc):
-            el.click()
-            sleep(0.5)
-        self.find_element(*self.tool_mouse_loc).click()

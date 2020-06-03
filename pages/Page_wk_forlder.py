@@ -3,6 +3,9 @@
 
 from common.BasePage import BasePage
 from selenium.webdriver.common.by import By
+from parts.tool_worker import left_click
+import pyautogui
+from time import sleep
 
 '''
 Create on 2020-3-24
@@ -24,8 +27,10 @@ class WorkerForlder(BasePage):
 
     el_divs_loc = (By.CSS_SELECTOR, '.work>div')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
+    el_fTitle_loc = (By.CLASS_NAME, 'content_title')
 
     btn_fjianqie_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(1)')
+    btn_fcopy_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
     btn_fdel_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(3)')
     btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
@@ -34,3 +39,12 @@ class WorkerForlder(BasePage):
     #打开网页
     def open(self):
         self._open(self.baseurl)
+
+    def input_title(self):
+        self.find_element(*self.el_fTitle_loc).click()
+        self.find_element(*self.el_fTitle_loc).click()
+        sleep(0.5)
+        pyautogui.typewrite('123', interval=0.25)
+        left_click(self, 100, 100, self.svg_loc)
+        # pyautogui.press('delete')
+        sleep(2)

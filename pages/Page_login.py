@@ -54,6 +54,9 @@ class LoginPage(BasePage):
         wait_tips(self)
         return self.find_element(*self.loginTips_loc).text
 
+    def get_warnTitle(self):
+        return self.find_element(*self.warnTitle_loc).text
+
     def login(self, username, password, flag=0, code=0):
         '''flag是否需要登录成功，code是否用验证码登录'''
         self.open()

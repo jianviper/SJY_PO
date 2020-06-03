@@ -2,23 +2,38 @@
 #coding:utf-8
 from parts.tool_page import *
 from selenium.webdriver.common.action_chains import ActionChains
+import pyautogui, os
 
 
 def public_getElSize(PO, el):  #获取元素的尺寸
-    return PO.find_element(*el).size
+    p_list = []
+    if PO.find_elements(*el):
+        for e in PO.find_elements(*el):
+            p_list.append(e.size)
+        return p_list
 
 
-def public_addTool(PO, toolEL, checkEL, nums=1, action=None):
+def public_getElPosition(PO, el):  #获取元素位置
+    p_list = []
+    if PO.find_elements(*el):
+        for e in PO.find_elements(*el):
+            p_list.append(e.location)
+        return p_list
+
+
+def public_addTool(PO, toolEL, checkEL, nums=1, action=None, **kwargs):
     '''登录，新建项目，进入项目添加工具'''
     x, y, margin, height = 200, 150, 0, 0  #初始位置
-    tc = TestCase()
+    if kwargs.get('x') and kwargs.get('y'):
+        x, y = kwargs.get('x', 200), kwargs.get('y', 150)
     for i in range(nums):
         PO.find_element(*toolEL).click()
         if i > 0:  #添加了一个元素之后
-            size = public_getElSize(PO, checkEL)
+            size = public_getElSize(PO, checkEL)[i - 1]
             height, margin = size['height'], 50
-        left_click(PO, x, y + height + margin, el=PO.svg_loc)
-        tc.assertTrue(public_check(PO, checkEL))
+        left_click(PO, x, y + (height + margin) * i, el=PO.svg_loc)
+        sleep(1)
+        assert public_check(PO, checkEL)
         if action == 'upload':  #需要上传图片
             PO.find_elements(*checkEL)[i].click()
             sleep(1)
@@ -29,9 +44,15 @@ def public_addTool(PO, toolEL, checkEL, nums=1, action=None):
 def get_selectPosition(PO, el):
     #获取设置指定元素的选取范围
     x, y = [], []
-    for e in PO.find_elements(*el):
-        x.append(e.location['x'])
-        y.append(e.location['y'])
+    if type(el) == list and len(el) > 0:
+        for e in el:
+            for ee in PO.find_elements(*e):
+                x.append(ee.location['x'])
+                y.append(ee.location['y'])
+    else:
+        for ee in PO.find_elements(*el):
+            x.append(ee.location['x'])
+            y.append(ee.location['y'])
     print(x, y)
     return ((min(x) - 20, min(y) - 20), (max(x) + 20, max(y) + 20))
     # return (PO.find_element(*el).location, PO.find_element(*el).location_once_scrolled_into_view)
@@ -40,6 +61,7 @@ def get_selectPosition(PO, el):
 def selection(PO, el):
     '''根据需求多选元素'''
     SP = get_selectPosition(PO, el)
+    sleep(1)
     action = ActionChains(PO.driver)
     action.move_to_element_with_offset(PO.find_element(*PO.svg_loc), SP[0][0], SP[0][1])
     action.click_and_hold().move_by_offset(SP[1][0], SP[1][1]).release().perform()
@@ -53,6 +75,8 @@ def left_click(PO, x=0, y=0, el=None):
     elif x and y:  #在当前鼠标位置的相对偏移位置
         action.move_by_offset(x, y).click().perform()
     elif el:  #在指定元素上
+        print('cccc')
+        # PO.find_element(*el).click()
         action.click(PO.find_element(*el)).perform()
     sleep(1.5)
 
@@ -90,3 +114,31 @@ def recovery(PO):
             el.click()
             sleep(0.5)
     PO.find_element(*tool_mouse_loc).click()
+
+
+def elDrag(PO, start, end):  #拖动元素到某个元素上
+    sleep(1)
+    action = ActionChains(PO.driver)
+    print("aaaaa")
+    action.drag_and_drop(PO.find_element(*start), PO.find_element(*end)).perform()
+    sleep(1)
+    # left_click(PO, 200, -200, end)
+    # sleep(2)
+    # action.move_by_offset(30, 0).release().perform()
+    # action.drag_and_drop_by_offset(PO.find_element(*start),50,0).perform()
+
+
+def drag_and_drop(PO):
+    PO.driver.set_script_timeout(20)
+    jq_url = 'https://libs.baidu.com/jquery/2.1.4/jquery.min.js'
+    with open('../parts/jquery_loader_helper.js') as f:
+        load_jquery_js = f.read()
+        # print(load_jquery_js)
+    with open('../parts/drag_and_drop_helper.js') as f:
+        drag_and_drop_js = f.read()
+        # print(drag_and_drop_js)
+
+    PO.driver.execute_async_script(load_jquery_js, jq_url)
+    print('gogogo')
+    PO.driver.execute_script(
+        drag_and_drop_js + '$(".relation_bottom").simulateDragDrop({"dropTarget":".img"});')

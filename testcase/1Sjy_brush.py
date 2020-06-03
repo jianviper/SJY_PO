@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 #coding:utf-8
 import unittest
-from time import strftime, localtime
+from common.get_config import get_url
 from pages.Page_worker import WorkerPage
 from parts.tool_page import *
+from parts.tool_worker import left_click
 
 '''
 Create on 2020-3-17
@@ -16,82 +17,57 @@ class WorkerTest(unittest.TestCase):
     linexy = []
 
     def setUp(self) -> None:
-        url = 'https://app.bimuyu.tech/login'
-        #url = 'http://test.bimuyu.tech/login'
-        self.home_url = 'http://app.bimuyu.tech/home'
+        urls = get_url()  #return [url,home_url]
+        self.url, self.home_url = urls[0], urls[1]
         self.username = '14500000050'
         self.password = '123456'
-        self.brushPage = WorkerPage(base_url=url)
-        self._nowtime = strftime("%Y-%m-%d %H:%M:%S", localtime())
-        self.projectName = '自动化测试项目-{0}'.format(self._nowtime)
-        self.textContent = '自动化测试文本-{0}'.format(self._nowtime)
+        self.brush_PO = WorkerPage(base_url=self.url)
+        self.projectName = project_name()
         self.lineNum = 5
+        self.brush_PO.open()
 
     def tearDown(self) -> None:
-        self.brushPage.driver.get(self.home_url)
-        if self.brushPage.check((By.CLASS_NAME, 'item_text'), islen=True) > 2:
-            pass
-            # public_delProject(self.brushPage, self.home_url)
-        self.brushPage.driver.quit()
+        # public_tearDown(self.brush_PO, self.url, self.home_url, self.username, self.password)
+        self.brush_PO.driver.quit()
 
     def test_draw(self):
         '''使用画笔绘制'''
-        public_login(self.brushPage, self.username, self.password)
-        public_createProject(self.brushPage, self.projectName)
-        self.brushPage.click_intoProject()
-        self.brushPage.choose_tool(self.brushPage.tool_pen_loc)
+        public_init(self.brush_PO, self.username, self.password, self.projectName)
+        self.brush_PO.choose_tool(self.brush_PO.tool_pen_loc)
         n = i = self.lineNum
-        sleep(3)
-        self.brushPage.action_click(self.brushPage.svg_loc)
+
+        self.brush_PO.action_click(self.brush_PO.svg_loc)
+        left_click(self.brush_PO, 150, 100, self.brush_PO.svg_loc)
         while i > 0:  #绘制多条痕迹
-            # self.linexy.append(self.brushPage.draw_line())
-            self.linexy.append(self.brushPage.draw_line())
+            self.linexy.append(self.brush_PO.draw_line())
             i -= 1
             sleep(1)
         print(self.projectName, '\r\n', self.linexy)
-        self.assertEqual(n, self.brushPage.check(self.brushPage.el_line_loc, islen=True))  #检查是否绘制成功
-        sleep(3)
+        self.brush_PO.driver.refresh()
+        sleep(2)
+        #检查是否绘制成功
+        self.assertIs(self.lineNum, public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True))
 
-    def te1st_eraser(self):
+    def test_eraser(self):
         '''使用橡皮擦'''
-        public_login(self.brushPage, self.username, self.password)
-        public_createProject(self.brushPage, self.projectName)
-        self.brushPage.click_intoProject()
-        self.brushPage.choose_tool(self.brushPage.tool_pen_loc)
+        public_init(self.brush_PO, self.username, self.password, self.projectName)
+        self.brush_PO.choose_tool(self.brush_PO.tool_pen_loc)
+        left_click(self.brush_PO, 150, 100, self.brush_PO.svg_loc)
         n = i = self.lineNum
         while i > 0:  #绘制多条痕迹
-            self.linexy.append(self.brushPage.draw_line())
+            self.linexy.append(self.brush_PO.draw_line())
             i -= 1
             sleep(0.6)
         #检查是否绘制成功
-        self.assertEqual(n, self.brushPage.check(self.brushPage.el_line_loc, islen=True))
-        self.brushPage.choose_tool(self.brushPage.tool_pen_loc)
-        self.brushPage.choose_tool(self.brushPage.tool_eraser_loc)
+        self.assertIs(self.lineNum, public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True))
+        self.brush_PO.choose_tool(self.brush_PO.tool_pen_loc)
+        self.brush_PO.choose_tool(self.brush_PO.tool_eraser_loc)
         print(self.linexy[0])
-        self.brushPage.do_eraser(self.linexy[0])  #擦除第一根痕迹
+        self.brush_PO.do_eraser(self.linexy[0])  #擦除第一根痕迹
         #是否擦除成功
-        self.assertLess(self.brushPage.check(self.brushPage.el_line_loc, islen=True), self.lineNum)
-        public_delProject(self.brushPage, self.home_url)
-        sleep(3)
-
-    def te1st_brush(self):
-
-        public_login(self.brushPage, self.username, self.password)
-        public_createProject(self.brushPage, self.projectName)
-        self.brushPage.click_intoProject()
-        self.brushPage.choose_tool(self.brushPage.tool_pen_loc)
-        # print(self.brushPage.draw_line1())
-        sleep(3)
+        self.assertLess(public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True), self.lineNum)
+        public_delProject(self.brush_PO, self.home_url)
 
 
 if __name__ == "__main__":
     unittest.main()
-'''
-        token = self.WorkerPage.driver.get_cookies()[1]['value']
-        url = 'https://api.hetaonote.com:8080/hetaoNoteApi/app/element/add'
-        header = {'token': token,
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                                'Chrome/79.0.3945.88 Safari/537.36'}
-        data = {'parentId': 58535, 'position': '761,243', 'type': 2, 'html': 'test', 'content': '', 'ext': ''}
-        requests.post(url, data,headers=header,verify = False)
-'''

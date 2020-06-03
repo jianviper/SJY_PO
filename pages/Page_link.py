@@ -7,11 +7,11 @@ from time import sleep
 '''
 Create on 2020-3-18
 author:linjian
-summary:邀请/加入功能的元素对象
+summary:关联线功能的元素对象
 '''
 
 
-class InvitePage(BasePage):
+class LinkPage(BasePage):
     #定位器，通过元素属性定位元素对象
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
 

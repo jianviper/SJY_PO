@@ -28,6 +28,7 @@ class WokerPic(BasePage):
 
     btn_imgupload_loc = (By.CLASS_NAME, 'box_img')
     btn_jianqie_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
+    btn_copy_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
     btn_tihuan_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(5)')
     btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
