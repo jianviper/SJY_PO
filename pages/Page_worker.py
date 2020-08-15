@@ -37,48 +37,39 @@ class WorkerPage(BasePage):
     tool_recovery_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
     tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
 
-    el_divs_loc = (By.CSS_SELECTOR, '.work>div')
+    el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
-    el_textNoteText_loc = (By.CLASS_NAME, 'text_content')
+    el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
     el_line_loc = (By.CLASS_NAME, 'content_path')
     el_imgDIV_loc = (By.CSS_SELECTOR, '.work_image.work_element')
-    el_img_loc = (By.CLASS_NAME, 'img')  #图片
+    el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>img')  #图片
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
     el_trashEL_loc = (By.CSS_SELECTOR, '.item_list>li')
     el_linkPoint_loc = (By.CLASS_NAME, 'relation_bottom')
     el_temp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>div:first-child')
 
     btn_imgupload_loc = (By.CLASS_NAME, 'box_img')
-    btn_jianqie_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
-    btn_fjianqie_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(1)')
+    btn_imgCut_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(1)')
+    btn_imgCopy_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(2)')
+    btn_imgDel_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(3)')
+    btn_imgReplace_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(7)')
+    btn_cut_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
+    btn_fcut_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(1)')
     btn_copy_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(2)')
-    btn_fcopy_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(2)')
+    btn_fcopy_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
-    btn_fdel_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(3)')
+    btn_fdel_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(3)')
     btn_tihuan_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(5)')
-    btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
+    btn_paste_loc = (By.CSS_SELECTOR, '.work_menu>li:first-child')
     btn_useTemp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>.sure-btn.is-plain.use-tpl')
+    btn_skip_loc = (By.CLASS_NAME, 'button_skip')
+    btn_revoke_loc = (By.CSS_SELECTOR, '.actionImg.backImg')
+    btn_recovery_loc = (By.CSS_SELECTOR, '.actionImg.restImg')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
     def open(self):
         self._open(self.baseurl)
-
-    def check(self, el, text=None, islen=False):
-        #根据判定需求返回不同检查结果
-        if text:
-            for e in self.find_elements(*el, waitsec=5, check='【check】'):
-                if e.text != text:
-                    return False
-            return True
-        elif islen:
-            return len(self.find_elements(*el, waitsec=5, check='【check】'))
-        else:
-            return self.find_element(*el, waitsec=5, check='【check】')
-
-    def click_intoProject(self, el=lastProject_loc):
-        self.find_element(*el).click()
-        sleep(2)
 
     def draw_line(self):
         x, y = randint(80, self.X - 120), randint(190, self.Y - 100)
@@ -117,38 +108,15 @@ class WorkerPage(BasePage):
             pyautogui.click(self.X - 200, self.Y - 200)
         sleep(2)
 
-    def input_textNote(self, text):
-        #文本便签利用JS进行赋值
-        js = '''
-        document.querySelector('.work_text.work_element').style.border='5px solid red';
-        document.getElementsByClassName("text_content")[0].append('{0}');'''.format(text)
-        jss = '''
-        var ds=document.getElementsByClassName('text_content'); 
-        for(i=0;i<ds.length;i++){
-            ds[i].parentNode.style.border='5px solid red';
-            ds[i].append("%s");
-        }
-        ''' % text
-        self.driver.execute_script(jss)
-        for e in self.find_elements(*self.el_textNote_loc):
-            e.click()
-            sleep(1)
-            self.action_click(50, -80, self.tool_mouse_loc)
+    def do_revoke(self):
+        sleep(1)
+        self.find_element(*self.btn_revoke_loc).click()
+        sleep(1)
 
-    def action_click(self, x=0, y=0, el=None):
-        '''左键点击，可以指定元素及相对位置进行'''
-        action = ActionChains(self.driver)
-        if x and y and el:  #在指定元素的相对位置
-            action.move_to_element_with_offset(self.find_element(*el), x, y).click().perform()
-        elif x and y:  #在当前鼠标位置的相对偏移位置
-            action.move_by_offset(x, y).click().perform()
-        elif el:  #在指定元素上
-            action.click(self.find_element(*el)).perform()
-        sleep(1.5)
+    def do_recovery(self):
+        sleep(1)
+        self.find_element(*self.btn_recovery_loc).click()
+        sleep(1)
 
-    def click_imgUpload(self, el=el_imgDIV_loc):
-        self.find_element(*el).click()
-        sleep(1.5)
-
-    def get_imgSrc(self):
-        return self.find_element(*self.el_img_loc).get_attribute('src')
+    def get_textContent(self):
+        return self.find_element(*self.el_textContent_loc).text

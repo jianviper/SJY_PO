@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-import unittest
+import unittest, warnings
 from common.get_config import get_url
 from pages.Page_invite import InvitePage
 from parts.tool_worker import *
@@ -14,6 +14,7 @@ summary:邀请/加入的测试用例
 
 class InviteTest(unittest.TestCase):
     def setUp(self) -> None:
+        warnings.simplefilter('ignore', ResourceWarning)
         urls = get_url()  #return [url,home_url]
         self.url, self.home_url = urls[0], urls[1]
         self.username = '14500000050'

@@ -20,6 +20,7 @@ class HomePage(BasePage):
     firstProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')  #第一个项目
     win_bind_loc = (By.CLASS_NAME, 'ant-modal-body')  #
     input_projectName_loc = (By.CSS_SELECTOR, '.form-line.iteminput')
+    log_content_loc = (By.CLASS_NAME, 'log_content')
 
     btn_help_loc = (By.CLASS_NAME, 'guideHelp')
     btn_user_loc = (By.CSS_SELECTOR, '.menu_user.mouse_hover')
@@ -30,6 +31,7 @@ class HomePage(BasePage):
     btn_menu_rename_loc = (By.CSS_SELECTOR, '.item_menu>li:first-child')
     btn_menu_del_loc = (By.CSS_SELECTOR, '.item_menu>li:last-child')
     btn_closeBind_loc = (By.CLASS_NAME, 'closeBtn')
+    btn_log_close_loc = (By.CLASS_NAME, 'header_close')
 
     lastProjectName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
     lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
@@ -98,6 +100,8 @@ class HomePage(BasePage):
 
     def createProject(self, name):
         '''创建项目'''
+        if self.find_element(*self.log_content_loc):
+            self.find_element(*self.btn_log_close_loc).click()
         self.click_createProject()
         self.input_create_projectName(name)
         self.click_CRDSubmit()

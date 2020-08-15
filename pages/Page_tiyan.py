@@ -5,27 +5,29 @@ from common.BasePage import BasePage
 from time import sleep
 
 '''
-Create on 2020-3-18
+Create on 2020-6-3
 author:linjian
-summary:邀请/加入功能的元素对象
+summary:体验功能的元素对象
 '''
 
 
-class InvitePage(BasePage):
+class TiyanPage(BasePage):
     #定位器，通过元素属性定位元素对象
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
 
-    tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(4)')
-    el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
+    tool_loc = (By.CLASS_NAME, 'work_tool')
 
-    btn_invite_loc = (By.CLASS_NAME, 'menbercompoment')
-    btn_joinInvi_loc = (By.CSS_SELECTOR, '.invitation_submit.sure-btn')
-    btn_user_loc = (By.CLASS_NAME, 'user_box')
-    btn_exit_loc = (By.CSS_SELECTOR, '.team_invitation>button')
-    btn_exitSure_loc = (By.CSS_SELECTOR, '.sure-btn.submit-info')
+    el_codeimg_loc = (By.CLASS_NAME, 'code_image')
+    el_title_loc = (By.CLASS_NAME, 'info_title1')
+    el_course_loc = (By.CLASS_NAME, 'course')
 
-    inviUrl_loc = (By.ID, 'inviUrl')
-    inviName_loc = (By.CSS_SELECTOR, '.invitation_content>p>span:last-child')
+    btn_menusign_loc = (By.CLASS_NAME, 'menu_login')
+    btn_invite_loc = (By.CLASS_NAME, 'userout')
+    btn_sign_loc = (By.CSS_SELECTOR, '.sure-btn.submit-info')
+    btn_next_loc = (By.CLASS_NAME, 'button_next')
+    btn_finish_loc = (By.CLASS_NAME, 'button_adopt')
+    btn_skip_loc = (By.CLASS_NAME, 'button_skip')
+
     lastProjectName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
@@ -33,21 +35,26 @@ class InvitePage(BasePage):
     def open(self):
         self._open(self.baseurl)
 
+    def click_menuSign(self):
+        self.find_element(*self.btn_menusign_loc).click()
+        sleep(2)
+
     def click_invite(self):
         self.find_element(*self.btn_invite_loc).click()
-
-    def get_inviUrl(self):
-        return self.find_element(*self.inviUrl_loc).get_attribute('value')
-
-    def click_joinInvi(self):
-        self.find_element(*self.btn_joinInvi_loc).click()
-
-    def get_inviName(self):  #获取协同项目名称
-        return self.find_element(*self.inviName_loc).text
-
-    def exit_project(self):  #退出画布
-        sleep(1)
-        self.find_element(*self.btn_user_loc).click()
-        self.find_element(*self.btn_exit_loc).click()
-        self.find_element(*self.btn_exitSure_loc).click()
         sleep(2)
+
+    def click_sign(self):
+        self.find_element(*self.btn_sign_loc).click()
+        sleep(2)
+
+    def click_next(self):
+        self.find_element(*self.btn_next_loc).click()
+
+    def get_title(self, el):
+        return self.find_element(*el).text
+
+    def click_finish(self):
+        self.find_element(*self.btn_finish_loc).click()
+
+    def click_skip(self):
+        self.find_element(*self.btn_skip_loc).click()

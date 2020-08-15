@@ -4,7 +4,7 @@
 from common.BasePage import BasePage
 from selenium.webdriver.common.by import By
 from parts.tool_worker import left_click
-import pyautogui
+# import pyautogui
 from time import sleep
 
 '''
@@ -19,32 +19,47 @@ class WorkerForlder(BasePage):
     #定位器，通过元素属性定位元素对象
     lastProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text')
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
+    tips_loc = (By.CSS_SELECTOR, '.ant-notification-notice.ant-notification-notice-closable')
+    right_menu_loc = (By.CLASS_NAME, 'task_menu')
+    header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
     tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
     tool_recovery_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
 
-    el_divs_loc = (By.CSS_SELECTOR, '.work>div')
+    el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
-    el_fTitle_loc = (By.CLASS_NAME, 'content_title')
+    el_fTitle_loc = (By.CLASS_NAME, 'content_title2')
+    el_titleInput_loc = (By.CSS_SELECTOR, '.content_title.ant-input')
+    el_folderImg_loc = (By.CSS_SELECTOR, '.file_content>div>img')
 
-    btn_fjianqie_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(1)')
-    btn_fcopy_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(2)')
+    btn_fjianqie_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(1)')
+    btn_fcopy_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
-    btn_fdel_loc = (By.CSS_SELECTOR, '.task_menu>li:nth-child(3)')
+    btn_fdel_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(3)')
     btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
+    btn_color_loc = (By.CSS_SELECTOR, '.flex_row_around.colormenu>span:nth-child(2)')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
     def open(self):
         self._open(self.baseurl)
 
-    def input_title(self):
-        self.find_element(*self.el_fTitle_loc).click()
-        self.find_element(*self.el_fTitle_loc).click()
+    def input_title(self, title):
+        from selenium.webdriver import ActionChains
+        action = ActionChains(self.driver)
+        action.double_click(self.find_element(*self.el_fTitle_loc)).perform()
+        # self.find_element(*self.el_fTitle_loc).click()
         sleep(0.5)
-        pyautogui.typewrite('123', interval=0.25)
-        left_click(self, 100, 100, self.svg_loc)
+        self.find_element(*self.el_titleInput_loc).click()
+        self.find_element(*self.el_titleInput_loc).clear()
+        sleep(0.5)
+        # pyautogui.typewrite('123', interval=0.25)
+        self.find_element(*self.el_titleInput_loc).send_keys(title)
+        left_click(self, 50, 100, self.header_loc)
         # pyautogui.press('delete')
         sleep(2)
+
+    def get_title(self):
+        return self.find_element(*self.el_fTitle_loc).text

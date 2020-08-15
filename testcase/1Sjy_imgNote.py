@@ -4,7 +4,7 @@ import unittest
 from common.get_config import get_url
 from pages.Page_wk_img import WokerPic
 from parts.tool_worker import *
-from parts.ws_client import WSupload_img
+from common.ws_client import WSupload_img
 
 '''
 Create on 2020-4-7
@@ -32,10 +32,10 @@ class ImgNoteTest(unittest.TestCase):
     def test_add_imgNote(self):
         '''添加/上传/删除/恢复图片便签'''
         public_init(self.img_PO, self.username, self.password, self.projectName)
-        public_addTool(self.img_PO, self.img_PO.tool_img_loc, self.img_PO.el_imgDIV_loc, action='upload')
+        public_add(self.img_PO, [('i', 1)])
         #是否上传成功
         self.assertTrue(public_check(self.img_PO, self.img_PO.el_img_loc))
-        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_del_loc)
+        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_imgDel_loc)
         #是否删除成功
         self.assertFalse(public_check(self.img_PO, self.img_PO.el_imgDIV_loc))
         click_trash(self.img_PO)  #打开废纸篓进行恢复
@@ -48,12 +48,12 @@ class ImgNoteTest(unittest.TestCase):
     def test_replace(self):
         '''替换图片'''
         public_init(self.img_PO, self.username, self.password, self.projectName)
-        public_addTool(self.img_PO, self.img_PO.tool_img_loc, self.img_PO.el_imgDIV_loc, action='upload')
+        public_add(self.img_PO, [('i', 1)])
         #是否上传成功
         self.assertTrue(public_check(self.img_PO, self.img_PO.el_img_loc))
         src1 = self.img_PO.get_imgSrc()
         #右键-替换
-        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_tihuan_loc)
+        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_imgReplace_loc)
         os.system('uploadIMG.exe')
         sleep(5)
         src2 = self.img_PO.get_imgSrc()
@@ -64,14 +64,14 @@ class ImgNoteTest(unittest.TestCase):
     def test_shear(self):
         '''剪切,粘贴'''
         public_init(self.img_PO, self.username, self.password, self.projectName)
-        public_addTool(self.img_PO, self.img_PO.tool_img_loc, self.img_PO.el_imgDIV_loc)
-        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_jianqie_loc)
+        public_add(self.img_PO, [('i', 1)])
+        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_imgCut_loc)
         #检查剪切是否成功
         self.assertFalse(public_check(self.img_PO, self.img_PO.el_imgDIV_loc))
         #剪切后左键点击画布，检查是否会有文件夹多出（BUG点）
         left_click(self.img_PO, 200, 50, el=self.img_PO.tool_loc)
         self.assertIs(public_check(self.img_PO, self.img_PO.el_divs_loc, islen=True), 2)
-        rightClick_action(self.img_PO, actionEl=self.img_PO.btn_zhantie_loc)
+        rightClick_action(self.img_PO, actionEl=self.img_PO.btn_Paste_loc)
         self.assertTrue(public_check(self.img_PO, self.img_PO.el_imgDIV_loc))
 
         public_delProject(self.img_PO, self.home_url)
@@ -79,17 +79,17 @@ class ImgNoteTest(unittest.TestCase):
     def test_multiShear(self):
         '''多选剪切，粘贴'''
         public_init(self.img_PO, self.username, self.password, self.projectName)
-        public_addTool(self.img_PO, self.img_PO.tool_img_loc, self.img_PO.el_imgDIV_loc, nums=2, action='upload')
+        public_add(self.img_PO, [('i', 2)])
         #是否上传成功
         self.assertIs(public_check(self.img_PO, self.img_PO.el_img_loc, islen=True), 2)
         selection(self.img_PO, self.img_PO.el_imgDIV_loc)  #多选，下一步进行剪切
-        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_jianqie_loc)
+        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_imgCut_loc)
         #检查是否剪切成功
         self.assertFalse(public_check(self.img_PO, self.img_PO.el_imgDIV_loc))
         left_click(self.img_PO, 200, 50, el=self.img_PO.tool_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
         self.assertIs(public_check(self.img_PO, self.img_PO.el_divs_loc, islen=True), 2)
-        rightClick_action(self.img_PO, actionEl=self.img_PO.btn_zhantie_loc)
+        rightClick_action(self.img_PO, actionEl=self.img_PO.btn_Paste_loc)
         self.assertIs(public_check(self.img_PO, self.img_PO.el_imgDIV_loc, islen=True), 2)
 
         public_delProject(self.img_PO, self.home_url)
@@ -97,11 +97,11 @@ class ImgNoteTest(unittest.TestCase):
     def test_multiDel(self):
         '''多选删除,恢复'''
         public_init(self.img_PO, self.username, self.password, self.projectName)
-        public_addTool(self.img_PO, self.img_PO.tool_img_loc, self.img_PO.el_imgDIV_loc, nums=2, action='upload')
+        public_add(self.img_PO, [('i', 2)])
         #检查是否上传成功
         self.assertIs(public_check(self.img_PO, self.img_PO.el_img_loc, islen=True), 2)
         selection(self.img_PO, self.img_PO.el_imgDIV_loc)
-        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_del_loc)
+        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_imgDel_loc)
         #是否删除成功
         self.assertFalse(public_check(self.img_PO, self.img_PO.el_imgDIV_loc))
         click_trash(self.img_PO)  #打开废纸篓进行恢复
@@ -114,7 +114,7 @@ class ImgNoteTest(unittest.TestCase):
     def test_doubleImgCopy(self):
         '''多图片便签，多选复制/粘贴，跨白板'''
         public_init(self.img_PO, self.username, self.password, self.projectName)
-        public_addTool(self.img_PO, self.img_PO.tool_img_loc, self.img_PO.el_imgDIV_loc, nums=2)
+        public_add(self.img_PO, [('i', 2)])
         #是否新建成功
         self.assertTrue(public_check(self.img_PO, self.img_PO.el_imgDIV_loc))
         #通过websocket上传图片
@@ -123,9 +123,9 @@ class ImgNoteTest(unittest.TestCase):
         self.assertTrue(public_check(self.img_PO, self.img_PO.el_img_loc, attr='src'))
         selection(self.img_PO, self.img_PO.el_imgDIV_loc)
         #右键-复制
-        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_copy_loc)
+        rightClick_action(self.img_PO, el=self.img_PO.el_imgDIV_loc, actionEl=self.img_PO.btn_imgCopy_loc)
         #右键-粘贴
-        rightClick_action(self.img_PO, 450, 10, self.img_PO.el_imgDIV_loc, self.img_PO.btn_zhantie_loc)
+        rightClick_action(self.img_PO, 450, 10, self.img_PO.el_imgDIV_loc, self.img_PO.btn_Paste_loc)
         #检查个数和图片是否已上传
         self.assertIs(public_check(self.img_PO, self.img_PO.el_imgDIV_loc, islen=True), 4)
         self.assertTrue(public_check(self.img_PO, self.img_PO.el_img_loc, attr='src'))
@@ -134,10 +134,10 @@ class ImgNoteTest(unittest.TestCase):
         #进行跨白板粘贴
         public_createProject(self.img_PO, '[copy]' + self.projectName)
         public_intoProject(self.img_PO)
-        rightClick_action(self.img_PO, 300, 200, self.img_PO.svg_loc, self.img_PO.btn_zhantie_loc)
+        rightClick_action(self.img_PO, 300, 200, self.img_PO.svg_loc, self.img_PO.btn_Paste_loc)
         self.img_PO.driver.refresh()
         self.assertIs(public_check(self.img_PO, self.img_PO.el_imgDIV_loc, islen=True), 2)
-        self.assertTrue(public_check(self.img_PO, self.img_PO.el_img_loc, attr='src'))
+        self.assertIs(len(public_check(self.img_PO, self.img_PO.el_img_loc, attr='src')), 2)
 
         public_delProject(self.img_PO, self.home_url)
 

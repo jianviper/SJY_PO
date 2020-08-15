@@ -15,10 +15,11 @@ class InvitePage(BasePage):
     #定位器，通过元素属性定位元素对象
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
 
+    tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(4)')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
 
-    btn_invite_loc = (By.CLASS_NAME, 'menbercompoment')
+    btn_invite_loc = (By.CLASS_NAME, 'userout')
     btn_joinInvi_loc = (By.CSS_SELECTOR, '.invitation_submit.sure-btn')
     btn_user_loc = (By.CLASS_NAME, 'user_box')
     btn_exit_loc = (By.CSS_SELECTOR, '.team_invitation>button')

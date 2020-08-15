@@ -2,6 +2,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from common.brower import BrowerSet
+import logging
 
 '''
 Create on 2020-3-17
@@ -15,10 +16,16 @@ class BasePage(object):
     BasePage封装所有页面都公用的方法，例如driver, url ,FindElement等
     '''
 
-    def __init__(self, brower_option='chrome', base_url=''):
+    def __init__(self, brower_name='chrome', base_url=''):
+        logger = logging.getLogger()
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+        console = logging.StreamHandler()
+        console.setLevel(logging.INFO)
+
         self.baseurl = base_url
         #供选择浏览器，默认谷歌
-        BS = BrowerSet(brower_option)
+        BS = BrowerSet(brower_name)
         self.driver = BS.set()
 
     #利用get打开页面，并可以扩展做一些检查
@@ -40,13 +47,13 @@ class BasePage(object):
         except:
             print(u"%s%s 页面中未找到%s元素" % (check, self, loc))
 
-    def find_elements(self, *loc, waitsec=10,check=''):
+    def find_elements(self, *loc, waitsec=10, check=''):
         try:
             WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
             #WebDriverWait(self.driver, 10).until(EC.visibility_of_all_elements_located(*loc))
             return self.driver.find_elements(*loc)
         except:
-            print(u"%s%s 页面中未找到%s元素" % (check,self, loc))
+            print(u"%s%s 页面中未找到%s元素" % (check, self, loc))
 
     #重写定义send_keys方法
     def send_keys(self, loc, value, clear_first=True, click_first=True):

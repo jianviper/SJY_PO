@@ -36,8 +36,7 @@ class WorkerTest(unittest.TestCase):
         self.brush_PO.choose_tool(self.brush_PO.tool_pen_loc)
         n = i = self.lineNum
 
-        self.brush_PO.action_click(self.brush_PO.svg_loc)
-        left_click(self.brush_PO, 150, 100, self.brush_PO.svg_loc)
+        left_click(self.brush_PO, 50, 100, self.brush_PO.header_loc)
         while i > 0:  #绘制多条痕迹
             self.linexy.append(self.brush_PO.draw_line())
             i -= 1

@@ -4,7 +4,7 @@ import unittest
 from common.get_config import get_url
 from pages.Page_worker import WorkerPage
 from parts.tool_worker import *
-from parts.ws_client import WSupload_img
+from common.ws_client import WSupload_img
 
 '''
 Create on 2020-5-29
@@ -87,10 +87,10 @@ class LinkTest(unittest.TestCase):
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_textNote_loc))
         #框选，右键剪切，粘贴
         selection(self.link_PO, [self.link_PO.el_textNote_loc, self.link_PO.el_folder_loc])
-        rightClick_action(self.link_PO, el=self.link_PO.el_folder_loc, actionEl=self.link_PO.btn_fjianqie_loc)
+        rightClick_action(self.link_PO, el=self.link_PO.el_folder_loc, actionEl=self.link_PO.btn_fcut_loc)
         left_click(self.link_PO, 50, -80, self.link_PO.tool_mouse_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 2)
-        rightClick_action(self.link_PO, 200, 10, self.link_PO.tool_loc, actionEl=self.link_PO.btn_zhantie_loc)
+        rightClick_action(self.link_PO, 200, 10, self.link_PO.tool_loc, actionEl=self.link_PO.btn_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_folder_loc))
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_textNote_loc))
@@ -99,7 +99,7 @@ class LinkTest(unittest.TestCase):
         rightClick_action(self.link_PO, el=self.link_PO.el_folder_loc, actionEl=self.link_PO.btn_fcopy_loc)
         left_click(self.link_PO, 50, -80, self.link_PO.tool_mouse_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 4)
-        rightClick_action(self.link_PO, 200, 400, self.link_PO.tool_loc, actionEl=self.link_PO.btn_zhantie_loc)
+        rightClick_action(self.link_PO, 200, 400, self.link_PO.tool_loc, actionEl=self.link_PO.btn_paste_loc)
         #检查是否粘贴成功
         self.assertIs(public_check(self.link_PO, self.link_PO.el_folder_loc, islen=True), 2)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_textNote_loc, islen=True), 2)
@@ -118,10 +118,10 @@ class LinkTest(unittest.TestCase):
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_folder_loc))
         #框选，右键剪切，粘贴
         selection(self.link_PO, [self.link_PO.el_folder_loc, self.link_PO.el_imgDIV_loc])
-        rightClick_action(self.link_PO, el=self.link_PO.el_imgDIV_loc, actionEl=self.link_PO.btn_jianqie_loc)
+        rightClick_action(self.link_PO, el=self.link_PO.el_imgDIV_loc, actionEl=self.link_PO.btn_cut_loc)
         left_click(self.link_PO, 50, -80, self.link_PO.tool_mouse_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 2)
-        rightClick_action(self.link_PO, 200, 10, self.link_PO.tool_loc, actionEl=self.link_PO.btn_zhantie_loc)
+        rightClick_action(self.link_PO, 200, 10, self.link_PO.tool_loc, actionEl=self.link_PO.btn_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_folder_loc))
@@ -130,7 +130,7 @@ class LinkTest(unittest.TestCase):
         rightClick_action(self.link_PO, el=self.link_PO.el_imgDIV_loc, actionEl=self.link_PO.btn_copy_loc)
         left_click(self.link_PO, 50, -80, self.link_PO.tool_mouse_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 4)
-        rightClick_action(self.link_PO, 200, 400, self.link_PO.tool_loc, actionEl=self.link_PO.btn_zhantie_loc)
+        rightClick_action(self.link_PO, 200, 400, self.link_PO.tool_loc, actionEl=self.link_PO.btn_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_img_loc, attr='src'))
         self.assertIs(public_check(self.link_PO, self.link_PO.el_folder_loc, islen=True), 2)
@@ -150,10 +150,10 @@ class LinkTest(unittest.TestCase):
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_textNote_loc))
         #框选，右键剪切，粘贴
         selection(self.link_PO, [self.link_PO.el_textNote_loc, self.link_PO.el_imgDIV_loc])
-        rightClick_action(self.link_PO, el=self.link_PO.el_imgDIV_loc, actionEl=self.link_PO.btn_jianqie_loc)
+        rightClick_action(self.link_PO, el=self.link_PO.el_imgDIV_loc, actionEl=self.link_PO.btn_cut_loc)
         left_click(self.link_PO, 50, -80, self.link_PO.tool_mouse_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 2)
-        rightClick_action(self.link_PO, 200, 10, self.link_PO.tool_loc, actionEl=self.link_PO.btn_zhantie_loc)
+        rightClick_action(self.link_PO, 200, 10, self.link_PO.tool_loc, actionEl=self.link_PO.btn_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_textNote_loc))
@@ -162,7 +162,7 @@ class LinkTest(unittest.TestCase):
         rightClick_action(self.link_PO, el=self.link_PO.el_imgDIV_loc, actionEl=self.link_PO.btn_copy_loc)
         left_click(self.link_PO, 50, -80, self.link_PO.tool_mouse_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 4)
-        rightClick_action(self.link_PO, 200, 400, self.link_PO.tool_loc, actionEl=self.link_PO.btn_zhantie_loc)
+        rightClick_action(self.link_PO, 200, 400, self.link_PO.tool_loc, actionEl=self.link_PO.btn_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_img_loc, attr='src'))
         self.assertIs(public_check(self.link_PO, self.link_PO.el_textNote_loc, islen=True), 2)

@@ -31,7 +31,7 @@ class HomeTest(unittest.TestCase):
         public_login(self.hp_PO, self.username, self.password)
         self.hp_PO.go_helpPage()
         self.hp_PO.driver.switch_to.window(self.hp_PO.driver.window_handles[1])
-        self.assertEqual('比幕鱼 - 新手教程', self.hp_PO.driver.title)
+        self.assertEqual('比幕鱼 - 新手教程-基础', self.hp_PO.driver.title)
 
     def test_userMenu(self):
         '''用户个人中心菜单打开是否正常'''

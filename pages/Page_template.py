@@ -3,6 +3,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from common.BasePage import BasePage
+from parts.tool_page import wait_tips
 from time import sleep
 
 '''
@@ -14,11 +15,12 @@ summary:模版的元素对象
 
 class TemplatePage(BasePage):
     #定位器，通过元素属性定位元素对象
+    header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
 
     el_tempImg_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>div:first-child')
-    el_divs_loc = (By.CSS_SELECTOR, '.work>div')
+    el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_searchInput_loc = (By.CSS_SELECTOR, '.searchInput.form-line')
     el_resultName_loc = (By.CLASS_NAME, 'name')
     el_secondtext_loc = (By.CLASS_NAME, 'secondtext')
@@ -45,13 +47,14 @@ class TemplatePage(BasePage):
 
     def add_temp(self):
         self.choose_template()
+        self.do_search('SWOT')
         action = ActionChains(self.driver)
         action.move_to_element(self.find_element(*self.el_tempImg_loc)).perform()
         sleep(1)
         self.find_element(*self.btn_useTemp_loc).click()
         sleep(1.5)
         action = ActionChains(self.driver)
-        action.move_to_element_with_offset(self.find_element(*self.tool_loc), 200, 20).click().perform()
+        action.move_to_element_with_offset(self.find_element(*self.header_loc), 200, 200).click().perform()
         sleep(1)
 
     def do_search(self, text):
@@ -67,6 +70,7 @@ class TemplatePage(BasePage):
         self.find_element(*self.el_job_loc).send_keys(job)
         if sb == 2: el = self.btn_submit2_loc
         self.find_element(*el).click()
+        wait_tips(self)
 
     def click_notfind(self):
         self.find_element(*self.el_notfind_loc).click()
