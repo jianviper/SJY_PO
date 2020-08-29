@@ -39,7 +39,7 @@ class TiyanTest(unittest.TestCase):
         public_check(self.tiyan_PO, self.tiyan_PO.el_codeimg_loc)
         self.assertEqual('比幕鱼 - 注册登录', self.tiyan_PO.driver.title)
 
-    def te1st_tiyan_vAndSign(self):
+    def test_tiyan_vAndSign(self):
         '''体验,点击邀请-去注册'''
         public_check(self.tiyan_PO, self.tiyan_PO.svg_loc)
         self.assertEqual('比幕鱼 - 体验', self.tiyan_PO.driver.title)
@@ -49,7 +49,7 @@ class TiyanTest(unittest.TestCase):
         public_check(self.tiyan_PO, self.tiyan_PO.el_codeimg_loc)
         self.assertEqual('比幕鱼 - 注册登录', self.tiyan_PO.driver.title)
 
-    def te1st_tiyan_jiaocheng(self):
+    def test_tiyan_jiaocheng(self):
         '''体验，教程一步一步走完'''
         public_check(self.tiyan_PO, self.tiyan_PO.svg_loc)
         self.assertEqual('比幕鱼 - 体验', self.tiyan_PO.driver.title)
@@ -63,7 +63,7 @@ class TiyanTest(unittest.TestCase):
         self.tiyan_PO.click_finish()
         self.assertFalse(self.tiyan_PO.find_element(*self.tiyan_PO.el_course_loc, waitsec=3))
 
-    def te1st_skip(self):
+    def test_skip(self):
         '''跳过教程'''
         public_check(self.tiyan_PO, self.tiyan_PO.svg_loc)
         self.tiyan_PO.click_skip()

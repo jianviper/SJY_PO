@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from parts.tool_worker import left_click
 # import pyautogui
 from time import sleep
+from selenium.webdriver import ActionChains
 
 '''
 Create on 2020-3-24
@@ -33,13 +34,16 @@ class WorkerForlder(BasePage):
     el_fTitle_loc = (By.CLASS_NAME, 'content_title2')
     el_titleInput_loc = (By.CSS_SELECTOR, '.content_title.ant-input')
     el_folderImg_loc = (By.CSS_SELECTOR, '.file_content>div>img')
+    el_line_loc = '//*[@class="work_svg"]/*[name()="svg"][2]/*[name()="line"]'
 
+    btn_bread_loc = (By.CSS_SELECTOR, '.header_crumbs.ant-breadcrumb>span:first-child>span:first-child')
     btn_fjianqie_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(1)')
     btn_fcopy_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(2)')
     btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
     btn_fdel_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(3)')
-    btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
+    btn_paste_loc = (By.CLASS_NAME, 'menu_item')
     btn_color_loc = (By.CSS_SELECTOR, '.flex_row_around.colormenu>span:nth-child(2)')
+    btn_relbtm_loc = (By.CLASS_NAME, 'relation_bottom')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
@@ -63,3 +67,14 @@ class WorkerForlder(BasePage):
 
     def get_title(self):
         return self.find_element(*self.el_fTitle_loc).text
+
+    def enter(self, index=0):  #进入文件夹
+        action = ActionChains(self.driver)
+        action.double_click(self.find_elements(*self.el_folder_loc)[index]).perform()
+        sleep(2)
+
+    def click(self, el):
+        self.find_element(*el).click()
+
+    def el_click(self, el):
+        el.click()

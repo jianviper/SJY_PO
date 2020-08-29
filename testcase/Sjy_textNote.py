@@ -37,7 +37,7 @@ class textNoteTest(unittest.TestCase):
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, step=num)  #撤销，恢复
         public_textInput(self.text_PO, self.textContent)  #点击文本便签，再输入文本
         #点击画布
-        left_click(self.text_PO, 50, -50, self.text_PO.tool_loc)
+        left_click(self.text_PO, 100, 80, self.text_PO.header_loc)
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         public_revoke(self.text_PO, type='input', step=num)
         # self.text_PO.driver.refresh()
@@ -45,7 +45,7 @@ class textNoteTest(unittest.TestCase):
         # self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)  #多选
-        rightClick_action(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_del_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_del_loc)
         #是否删除成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='del', step=num)
@@ -76,7 +76,7 @@ class textNoteTest(unittest.TestCase):
         tiyan(self.text_PO)
         self.addAndDel(2)
 
-    def shear(self, num):
+    def cut(self, num):
         #剪切，粘贴
         public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
@@ -85,38 +85,38 @@ class textNoteTest(unittest.TestCase):
         poi_src = public_getElPosition(self.text_PO, self.text_PO.el_textNote_loc)
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)  #多选
-        rightClick_action(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_jianqie_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_jianqie_loc)
         #检查是否剪切成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         left_click(self.text_PO, 500, 200, self.text_PO.header_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
         self.assertIs(public_check(self.text_PO, self.text_PO.el_divs_loc, islen=True), 0)
-        rightClick_action(self.text_PO, actionEl=self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, actionEl=self.text_PO.btn_zhantie_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         poi_dst = public_getElPosition(self.text_PO, self.text_PO.el_textNote_loc)
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
-    def test_shear(self):
+    def test_cut(self):
         '''剪切，粘贴'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
-        self.shear(1)
+        self.cut(1)
         public_delProject(self.text_PO, self.home_url)
 
-    def test_ty_shear(self):
+    def test_ty_cut(self):
         '''体验模式-剪切，粘贴'''
         tiyan(self.text_PO)
-        self.shear(1)
+        self.cut(1)
 
-    def test_multiShear(self):
+    def test_multicut(self):
         '''多选剪切，粘贴'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
-        self.shear(2)
+        self.cut(2)
         public_delProject(self.text_PO, self.home_url)
 
-    def test_ty_multiShear(self):
+    def test_ty_multicut(self):
         '''体验模式-多选剪切，粘贴'''
         tiyan(self.text_PO)
-        self.shear(2)
+        self.cut(2)
 
     def tes1t_drag(self):
         '''拖动到文件夹内'''
@@ -144,9 +144,9 @@ class textNoteTest(unittest.TestCase):
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)
         #右键-复制
-        rightClick_action(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_copy_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_copy_loc)
         #右键-粘贴
-        rightClick_action(self.text_PO, 450, 10, self.text_PO.el_textNote_loc, self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, 450, 10, self.text_PO.el_textNote_loc, self.text_PO.btn_zhantie_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num * 2)
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='copy', num=num)
@@ -154,7 +154,7 @@ class textNoteTest(unittest.TestCase):
         self.text_PO.driver.get(self.home_url)
         public_createProject(self.text_PO, '[copy]' + self.projectName)
         public_intoProject(self.text_PO)
-        rightClick_action(self.text_PO, 500, 10, self.text_PO.tool_loc, self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, 500, 10, self.text_PO.tool_loc, self.text_PO.btn_zhantie_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc)

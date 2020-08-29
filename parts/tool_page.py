@@ -19,9 +19,9 @@ def forlder_title():  #生成文件夹标题
 
 
 def wait_tips(PO, el=None):
-    loginTips_loc = (By.CSS_SELECTOR, '.ant-message>span>.ant-message-notice')
+    Tips_loc = (By.CSS_SELECTOR, '.ant-message>span>.ant-message-notice')
 
-    i, ele = 0, loginTips_loc
+    i, ele = 0, Tips_loc
     if el:
         ele = el
     # print('wait_tips')
@@ -94,7 +94,7 @@ def public_intoProject(PO, el=None):
     assert PO.find_element(*work_tool, waitsec=5)
 
 
-def public_delProject(PO, home_url, flag=True):
+def public_delProject(PO, home_url=None, flag=True):
     '''公用删除项目'''
     if not flag:
         return
@@ -105,7 +105,8 @@ def public_delProject(PO, home_url, flag=True):
     inputProjectName_loc = (By.CSS_SELECTOR, '.form_item>input[type=text]')
     delSubmitButton_loc = (By.CSS_SELECTOR, '.add_footer>.sure-btn.submit-info')
 
-    PO.driver.get(home_url)
+    if home_url:
+        PO.driver.get(home_url)
     PO.find_element(*lastProjectMenu_loc).click()
     PO.find_element(*delMenuButton_loc).click()
     PO.find_element(*inputProjectName_loc).send_keys(PO.find_element(*delProjectName_loc).text)
@@ -133,7 +134,7 @@ def bind(PO):  #绑定弹窗
         PO.find_element(*btn_closeBind_loc).click()
 
 
-def public_check(PO, el, text=None, islen=False, attr=None):
+def public_check(PO, el, text=None, islen=False, attr=None, **kwargs):
     '''公用检查方法，检查元素的文本是否一致，元素是否存在，元素的个数'''
     if text:
         if PO.find_elements(*el, waitsec=3, check='【check】'):
@@ -142,22 +143,27 @@ def public_check(PO, el, text=None, islen=False, attr=None):
                     return False
             return True
     elif islen:  #返回个数
-        result = PO.find_elements(*el, waitsec=3, check='【check】')
-        if result:
-            return len(result)
+        if kwargs.get('driver'):
+            sleep(3)
+            return len(PO.driver.find_elements_by_xpath(el))
         else:
-            return 0
+            return len(PO.find_elements(*el, waitsec=3, check='【check】'))
     elif attr:  #检查是否有属性值
         return get_attrs(PO, el, attr)
     else:
-        return PO.find_element(*el, waitsec=5, check='【check】')
+        if kwargs.get("driver"):
+            sleep(3)
+            return PO.driver.find_element_by_xpath(el)
+        else:
+            return PO.find_element(*el, waitsec=5, check='【check】')
 
 
 def public_tearDown(PO, url, hurl, username, password):
     if PO.driver.title == '比幕鱼 - 体验': return True
     if PO.driver.title == '比幕鱼 - 注册登录':
         public_login(PO, username, password)
-    PO.driver.get(hurl)
+    if PO.driver.title != '比幕鱼 - 白板列表':
+        PO.driver.get(hurl)
     if public_check(PO, (By.CLASS_NAME, 'item_text'), islen=True) > 2:
         public_delProject(PO, hurl, flag=True)
 

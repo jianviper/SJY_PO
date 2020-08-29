@@ -25,6 +25,7 @@ class WorkerPage(BasePage):
     msg_loc = (By.CLASS_NAME, 'message_img')
     headless_multiImg_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
     headless_img_loc = (By.CSS_SELECTOR, '.home_content.clearfix>div:nth-child(2)')
+    code_image_loc = (By.CLASS_NAME, 'code_image')
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
@@ -45,8 +46,9 @@ class WorkerPage(BasePage):
     el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>img')  #图片
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
     el_trashEL_loc = (By.CSS_SELECTOR, '.item_list>li')
-    el_linkPoint_loc = (By.CLASS_NAME, 'relation_bottom')
     el_temp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>div:first-child')
+    el_shareUrl_loc = (By.ID, 'shareUrl')
+    el_file_loc = (By.CSS_SELECTOR, '.work_wps.work_element')
 
     btn_imgupload_loc = (By.CLASS_NAME, 'box_img')
     btn_imgCut_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(1)')
@@ -65,6 +67,8 @@ class WorkerPage(BasePage):
     btn_skip_loc = (By.CLASS_NAME, 'button_skip')
     btn_revoke_loc = (By.CSS_SELECTOR, '.actionImg.backImg')
     btn_recovery_loc = (By.CSS_SELECTOR, '.actionImg.restImg')
+    btn_userout_loc = (By.CLASS_NAME, 'userout')
+    btn_relbtm_loc = (By.CLASS_NAME, 'relation_bottom')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
@@ -120,3 +124,9 @@ class WorkerPage(BasePage):
 
     def get_textContent(self):
         return self.find_element(*self.el_textContent_loc).text
+
+    def click(self, el):
+        self.find_element(*el).click()
+
+    def get_value(self, el):  #获取文本值
+        return self.find_element(*el).get_attribute('value')

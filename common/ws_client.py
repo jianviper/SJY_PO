@@ -15,11 +15,22 @@ def ws_creatClient(token, canvasId):
     return ws
 
 
-def ws_add(PO, type, poix, poiy, **kwargs):
+def ws_creat(PO):
     token = get_token(PO)
     url = PO.driver.current_url
     canvasId = re.search(r'(id=)\d+', url).group().split('=')[1]
-    ws = ws_creatClient(token, canvasId)
+    url = get('websocket', 'ws')
+    wsUrl = url + '?token={0}&canvasId={1}'.format(token, canvasId)
+    ws = create_connection(wsUrl)
+    return ws
+
+
+def ws_add(PO, type, poix, poiy, **kwargs):
+    # token = get_token(PO)
+    url = PO.driver.current_url
+    canvasId = re.search(r'(id=)\d+', url).group().split('=')[1]
+    # ws = ws_creatClient(token, canvasId)
+    ws = kwargs.get('ws')
     img_url = ["https://hetao-note.oss-cn-hangzhou.aliyuncs.com/16217/5CxWGwys5aZdEwTfaNrFzTmx2pcz2njp.png",
                "https://hetao-note.oss-cn-hangzhou.aliyuncs.com/16217/cm3ANpMCi36zsBe8kb6bacdsPEsZCyrH.jpg",
                "https://hetao-note.oss-cn-hangzhou.aliyuncs.com/16217/s5X2dCphQkzc3WPtrBSix5cxjt4W776K.png",
@@ -36,7 +47,8 @@ def ws_add(PO, type, poix, poiy, **kwargs):
         #组织发送数据,根据类型加入数据
         if type == "TEXT_LABEL_ADD":
             utime = time.strftime('%Y-%m-%d %H:%M:%S')
-            send_msg.update({"type": "TEXT_LABEL_ADD", "content": 'AutoTestContent-{0}'.format(utime)})
+            send_msg.update(
+                {"type": "TEXT_LABEL_ADD", "content": 'AutoTestContent-{0}'.format(utime), "poiW": 350, "poiH": 60})
         elif type == "IMAGE_LABEL_ADD":
             send_msg.update({"type": "IMAGE_LABEL_ADD",
                              "img": img_url[random.randint(0, 3)],
@@ -48,10 +60,19 @@ def ws_add(PO, type, poix, poiy, **kwargs):
             send_msg.update({"type": "CANVAS_ADD",
                              "name": "标题",
                              "bgColor": color_list[random.randint(0, 4)]})
+        elif type == 'FILE_LABEL_ADD':
+            fileId = None
+            if 'test' in url:
+                fileId = '32486103420375040'
+            elif 'app' in url:
+                fileId = '32543435433054208'
+            send_msg = {"type": "FILE_LABEL_ADD", "id": get_ID(PO), "fileId": fileId, "poiX": poix,
+                        "poiY": poiy, "title": "websocket.docx"}
         # print(send_msg)
+        # print('{0}__send_msg:{1}'.format(type, send_msg))
         ws.send(json.dumps(send_msg))  #执行发送
-    finally:
-        ws.close()
+    except BaseException as e:
+        print(e)
 
 
 def WSupload_img(PO, el, attr_name):
@@ -141,6 +162,8 @@ def create_apiUrl(PO):
     api_url = "http://{0}:8080/hetaoNoteApi/app/".format(host)
     if host == 'app.bimuyu.tech':
         api_url = 'https://api.hetaonote.com:8080/hetaoNoteApi/app/'
+    elif host == 'pre.bimuyu.tech':
+        api_url = 'http://pre.api.bimuyu.tech/hetaoNoteApi/app/'
     return api_url
 
 

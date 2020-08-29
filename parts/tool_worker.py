@@ -2,7 +2,7 @@
 #coding:utf-8
 from parts.tool_page import *
 from selenium.webdriver.common.action_chains import ActionChains
-from common.ws_client import ws_add
+from common.ws_client import ws_add, ws_creat
 import pyautogui, os
 
 
@@ -53,7 +53,12 @@ def get_selectPosition(PO, el):
 
 
 def selection(PO, el):
-    '''根据需求多选元素'''
+    '''
+    根据需求多选元素
+    :param PO:
+    :param el: 要选择的元素，可以是列表
+    :return:
+    '''
     sleep(1)
     action = ActionChains(PO.driver)
     SP = get_selectPosition(PO, el)
@@ -67,7 +72,15 @@ def selection(PO, el):
 
 
 def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
-    '''登录，新建项目，进入项目添加工具'''
+    '''
+    登录，新建项目，进入项目添加工具
+    :param PO:
+    :param toolEL: 左侧工具栏的工具按钮
+    :param checkEL: 添加后生成的元素
+    :param num: 添加的元素数量
+    :param kwargs: 可传参数x，y设置初始位置
+    :return:
+    '''
     x, y, margin, height = 200, 150, 0, 0  #初始位置
     header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
     if kwargs.get('x') and kwargs.get('y'):
@@ -84,30 +97,53 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
 
 
 def public_add(PO, els, **kwargs):
-    '''通过websocket添加元素'''
-    #els的格式:[("text",1),("img",2),("folder",2)]
+    '''
+    通过websocket添加元素
+    :param PO:
+    :param els: 需要添加的元素，格式:[("t",1),("i",2),("f",2)]
+    t:文本便签，i：图片便签，f：文件夹，file：文件
+    :param kwargs: 可传入x，y设置初始位置
+    :return:
+    '''
     x, y, margin, height = kwargs.get('x', 200), kwargs.get('y', 150), 50, 0  #初始位置
     type = None
-    for el in els:
-        el_height = 0
-        #根据类型设置元素高度
-        if el[0] == "t":
-            type = "TEXT_LABEL_ADD"
-            el_height = 60
-        elif el[0] == "i":
-            type = "IMAGE_LABEL_ADD"
-            el_height = 150
-        elif el[0] == 'f':
-            type = "CANVAS_ADD"
-            el_height = 100
-        for i in range(el[1]):
-            ws_add(PO, type, x, y)
-            y = y + el_height + margin
-            sleep(1)
+    ws = None
+    try:
+        ws = ws_creat(PO)
+        for el in els:
+            el_height = 0
+            #根据类型设置元素高度
+            if el[0] == "t":
+                type = "TEXT_LABEL_ADD"
+                el_height = 60
+            elif el[0] == "i":
+                type = "IMAGE_LABEL_ADD"
+                el_height = 150
+            elif el[0] == 'f':
+                type = "CANVAS_ADD"
+                el_height = 100
+            elif el[0] == 'file':
+                type = 'FILE_LABEL_ADD'
+                el_height = 110
+            for i in range(el[1]):
+                ws_add(PO, type, x, y, ws=ws)
+                y = y + el_height + margin
+                sleep(1)
+    except BaseException as e:
+        print(e)
+    finally:
+        ws.close()
 
 
 def left_click(PO, x=0, y=0, el=None):
-    '''左键点击，可以指定元素及相对位置进行'''
+    '''
+    左键点击，可以指定元素及相对位置进行
+    :param PO:
+    :param x: x偏移量
+    :param y: y偏移量
+    :param el: 在哪个元素上左键点击
+    :return:
+    '''
     # print('x:{0},y:{1}'.format(x, y))
     action = ActionChains(PO.driver)
     if x and y and el:  #在指定元素的相对位置
@@ -121,8 +157,16 @@ def left_click(PO, x=0, y=0, el=None):
     sleep(1.5)
 
 
-def rightClick_action(PO, x=0, y=0, el=None, actionEl=None):
-    '''右键点击,可以指定元素及其相对位置，也可右键菜单操作'''
+def rightClick(PO, x=0, y=0, el=None, actionEl=None):
+    '''
+    右键点击,可以指定元素及其相对位置，也可右键菜单操作
+    :param PO:
+    :param x: x偏移量
+    :param y: y偏移量
+    :param el: 在哪个元素上右键点击
+    :param actionEl: 右键菜单的选项
+    :return:
+    '''
     action = ActionChains(PO.driver)
     if x and y and el:  #在指定元素的相对位置
         if el == (By.CLASS_NAME, 'menu_item'):
@@ -136,6 +180,12 @@ def rightClick_action(PO, x=0, y=0, el=None, actionEl=None):
     if actionEl:
         PO.find_element(*actionEl).click()
         sleep(1.5)
+
+
+def double_click(PO, el):
+    #双击元素
+    action = ActionChains(PO.driver)
+    action.double_click(PO.find_element(*el)).perform()
 
 
 def click_trash(PO):  #打开废纸篓
@@ -158,18 +208,39 @@ def recovery(PO):
     PO.find_element(*tool_mouse_loc).click()
 
 
-def elDrag(PO, start, end):  #拖动元素到某个元素上
+def elDrag(PO, el=None, start=None, end=None):
+    '''
+    按住某个元素拖动，根据el决定是否拖动到空白处还是某个元素上
+    :param PO:
+    :param el: 指定从这个元素上拉出关联线
+    :param start: 开始元素，有传el代表offset_x
+    :param end: 结束元素，有传el代表offset_y
+    :return:
+    '''
     sleep(1)
     action = ActionChains(PO.driver)
-    print("aaaaa")
-    action.drag_and_drop(PO.find_element(*start), PO.find_element(*end)).perform()
+    if el:
+        action.drag_and_drop_by_offset(PO.find_element(*el), start, end).perform()
+    else:
+        action.drag_and_drop(PO.find_element(*start), PO.find_element(*end)).perform()
     sleep(1)
-    # left_click(PO, 200, -200, end)
-    # sleep(2)
-    # action.move_by_offset(30, 0).release().perform()
-    # action.drag_and_drop_by_offset(PO.find_element(*start),50,0).perform()
 
 
+def elDragforLine(PO, start=None, end=None):
+    '''
+    两个元素之间新建关联线
+    :param PO:
+    :param start: 起始元素的关联线节点
+    :param end: 终止元素
+    :return:
+    '''
+    sleep(1)
+    action = ActionChains(PO.driver)
+    action.drag_and_drop(PO.find_element(*start), end).perform()
+    sleep(1)
+
+
+'''
 def drag_and_drop(PO):
     PO.driver.set_script_timeout(20)
     jq_url = 'https://libs.baidu.com/jquery/2.1.4/jquery.min.js'
@@ -184,7 +255,7 @@ def drag_and_drop(PO):
     print('gogogo')
     PO.driver.execute_script(
         drag_and_drop_js + '$(".relation_bottom").simulateDragDrop({"dropTarget":".img"});')
-
+'''
 
 def public_textInput(PO, text):
     #文本便签利用JS进行赋值
@@ -201,8 +272,9 @@ def public_textInput(PO, text):
     PO.driver.execute_script(jss)
     if len(PO.find_elements(*PO.el_textNote_loc)) > 0:
         header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
-        for e in PO.find_elements(*PO.el_textNote_loc):
-            e.click()
+        action = ActionChains(PO.driver)
+        for e in PO.find_elements(*PO.el_textNoteText_loc):
+            action.double_click(e).perform()
             sleep(1)
             left_click(PO, 50, 100, header_loc)
 
@@ -230,7 +302,13 @@ def do_recovery(PO, step=1):
 
 
 def public_revoke(PO, el=None, **kwargs):
-    '''撤销，恢复'''
+    '''
+    撤销，恢复
+    :param PO:
+    :param el: 被撤销和恢复的元素
+    :param kwargs: 可传参数type:操作类型，step:撤销和恢复的步数
+    :return:
+    '''
     if kwargs.get('type') == 'input':  #文本便签的输入
         el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
         do_revoke(PO, kwargs.get('step', 1))  #撤销

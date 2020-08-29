@@ -17,12 +17,9 @@ class BasePage(object):
     '''
 
     def __init__(self, brower_name='chrome', base_url=''):
-        logger = logging.getLogger()
-        logging.basicConfig(level=logging.DEBUG,
+        # logger = logging.getLogger()
+        logging.basicConfig(level=logging.INFO,
                             format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
-        console = logging.StreamHandler()
-        console.setLevel(logging.INFO)
-
         self.baseurl = base_url
         #供选择浏览器，默认谷歌
         BS = BrowerSet(brower_name)
@@ -54,6 +51,7 @@ class BasePage(object):
             return self.driver.find_elements(*loc)
         except:
             print(u"%s%s 页面中未找到%s元素" % (check, self, loc))
+            return []
 
     #重写定义send_keys方法
     def send_keys(self, loc, value, clear_first=True, click_first=True):

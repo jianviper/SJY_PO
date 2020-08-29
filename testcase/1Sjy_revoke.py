@@ -98,15 +98,15 @@ class RevokeTest(unittest.TestCase):
         cut = self.createNote(tool, el)
         #获取元素初始位置
         poi_src = public_getElPosition(self.revoke_PO, el)[0]
-        rightClick_action(self.revoke_PO, el=el, actionEl=cut)
+        rightClick(self.revoke_PO, el=el, actionEl=cut)
         #检查剪切是否成功
         self.assertFalse(public_check(self.revoke_PO, el))
         #剪切后左键点击画布，检查是否会有文件夹多出（BUG点）
         left_click(self.revoke_PO, 50, 100, el=self.revoke_PO.header_loc)
         self.assertIs(public_check(self.revoke_PO, self.revoke_PO.el_divs_loc, islen=True), 0)
         #在指定位置粘贴-------------------
-        rightClick_action(self.revoke_PO, 700, 200, self.revoke_PO.header_loc,
-                          actionEl=self.revoke_PO.btn_paste_loc)
+        rightClick(self.revoke_PO, 700, 200, self.revoke_PO.header_loc,
+                   actionEl=self.revoke_PO.btn_paste_loc)
         self.assertTrue(public_check(self.revoke_PO, el))
         #获取元素剪切粘贴后的位置
         poi_dst = public_getElPosition(self.revoke_PO, el)[0]

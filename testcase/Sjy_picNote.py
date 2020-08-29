@@ -36,7 +36,7 @@ class ImgNoteTest(unittest.TestCase):
         public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, step=num)
         if num > 1:
             selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick_action(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgDel_loc)
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgDel_loc)
         #是否删除成功
         self.assertFalse(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc))
         public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='del')
@@ -67,43 +67,43 @@ class ImgNoteTest(unittest.TestCase):
         tiyan(self.pic_PO)
         self.Del(2)
 
-    def shear(self, num):
+    def cut(self, num):
         public_add(self.pic_PO, [('i', num)])
         self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_img_loc, attr='src'))
         poi_src = public_getElPosition(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         if num > 1:
             selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)  #多选，下一步进行剪切
-        rightClick_action(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgCut_loc)
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgCut_loc)
         #检查是否剪切成功
         self.assertFalse(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc))
         left_click(self.pic_PO, 200, 50, el=self.pic_PO.tool_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
         self.assertIs(public_check(self.pic_PO, self.pic_PO.el_divs_loc, islen=True), 0)
-        rightClick_action(self.pic_PO, actionEl=self.pic_PO.btn_Paste_loc)
+        rightClick(self.pic_PO, actionEl=self.pic_PO.btn_Paste_loc)
         self.assertIs(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc, islen=True), num)
         poi_dst = public_getElPosition(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
-    def test_shear(self):
+    def test_cut(self):
         '''单张剪切/粘贴'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.shear(1)
+        self.cut(1)
         public_delProject(self.pic_PO, self.home_url)
 
-    def test_ty_shear(self):
+    def test_ty_cut(self):
         '''体验模式-单张剪切/粘贴'''
         tiyan(self.pic_PO)
-        self.shear(1)
+        self.cut(1)
 
-    def test_multiShear(self):
+    def test_multicut(self):
         '''多选剪切，粘贴'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.shear(2)
+        self.cut(2)
 
-    def test_ty_multiShear(self):
+    def test_ty_multicut(self):
         '''体验模式-多选剪切，粘贴'''
         tiyan(self.pic_PO)
-        self.shear(2)
+        self.cut(2)
 
     def tes1t_drag(self):
         '''拖动到文件夹内'''
@@ -125,7 +125,7 @@ class ImgNoteTest(unittest.TestCase):
         '''旋转图片'''
         public_add(self.pic_PO, [('i', 1)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick_action(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgRorate_loc)
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgRorate_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         self.assertTrue(size1[0]['height'] == size2[0]['width'])
         self.assertTrue(size2[0]['height'] == size1[0]['width'])
@@ -144,7 +144,7 @@ class ImgNoteTest(unittest.TestCase):
         public_add(self.pic_PO, [('i', 2)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick_action(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgMRorate_loc)
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgMRorate_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         for i in range(size1.__len__()):
             self.assertTrue(size1[i]['width'] == size2[i]['height'])
@@ -163,7 +163,7 @@ class ImgNoteTest(unittest.TestCase):
         '''原图尺寸'''
         public_add(self.pic_PO, [('i', 1)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick_action(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgOrigin_loc)
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgOrigin_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         self.assertTrue(size1[0]['width'] < size2[0]['width'])
         self.assertTrue(size1[0]['height'] < size2[0]['height'])
@@ -182,7 +182,7 @@ class ImgNoteTest(unittest.TestCase):
         public_add(self.pic_PO, [('i', 2)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick_action(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgMOrigin_loc)
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, actionEl=self.pic_PO.btn_imgMOrigin_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         for i in range(size1.__len__()):
             self.assertTrue(size1[i]['width'] < size2[i]['width'])
