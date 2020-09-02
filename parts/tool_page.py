@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-from time import sleep, strftime, localtime
+from time import sleep, strftime, localtime, time
 from selenium.webdriver.common.by import By
 from common.create_UUID import create_uuid
 import re, requests
@@ -114,18 +114,23 @@ def public_delProject(PO, home_url=None, flag=True):
     sleep(1)
 
 
-def update_log(PO):  #更新日志弹窗
+def update_log(PO, skip=True):  #更新日志弹窗
     update_log_loc = (By.CLASS_NAME, 'log_content')
     el_item_loc = (By.CLASS_NAME, 'box_item')
-    btn_close_loc = (By.CLASS_NAME, 'header_close')
+    btn_close_loc = (By.CSS_SELECTOR, '.content_header>.header_close')
     btn_more_loc = (By.CLASS_NAME, 'box_more')
 
     if PO.find_element(*update_log_loc, waitsec=3):
-        PO.find_element(*btn_more_loc).click()
-        sleep(2)
-        assert public_check(PO, el_item_loc, islen=True) > 1
-        PO.find_element(*btn_close_loc).click()
-        sleep(1)
+        if skip:  #直接关闭日志
+            # p_time = strftime("%Y-%m-%d-%H_%M_%S", localtime(time()))
+            # PO.driver.get_screenshot_as_file('E:\\python\\project\\SJY_PO\\screen\\{0}.jpg'.format(p_time))
+            PO.find_element(*btn_close_loc).click()
+        else:  #测试下加载更多
+            PO.find_element(*btn_more_loc).click()
+            sleep(2)
+            assert public_check(PO, el_item_loc, islen=True) > 1
+            PO.find_element(*btn_close_loc).click()
+            sleep(1)
 
 
 def bind(PO):  #绑定弹窗
@@ -202,7 +207,11 @@ def tiyan(PO):  #进入体验模式
         PO.find_element(*tiyan_loc).click()
     else:
         # url = quickReg(PO, host)
+        print(PO.driver.title)
+        count = 0
         while (PO.driver.title not in ['比幕鱼 - 体验', '比幕鱼 - 体验项目']):
+            if count > 3: raise Exception('go to tiyan fail!')
+            count += 1
             url = 'http://{0}/login?uuid={1}'.format(host, create_uuid())
             PO.driver.get(url)
             sleep(3)

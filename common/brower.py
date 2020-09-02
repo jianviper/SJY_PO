@@ -27,8 +27,9 @@ class BrowerSet(object):
         if self.bn == 'chrome':
             options = webdriver.ChromeOptions()
             options.add_argument('lang=zh_CN.UTF-8')
-            options.add_argument('--headless')
+            options.add_argument('--headless')  #无界面浏览器
             options.add_argument('--disable-gpu')
+            options.add_argument("--window-size=1920,1080")  #设置浏览器宽高
             # options.add_argument('blink-settings=imagesEnabled=false')
             # mobileEmulation = {'deviceName': self.mobileEmulations}
             # options.add_experimental_option('mobileEmulation', mobileEmulation)

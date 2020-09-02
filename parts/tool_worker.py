@@ -272,8 +272,9 @@ def public_textInput(PO, text):
     PO.driver.execute_script(jss)
     if len(PO.find_elements(*PO.el_textNote_loc)) > 0:
         header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
+        el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
         action = ActionChains(PO.driver)
-        for e in PO.find_elements(*PO.el_textNoteText_loc):
+        for e in PO.find_elements(el_textContent_loc):
             action.double_click(e).perform()
             sleep(1)
             left_click(PO, 50, 100, header_loc)
@@ -351,7 +352,7 @@ def public_revoke(PO, el=None, **kwargs):
         assert public_getAttrs(PO, el, 'src')[0] == kwargs.get('src')
         do_recovery(PO, kwargs.get('step', 1))
         assert public_getAttrs(PO, el, 'src')[0] == kwargs.get('dst')
-    else:
+    else:  #元素添加的撤销和恢复
         do_revoke(PO, kwargs.get('step', 1))
         assert public_check(PO, el) == None
         do_recovery(PO, kwargs.get('step', 1))
