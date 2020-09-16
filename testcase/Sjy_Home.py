@@ -38,42 +38,32 @@ class HomeTest(unittest.TestCase):
         public_login(self.hp_PO, self.username, self.password)
         self.hp_PO.go_userMenu()
         self.assertTrue(self.hp_PO.check_userMenu())
+        self.assertTrue(self)
 
-    def test_createProject(self):
-        '''正常创建项目测试'''
+    def test_updateLog(self):
+        '''打开更新日志，是否有内容'''
         public_login(self.hp_PO, self.username, self.password)
-        self.hp_PO.createProject(self.projectName)
-        self.assertEqual(self.projectName, self.hp_PO.get_lastProjectName())
-        sleep(2)
+        self.hp_PO.go_userMenu()
+        self.hp_PO.click_updateLog()
+        self.assertTrue(public_check(self.hp_PO, self.hp_PO.log_loc))
+        self.assertTrue(public_check(self.hp_PO, self.hp_PO.log_title_loc))
 
     def test_projectNameRename(self):
         '''项目名称重命名'''
         public_login(self.hp_PO, self.username, self.password)
-        while self.hp_PO.get_projectNum() == 0:
-            self.hp_PO.createProject(self.projectName)  #新建项目
-            self.assertEqual(self.projectName, self.hp_PO.get_lastProjectName())
-            self.hp_PO.driver.refresh()
-            sleep(1)
-        self.hp_PO.click_lastProjectMenu()
-        self.hp_PO.click_renameButton()
-        self.hp_PO.input_projectName("[rename]" + self.projectName)
+        public_createProject(self.hp_PO, self.projectName)
+        self.assertEqual(self.projectName, self.hp_PO.get_ProjectName(self.hp_PO.firstProName_loc))
+        self.hp_PO.click_firstProjectMenu()
+        self.hp_PO.input_projectName("[rename]" + self.projectName[8:])
         self.hp_PO.click_CRDSubmit()
-        self.assertEqual("[rename]" + self.projectName, self.hp_PO.get_lastProjectName())
+        self.assertEqual("[rename]" + self.projectName[8:], self.hp_PO.get_ProjectName(self.hp_PO.firstProName_loc))
         self.assertEqual('修改成功', self.hp_PO.get_tips())
 
     def test_delProject(self):
         '''删除项目'''
         public_login(self.hp_PO, self.username, self.password)
-        # self.HomePage.driver.switch_to.window(self.HomePage.driver.window_handles[0])
-        while self.hp_PO.get_projectNum() == 0:
-            self.hp_PO.createProject(self.projectName)  #新建项目
-            self.assertEqual(self.projectName, self.hp_PO.get_lastProjectName())
-            self.hp_PO.driver.refresh()
-            sleep(1)
-        self.hp_PO.click_lastProjectMenu()
-        self.hp_PO.click_delButton()
-        self.hp_PO.input_projectName(d=True)
-        self.hp_PO.click_CRDSubmit()
+        public_createProject(self.hp_PO, self.projectName)
+        self.hp_PO.go_del()
         self.assertEqual('删除成功', self.hp_PO.get_tips())
 
 

@@ -5,6 +5,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from common.ws_client import ws_add, ws_creat
 import pyautogui, os
 
+'''
+summary:画布页面的公用方法
+'''
+
+header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
+
 
 def public_getElSize(PO, el):  #获取元素的尺寸
     '''{"height":100,"width":200}'''
@@ -15,13 +21,17 @@ def public_getElSize(PO, el):  #获取元素的尺寸
         return p_list
 
 
-def public_getElPosition(PO, el):  #获取元素位置
+def public_getElPosition(PO, el, **kwargs):  #获取元素位置
     '''{"x":222,"y":333}'''
-    p_list = []
-    if PO.find_elements(*el):
-        for e in PO.find_elements(*el):
-            p_list.append(e.location)
-        return p_list
+    if kwargs.get('driver'):
+        find = PO.driver.find_elements_by_css_selector(el)
+    else:
+        find = PO.find_elements(*el)
+    if find:
+        poi_list = []
+        for e in find:
+            poi_list.append(e.location)
+        return poi_list
 
 
 def public_getAttrs(PO, el, attr_name):
@@ -33,7 +43,7 @@ def public_getAttrs(PO, el, attr_name):
         return idList
 
 
-def get_selectPosition(PO, el):
+def _get_selectPosition(PO, el):
     #获取设置指定元素的选取范围
     x, y = [], []
     if type(el) == list and len(el) > 0:
@@ -61,7 +71,7 @@ def selection(PO, el):
     '''
     sleep(1)
     action = ActionChains(PO.driver)
-    SP = get_selectPosition(PO, el)
+    SP = _get_selectPosition(PO, el)
     print("selectPoi:{0}".format(SP))
     header = (By.CLASS_NAME, 'header_fix')
     action.move_to_element_with_offset(PO.find_element(*header), SP[0][0], SP[0][1])
@@ -82,7 +92,7 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
     :return:
     '''
     x, y, margin, height = 200, 150, 0, 0  #初始位置
-    header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
+    # header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
     if kwargs.get('x') and kwargs.get('y'):
         x, y = kwargs.get('x', 200), kwargs.get('y', 10)
     for i in range(num):
@@ -112,7 +122,7 @@ def public_add(PO, els, **kwargs):
         ws = ws_creat(PO)
         for el in els:
             el_height = 0
-            #根据类型设置元素高度
+            #根据类型设置ws请求类型和元素高度
             if el[0] == "t":
                 type = "TEXT_LABEL_ADD"
                 el_height = 60
@@ -126,9 +136,10 @@ def public_add(PO, els, **kwargs):
                 type = 'FILE_LABEL_ADD'
                 el_height = 110
             for i in range(el[1]):
-                ws_add(PO, type, x, y, ws=ws)
+                ws_add(PO, type, x, y, ws=ws)  #请求websocket
                 y = y + el_height + margin
                 sleep(1)
+        PO.driver.refresh()
     except BaseException as e:
         print(e)
     finally:
@@ -226,20 +237,6 @@ def elDrag(PO, el=None, start=None, end=None):
     sleep(1)
 
 
-def elDragforLine(PO, start=None, end=None):
-    '''
-    两个元素之间新建关联线
-    :param PO:
-    :param start: 起始元素的关联线节点
-    :param end: 终止元素
-    :return:
-    '''
-    sleep(1)
-    action = ActionChains(PO.driver)
-    action.drag_and_drop(PO.find_element(*start), end).perform()
-    sleep(1)
-
-
 '''
 def drag_and_drop(PO):
     PO.driver.set_script_timeout(20)
@@ -257,6 +254,7 @@ def drag_and_drop(PO):
         drag_and_drop_js + '$(".relation_bottom").simulateDragDrop({"dropTarget":".img"});')
 '''
 
+
 def public_textInput(PO, text):
     #文本便签利用JS进行赋值
     js = '''
@@ -271,7 +269,7 @@ def public_textInput(PO, text):
         ''' % text
     PO.driver.execute_script(jss)
     if len(PO.find_elements(*PO.el_textNote_loc)) > 0:
-        header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
+        # header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
         el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
         action = ActionChains(PO.driver)
         for e in PO.find_elements(el_textContent_loc):
@@ -280,7 +278,7 @@ def public_textInput(PO, text):
             left_click(PO, 50, 100, header_loc)
 
 
-def do_revoke(PO, step=1):
+def do_revoke(PO, step=1):  #撤销
     btn_revoke_loc = (By.CSS_SELECTOR, '.actionImg.backImg')
     sleep(1)
     step = step
@@ -291,7 +289,7 @@ def do_revoke(PO, step=1):
             sleep(1)
 
 
-def do_recovery(PO, step=1):
+def do_recovery(PO, step=1):  #恢复
     btn_recovery_loc = (By.CSS_SELECTOR, '.actionImg.restImg')
     sleep(1)
     step = step
@@ -326,21 +324,31 @@ def public_revoke(PO, el=None, **kwargs):
     elif kwargs.get('type') == 'cut':  #元素剪切
         do_revoke(PO, kwargs.get('step', 1))
         if len(kwargs.get('poi_src')) > 1:  #当有多个元素的时候
-            for poi in public_getElPosition(PO, el):
-                assert poi in kwargs.get('poi_src')
+            poi = public_getElPosition(PO, el, driver=kwargs.get('driver'))
+            assert len(kwargs.get('poi_src')) == len(poi)
+            for p in poi:
+                assert p in kwargs.get('poi_src')
         else:
-            assert public_getElPosition(PO, el) == kwargs.get('poi_src')
+            assert public_getElPosition(PO, el, driver=kwargs.get('driver')) == kwargs.get('poi_src')
         do_recovery(PO, kwargs.get('step', 1))
         if len(kwargs.get('poi_dst')) > 1:  #当有多个元素的时候
-            for poi in public_getElPosition(PO, el):
-                assert poi in kwargs.get('poi_dst')
+            poi = public_getElPosition(PO, el, driver=kwargs.get('driver'))
+            assert len(kwargs.get('poi_dst')) == len(poi)
+            for p in poi:
+                assert p in kwargs.get('poi_dst')
         else:
-            assert public_getElPosition(PO, el) == kwargs.get('poi_dst')
+            assert public_getElPosition(PO, el, driver=kwargs.get('driver')) == kwargs.get('poi_dst')
     elif kwargs.get('type') == 'copy':  #元素复制
         do_revoke(PO, kwargs.get('step', 1))
-        assert len(PO.find_elements(*el)) == kwargs.get('num')
+        if kwargs.get('driver'):
+            assert len(PO.driver.find_elements_by_css_selector(el)) == kwargs.get('num')
+        else:
+            assert len(PO.find_elements(*el)) == kwargs.get('num')
         do_recovery(PO, kwargs.get('step', 1))
-        assert len(PO.find_elements(*el)) == kwargs.get('num') * 2
+        if kwargs.get('driver'):
+            assert len(PO.driver.find_elements_by_css_selector(el)) == kwargs.get('num') * 2
+        else:
+            assert len(PO.find_elements(*el)) == kwargs.get('num') * 2
     elif kwargs.get('type') == 'rotate' or kwargs.get('type') == 'origin':
         #图片便签的旋转或原图尺寸
         do_revoke(PO)
@@ -357,3 +365,42 @@ def public_revoke(PO, el=None, **kwargs):
         assert public_check(PO, el) == None
         do_recovery(PO, kwargs.get('step', 1))
         assert public_check(PO, el) != None
+
+
+def elAddLine(PO, start=None, end=None):
+    '''
+    两个元素之间新建关联线
+    :param PO:
+    :param start: 起始元素的关联线节点
+    :param end: 终止元素,已定位
+    :return:
+    '''
+    sleep(1)
+    action = ActionChains(PO.driver)
+    action.drag_and_drop(PO.find_element(*start), end).perform()
+    sleep(1)
+
+
+def addWithLine(PO, els, start=None, end=None):
+    '''
+    添加元素，且加上关联线
+    :param PO:
+    :param els: 要添加的元素
+    :param start: 起始元素
+    :param end: 结束元素
+    :return:
+    '''
+    btn_relbtm_loc = (By.CLASS_NAME, 'relation_bottom')
+    public_add(PO, els)
+    if start and end:  #如果多个不同的元素
+        PO.find_element(*start).click()
+        elAddLine(PO, btn_relbtm_loc, PO.find_element(*end))
+    elif start:  #同一种元素
+        el_list = PO.find_elements(*start)
+        if el_list:
+            for i in range(len(el_list)):
+                el_list[0].click()
+                elAddLine(PO, btn_relbtm_loc, el_list[1])
+        else:
+            raise Exception("页面中未找到{0}元素".format(start))
+    left_click(PO, 80, 100, header_loc)

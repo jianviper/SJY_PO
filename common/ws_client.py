@@ -26,6 +26,15 @@ def ws_creat(PO):
 
 
 def ws_add(PO, type, poix, poiy, **kwargs):
+    '''
+    通过websocket添加同步元素
+    :param PO:
+    :param type: 元素类型
+    :param poix: 元素x坐标
+    :param poiy: 元素y坐标
+    :param kwargs:
+    :return:
+    '''
     # token = get_token(PO)
     url = PO.driver.current_url
     canvasId = re.search(r'(id=)\d+', url).group().split('=')[1]
@@ -69,7 +78,7 @@ def ws_add(PO, type, poix, poiy, **kwargs):
             send_msg = {"type": "FILE_LABEL_ADD", "id": get_ID(PO), "fileId": fileId, "poiX": poix,
                         "poiY": poiy, "title": "websocket.docx"}
         # print(send_msg)
-        # print('{0}__send_msg:{1}'.format(type, send_msg))
+        print('{0}__send_msg:{1}'.format(type, send_msg))
         ws.send(json.dumps(send_msg))  #执行发送
     except BaseException as e:
         print(e)

@@ -31,7 +31,7 @@ class SharePage(BasePage):
     def open(self):
         self._open(self.baseurl)
 
-    def click(self, el):
+    def el_click(self, el):
         self.find_element(*el).click()
 
     def get_value(self, el):  #获取input文本值

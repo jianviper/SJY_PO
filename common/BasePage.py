@@ -56,11 +56,11 @@ class BasePage(object):
     #重写定义send_keys方法
     def send_keys(self, loc, value, clear_first=True, click_first=True):
         try:
-            loc = getattr(self, "_%s" % loc)
+            # loc = getattr(self, "_%s" % loc)
             if click_first:
                 self.find_element(*loc).click()
             if clear_first:
                 self.find_element(*loc).clear()
-                self.find_element(*loc).click()
+                self.find_element(*loc).send_keys(value)
         except AttributeError:
             print(u"%s 页面中未能找到 %s 元素" % (self, loc))

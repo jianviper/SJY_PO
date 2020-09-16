@@ -30,11 +30,13 @@ class WorkerForlder(BasePage):
     tool_recovery_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
+    el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
     el_fTitle_loc = (By.CLASS_NAME, 'content_title2')
     el_titleInput_loc = (By.CSS_SELECTOR, '.content_title.ant-input')
     el_folderImg_loc = (By.CSS_SELECTOR, '.file_content>div>img')
     el_line_loc = '//*[@class="work_svg"]/*[name()="svg"][2]/*[name()="line"]'
+    el_line2_loc = '.svg_line>.content_line'
 
     btn_bread_loc = (By.CSS_SELECTOR, '.header_crumbs.ant-breadcrumb>span:first-child>span:first-child')
     btn_fjianqie_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(1)')
@@ -73,7 +75,7 @@ class WorkerForlder(BasePage):
         action.double_click(self.find_elements(*self.el_folder_loc)[index]).perform()
         sleep(2)
 
-    def click(self, el):
+    def el_click(self, el):
         self.find_element(*el).click()
 
     def el_click(self, el):

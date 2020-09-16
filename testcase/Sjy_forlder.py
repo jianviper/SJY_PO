@@ -45,12 +45,12 @@ class Forldertest(unittest.TestCase):
         #检查恢复是否成功
         # self.assertTrue(public_check(self.f_PO, self.f_PO.el_folder_loc))
 
-    def test_add_folder(self):
+    def te1st_add_folder(self):
         '''添加文件夹,删除/恢复'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.add_folder(1)
 
-    def test_ty_add_folder(self):
+    def te1st_ty_add_folder(self):
         '''体验模式-添加文件夹,删除/恢复'''
         tiyan(self.f_PO)
         self.add_folder(2)
@@ -61,9 +61,8 @@ class Forldertest(unittest.TestCase):
         self.f_PO.enter()  #双击进入文件夹
         public_check(self.f_PO, self.f_PO.tool_loc)
         public_add(self.f_PO, [('t', 1), ('i', 1), ('f', 1), ('file', 1)])
-        self.f_PO.driver.refresh()
         self.assertIs(public_check(self.f_PO, self.f_PO.el_divs_loc, islen=True), 4)
-        self.f_PO.click(self.f_PO.btn_bread_loc)
+        self.f_PO.el_click(self.f_PO.btn_bread_loc)
         #复制，粘贴
         rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fcopy_loc)
         rightClick(self.f_PO, 400, 150, self.f_PO.header_loc, self.f_PO.btn_paste_loc)
@@ -73,15 +72,17 @@ class Forldertest(unittest.TestCase):
             for i in range(len(self.f_PO.find_elements(*self.f_PO.el_folder_loc))):
                 self.f_PO.enter(i)
                 self.assertIs(public_check(self.f_PO, self.f_PO.el_divs_loc, islen=True), 4)
-                self.f_PO.click(self.f_PO.btn_bread_loc)
+                self.f_PO.el_click(self.f_PO.btn_bread_loc)
                 self.assertTrue(public_check(self.f_PO, self.f_PO.el_folder_loc))
         sleep(3)
 
-    def test_copy(self):
+    def te1st_copy(self):
+        '''复制粘贴文件夹'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.copy()
 
-    def test_ty_copy(self):
+    def te1st_ty_copy(self):
+        '''体验模式下复制粘贴文件夹'''
         tiyan(self.f_PO)
         self.copy()
 
@@ -102,24 +103,24 @@ class Forldertest(unittest.TestCase):
         poi_dst = public_getElPosition(self.f_PO, self.f_PO.el_folder_loc)
         public_revoke(self.f_PO, self.f_PO.el_folder_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
-    def test_cut(self):
+    def te1st_cut(self):
         '''剪切，粘贴'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.cut(1)
         public_delProject(self.f_PO, self.home_url)
 
-    def test_ty_cut(self):
+    def te1st_ty_cut(self):
         '''体验模式-剪切，粘贴'''
         tiyan(self.f_PO)
         self.cut(1)
 
-    def test_multiShear(self):
+    def te1st_multiShear(self):
         '''多选剪切，粘贴'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.cut(2)
         public_delProject(self.f_PO, self.home_url)
 
-    def test_ty_multiShear(self):
+    def te1st_ty_multiShear(self):
         '''体验模式-多选剪切，粘贴'''
         tiyan(self.f_PO)
         self.cut(2)
@@ -137,13 +138,13 @@ class Forldertest(unittest.TestCase):
         #检查恢复是否成功
         # self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 2)
 
-    def test_multiDel(self):
+    def te1st_multiDel(self):
         '''多选删除,恢复'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.multiDel()
         public_delProject(self.f_PO, self.home_url)
 
-    def test_ty_multiDel(self):
+    def te1st_ty_multiDel(self):
         '''体验模式-多选删除,恢复'''
         tiyan(self.f_PO)
         self.multiDel()
@@ -155,18 +156,18 @@ class Forldertest(unittest.TestCase):
         self.f_PO.input_title(self.f_title)  #输入标题文字
         self.assertTrue(self.f_PO.get_title() == '标题{0}'.format(self.f_title))
 
-    def test_editTitle(self):
+    def te1st_editTitle(self):
         '''文件夹标题编辑'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.editTitle()
         public_delProject(self.f_PO, self.home_url)
 
-    def test_ty_editTile(self):
+    def te1st_ty_editTile(self):
         '''体验模式-文件夹标题编辑'''
         tiyan(self.f_PO)
         self.editTitle()
 
-    def test_doubleForlderCopy(self):
+    def te1st_doubleForlderCopy(self):
         '''多文件夹，多选复制/粘贴，跨项目'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         public_addTool(self.f_PO, self.f_PO.tool_folder_loc, self.f_PO.el_folder_loc, num=2)
@@ -201,36 +202,28 @@ class Forldertest(unittest.TestCase):
         self.assertTrue(dst == green_src)
         public_revoke(self.f_PO, self.f_PO.el_folderImg_loc, type='cc', src=src, dst=dst)
 
-    def test_changeColor(self):
-        #改变文件夹颜色
+    def te1st_changeColor(self):
+        '''改变文件夹颜色'''
         public_init(self.f_PO, self.username, self.password, self.projectName)
         self.changeColor()
         public_delProject(self.f_PO, self.home_url)
 
-    def test_ty_changeColor(self):
-        #体验模式，改变文件夹颜色
+    def te1st_ty_changeColor(self):
+        '''体验模式，改变文件夹颜色'''
         tiyan(self.f_PO)
         self.changeColor()
 
-    def addWithLink(self):
-        '''添加文件夹和关联线'''
-        public_init(self.f_PO, self.username, self.password, self.projectName)
-        public_add(self.f_PO, [('f', 2)])
-        forlders = self.f_PO.find_elements(*self.f_PO.el_folder_loc)
-        self.f_PO.el_click(forlders[0])
-        elDragforLine(self.f_PO, start=self.f_PO.btn_relbtm_loc, end=forlders[1])
-        self.f_PO.driver.refresh()
-        self.assertTrue(public_check(self.f_PO, self.f_PO.el_line_loc, driver=True))
-        selection(self.f_PO, self.f_PO.el_folder_loc)
-
     def test_copyWL(self):
         '''带有关联线的复制，粘贴'''
-        self.addWithLink()
+        public_init(self.f_PO, self.username, self.password, self.projectName)
+        addWithLine(self.f_PO, [('f', 1), ('t', 1)], self.f_PO.el_folder_loc, self.f_PO.el_textNote_loc)
+        selection(self.f_PO, [self.f_PO.el_folder_loc, self.f_PO.el_textNote_loc])
         #复制，粘贴
         rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fcopy_loc)
         rightClick(self.f_PO, 500, 150, self.f_PO.header_loc, self.f_PO.btn_paste_loc)
-        self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 4)
-        self.assertIs(public_check(self.f_PO, self.f_PO.el_line_loc, islen=True, driver=True), 2)
+        self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 2)
+        #self.assertIs(public_check(self.f_PO, self.f_PO.el_line_loc, islen=True, driver=True), 2)
+        self.assertIs(public_check(self.f_PO, self.f_PO.el_line2_loc, islen=True, driver=True), 2)
 
         sleep(3)
 

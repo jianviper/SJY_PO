@@ -5,9 +5,13 @@ from selenium.webdriver.common.by import By
 from common.create_UUID import create_uuid
 import re, requests
 
+'''
+summary:页面的公用方法
+'''
+
 
 def project_name():  #生成项目名称
-    return 'AT_{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime()))
+    return 'AT_{0}'.format(strftime("%Y-%m-%d %H:%M", localtime()))
 
 
 def textNote_Content():  #生成文本便签内容
@@ -55,9 +59,9 @@ def public_login(PO, username, password):
     # print('点击登录后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
     wait_tips(PO)
     # print('wait后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
-    update_log(PO)
+    check_updateLog(PO)
     # print('更新提示{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
-    bind(PO)
+    check_bind(PO)
     # print('绑定弹窗{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
 
 
@@ -74,13 +78,17 @@ def public_logout(PO):
 def public_createProject(PO, name):
     '''公用创建项目'''
     sleep(1)
-    createProject_loc = (By.CSS_SELECTOR, '.sure-btn.submit-info')
+    createProject_loc = (By.CSS_SELECTOR, '.sure-btn.submit-info.creatWork')
     projectName_loc = (By.CSS_SELECTOR, '.form-line.iteminput')
-    CPSubmitButton_loc = (By.CSS_SELECTOR, '.add_footer>.sure-btn.submit-info')
+    from random import randint
+    randint = randint(1, 4)
+    pic_loc = (By.CSS_SELECTOR, '.picList>div:nth-child({0})'.format(randint))
+    SubmitButton_loc = (By.CSS_SELECTOR, '.add_footer.modal_foot>:last-child>.sure-btn.submit-info')
 
     PO.find_element(*createProject_loc).click()
     PO.find_element(*projectName_loc).send_keys(name)
-    PO.find_element(*CPSubmitButton_loc).click()
+    PO.find_element(*pic_loc).click()
+    PO.find_element(*SubmitButton_loc).click()
     wait_tips(PO)
     sleep(2)
 
@@ -91,7 +99,7 @@ def public_intoProject(PO, el=None):
     if el:
         lastProject_loc = el
     PO.find_element(*lastProject_loc).click()
-    assert PO.find_element(*work_tool, waitsec=5)
+    assert PO.find_element(*work_tool)
 
 
 def public_delProject(PO, home_url=None, flag=True):
@@ -99,22 +107,27 @@ def public_delProject(PO, home_url=None, flag=True):
     if not flag:
         return
     sleep(3)
+    firstPro_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')
+    firstProMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_set')
     lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
-    delMenuButton_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>ul>:last-child')
-    delProjectName_loc = (By.CSS_SELECTOR, '.header_subtitle>span')
-    inputProjectName_loc = (By.CSS_SELECTOR, '.form_item>input[type=text]')
-    delSubmitButton_loc = (By.CSS_SELECTOR, '.add_footer>.sure-btn.submit-info')
+    btn_del_loc = (By.CSS_SELECTOR, '.footBtn.delBtn')
+    text_proName_loc = (By.CSS_SELECTOR, '.header_subtitle>span')
+    input_proName_loc = (By.CSS_SELECTOR, '.form_item>input[type=text]')
+    btn_delSubmit_loc = (By.CSS_SELECTOR, '.add_footer>.sure-btn.submit-info')
 
     if home_url:
         PO.driver.get(home_url)
-    PO.find_element(*lastProjectMenu_loc).click()
-    PO.find_element(*delMenuButton_loc).click()
-    PO.find_element(*inputProjectName_loc).send_keys(PO.find_element(*delProjectName_loc).text)
-    PO.find_element(*delSubmitButton_loc).click()
+    from selenium.webdriver.common.action_chains import ActionChains
+    action = ActionChains(PO.driver)
+    action.move_to_element(PO.find_element(*firstPro_loc)).perform()
+    PO.find_element(*firstProMenu_loc).click()
+    PO.find_element(*btn_del_loc).click()
+    PO.find_element(*input_proName_loc).send_keys(PO.find_element(*text_proName_loc).text)
+    PO.find_element(*btn_delSubmit_loc).click()
     sleep(1)
 
 
-def update_log(PO, skip=True):  #更新日志弹窗
+def check_updateLog(PO, skip=True):  #更新日志弹窗
     update_log_loc = (By.CLASS_NAME, 'log_content')
     el_item_loc = (By.CLASS_NAME, 'box_item')
     btn_close_loc = (By.CSS_SELECTOR, '.content_header>.header_close')
@@ -133,14 +146,40 @@ def update_log(PO, skip=True):  #更新日志弹窗
             sleep(1)
 
 
-def bind(PO):  #绑定弹窗
+def check_bind(PO):  #绑定弹窗
     btn_closeBind_loc = (By.CLASS_NAME, 'closeBtn')
     if PO.find_element(*btn_closeBind_loc, waitsec=3):
         PO.find_element(*btn_closeBind_loc).click()
 
 
+def get_attrs(PO, el, attr_name, **kwargs):
+    attrList = []
+    if kwargs.get('driver'):
+        if PO.driver.find_element_by_css_selector(el):
+            for e in PO.driver.find_elements_by_css_selector(el):
+                attr = e.get_attribute(attr_name)
+                if attr:
+                    attrList.append(attr)
+    else:
+        if PO.find_element(*el):
+            for e in PO.find_elements(*el):
+                attr = e.get_attribute(attr_name)
+                if attr:
+                    attrList.append(attr)
+    return attrList
+
+
 def public_check(PO, el, text=None, islen=False, attr=None, **kwargs):
-    '''公用检查方法，检查元素的文本是否一致，元素是否存在，元素的个数'''
+    '''
+    公用检查方法，检查元素的文本是否一致，元素是否存在，元素的个数
+    :param PO:
+    :param el: 要检查的元素
+    :param text: 元素的文本
+    :param islen: 返回元素的数量
+    :param attr: 返回元素的属性值
+    :param kwargs:driver:使用原始找元素的方法
+    :return:
+    '''
     if text:
         if PO.find_elements(*el, waitsec=3, check='【check】'):
             for e in PO.find_elements(*el, waitsec=3, check='【check】'):
@@ -150,15 +189,15 @@ def public_check(PO, el, text=None, islen=False, attr=None, **kwargs):
     elif islen:  #返回个数
         if kwargs.get('driver'):
             sleep(3)
-            return len(PO.driver.find_elements_by_xpath(el))
+            return len(PO.driver.find_elements_by_css_selector(el))
+            # return len(PO.driver.find_elements_by_xpath(el))
         else:
             return len(PO.find_elements(*el, waitsec=3, check='【check】'))
     elif attr:  #检查是否有属性值
-        return get_attrs(PO, el, attr)
+        return get_attrs(PO, el, attr, driver=kwargs.get('driver'))
     else:
         if kwargs.get("driver"):
-            sleep(3)
-            return PO.driver.find_element_by_xpath(el)
+            return PO.driver.find_element_by_css_selector(el)
         else:
             return PO.find_element(*el, waitsec=5, check='【check】')
 
@@ -170,17 +209,8 @@ def public_tearDown(PO, url, hurl, username, password):
     if PO.driver.title != '比幕鱼 - 白板列表':
         PO.driver.get(hurl)
     if public_check(PO, (By.CLASS_NAME, 'item_text'), islen=True) > 2:
-        public_delProject(PO, hurl, flag=True)
-
-
-def get_attrs(PO, el, attr_name):
-    if PO.find_element(*el):
-        idList = []
-        for e in PO.find_elements(*el):
-            id = e.get_attribute(attr_name)
-            idList.append(id)
-        return idList
-    return 0
+        while (public_check(PO, (By.CLASS_NAME, 'item_text'), islen=True) > 2):
+            public_delProject(PO, hurl, flag=True)
 
 
 def quickReg(PO, host):

@@ -35,7 +35,7 @@ class ShareTest(unittest.TestCase):
         public_init(self.share_PO, self.username, self.password, self.projectName)
         public_add(self.share_PO, [('t', 1), ('i', 1), ('f', 1)])
         title = self.share_PO.driver.title
-        self.share_PO.click(self.share_PO.btn_userout_loc)
+        self.share_PO.el_click(self.share_PO.btn_userout_loc)
         shareUrl = self.share_PO.get_value(self.share_PO.el_shareUrl_loc)
         public_logout(self.share_PO)
         public_check(self.share_PO, self.share_PO.code_image_loc)
@@ -61,13 +61,13 @@ class ShareTest(unittest.TestCase):
         public_login(self.share_PO, self.username, self.password)
 
     def test_unloginShare(self):
-        #未登录，打开分享页
+        '''未登录，打开分享页'''
         self.share(0)
 
         sleep(3)
 
     def test_loggedShare(self):
-        #先登录，再打开分享页
+        '''先登录，再打开分享页'''
         self.share(1)
 
 
