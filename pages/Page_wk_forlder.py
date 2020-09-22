@@ -74,9 +74,3 @@ class WorkerForlder(BasePage):
         action = ActionChains(self.driver)
         action.double_click(self.find_elements(*self.el_folder_loc)[index]).perform()
         sleep(2)
-
-    def el_click(self, el):
-        self.find_element(*el).click()
-
-    def el_click(self, el):
-        el.click()

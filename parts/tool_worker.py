@@ -272,7 +272,7 @@ def public_textInput(PO, text):
         # header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
         el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
         action = ActionChains(PO.driver)
-        for e in PO.find_elements(el_textContent_loc):
+        for e in PO.find_elements(*el_textContent_loc):
             action.double_click(e).perform()
             sleep(1)
             left_click(PO, 50, 100, header_loc)

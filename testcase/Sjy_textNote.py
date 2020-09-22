@@ -152,7 +152,7 @@ class textNoteTest(unittest.TestCase):
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='copy', num=num)
         sleep(2)
         self.text_PO.driver.get(self.home_url)
-        public_createProject(self.text_PO, '[copy]' + self.projectName)
+        public_createProject(self.text_PO, '[copy]' + self.projectName[6:].replace(' ', ''))
         public_intoProject(self.text_PO)
         rightClick(self.text_PO, 500, 10, self.text_PO.tool_loc, self.text_PO.btn_zhantie_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
@@ -166,6 +166,16 @@ class textNoteTest(unittest.TestCase):
 
     def test_multiCopy(self):
         self.copy(2)
+
+    def test_setBgColor(self):
+        #设置文本便签背景色,判断颜色设置是否正确
+        public_init(self.text_PO, self.username, self.password, self.projectName)
+        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=1)
+        public_textInput(self.text_PO, self.textContent)
+        for i in range(1, 9):
+            rightClick(self.text_PO, el=self.text_PO.el_textNote_loc)  #右键点击
+            self.text_PO.getc(i, self.textContent)
+            sleep(1)
 
 
 if __name__ == "__main__":

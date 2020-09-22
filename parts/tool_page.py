@@ -94,11 +94,12 @@ def public_createProject(PO, name):
 
 
 def public_intoProject(PO, el=None):
-    lastProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text')
+    # lastProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text')
+    firstProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
     work_tool = (By.CLASS_NAME, 'work_tool')
     if el:
-        lastProject_loc = el
-    PO.find_element(*lastProject_loc).click()
+        firstProject_loc = el
+    PO.find_element(*firstProject_loc).click()
     assert PO.find_element(*work_tool)
 
 
@@ -109,7 +110,7 @@ def public_delProject(PO, home_url=None, flag=True):
     sleep(3)
     firstPro_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')
     firstProMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_set')
-    lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
+    # lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
     btn_del_loc = (By.CSS_SELECTOR, '.footBtn.delBtn')
     text_proName_loc = (By.CSS_SELECTOR, '.header_subtitle>span')
     input_proName_loc = (By.CSS_SELECTOR, '.form_item>input[type=text]')
@@ -249,7 +250,8 @@ def tiyan(PO):  #进入体验模式
     # print(PO.driver.title)
     # assert '比幕鱼 - 体验' == PO.driver.title
     sleep(1)
-    PO.find_element(*btn_skip_loc).click()  #点击跳过教程按钮
+    if PO.find_element(*btn_skip_loc):
+        PO.find_element(*btn_skip_loc).click()  #点击跳过教程按钮
     assert len(PO.find_elements(*el_divs_loc)) == 11
     #到home页，新建项目
     if host == 'app.bimuyu.tech':
@@ -258,3 +260,17 @@ def tiyan(PO):  #进入体验模式
         PO.driver.get('http://{0}/home'.format(host))
     public_createProject(PO, project_name())
     public_intoProject(PO)
+
+
+def el_click(PO, el):
+    if PO.find_element(*el):
+        return PO.find_element(*el).click()
+    else:
+        assert Exception("function get_text() 元素不存在!")
+
+
+def get_text(PO, el):
+    if PO.find_element(*el):
+        return PO.find_element(*el).text
+    else:
+        assert Exception("function get_text() 元素不存在!")

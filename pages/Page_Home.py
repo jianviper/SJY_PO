@@ -21,12 +21,23 @@ class HomePage(BasePage):
     log_content_loc = (By.CLASS_NAME, 'log_content')
     log_loc = (By.CSS_SELECTOR, '.log.log_open')
     log_title_loc = (By.CLASS_NAME, 'increase_title')
+    headerName_loc = (By.CSS_SELECTOR, '.menu_user.mouse_hover>p')
+    photo_name_loc = (By.CLASS_NAME, 'photo_name')
+    userCenterText_loc = (By.CLASS_NAME, 'content_title')
+    nickName_loc = (By.CSS_SELECTOR, '.content_info>li:first-child>.item_nickname')
+    phone_loc = (By.CSS_SELECTOR, '.content_info>li:nth-child(2)>.item_nickname')
 
+    input_nick_loc = (By.CSS_SELECTOR, '.item_nickName.form-line.iteminput')
     input_proName_loc = (By.CSS_SELECTOR, '.form-line.iteminput')
     input_delName_loc = (By.CSS_SELECTOR, '.form_item>.form-line.iteminput')
+    input_phone_loc = (By.CSS_SELECTOR, '.form_item.form_disabled>.item_password.form-line.iteminput')
 
     btn_help_loc = (By.CLASS_NAME, 'guideHelp')
     btn_user_loc = (By.CSS_SELECTOR, '.menu_user.mouse_hover')
+    btn_nickEdit_loc = (By.CSS_SELECTOR, '.content_info>li:first-child>div:nth-child(3)>.header_edit')
+    btn_nickSubmit_loc = (By.CSS_SELECTOR, '.name_form>:last-child>.sure-btn.submit-info')
+    btn_pwdEdit_loc = (By.CSS_SELECTOR, '.content_info>li:nth-child(3)>div>.header_edit')
+    btn_headerClose_loc = (By.CLASS_NAME, 'header_close')
     btn_createProject_loc = (By.CSS_SELECTOR, '.home_header>.sure-btn.submit-info')
     #CRD:创建，重命名，删除 按钮
     btn_CR_loc = (By.CSS_SELECTOR, '.add_footer.modal_foot>:last-child>.sure-btn.submit-info')
@@ -38,6 +49,7 @@ class HomePage(BasePage):
     btn_log_close_loc = (By.CLASS_NAME, 'header_close')
 
     menu_user_loc = (By.CLASS_NAME, 'meny_level2')  #头像点击菜单
+    menu_userInfo_loc = (By.CSS_SELECTOR, '.meny_level2>li:nth-child(3)')  #个人中心
     menu_update_loc = (By.CSS_SELECTOR, '.meny_level2>li:nth-child(5)')  #点击更新日志
 
     firstPro_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')
@@ -78,6 +90,9 @@ class HomePage(BasePage):
     def get_ProjectName(self, el):
         #获取某个项目的名称
         return self.find_element(*el).text
+
+    def click_firstProject(self):
+        self.find_element(*self.firstProject_loc).click()
 
     def click_lastProjectMenu(self):
         self.find_element(*self.lastProMenu_loc).click()
@@ -124,7 +139,3 @@ class HomePage(BasePage):
         '''
         num = self.driver.find_elements(*self.num_project_loc).__len__()
         return num
-
-    def click_firstProject(self):
-        self.find_element(*self.firstProject_loc).click()
-

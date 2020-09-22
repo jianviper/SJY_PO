@@ -4,7 +4,7 @@
 from time import sleep
 from common.BasePage import BasePage
 from selenium.webdriver.common.by import By
-from parts.tool_worker import left_click
+from parts.tool_worker import left_click, get_text
 import pyautogui
 
 '''
@@ -72,3 +72,28 @@ class WorkerTextNote(BasePage):
                 sleep(0.5)
             left_click(self, 50, -80, self.tool_mouse_loc)
             sleep(1)
+
+    def set_color(self, el):
+        bc = self.find_element(*el).value_of_css_property('background-color')
+        self.find_element(*el).click()
+        print('r_bc:{0}'.format(bc))
+        return bc
+
+    def getc(self, cid, textContent):
+        '''
+        设置文本便签背景色,判断颜色设置是否正确
+        :param cid: 选项编号
+        :param textContent:文本便签内的内容
+        :return:
+        '''
+        color_item = (By.CSS_SELECTOR, '.color_item.color_{0}'.format(cid))
+        rbc = self.find_element(*color_item).value_of_css_property('background-color')
+        self.find_element(*color_item).click()
+        sleep(1)
+        text = get_text(self, self.el_textNote_loc)
+        assert text == textContent
+        bc = self.find_element(*self.el_textNote_loc).value_of_css_property('background-color')
+        if cid == 1:
+            rbc = 'rgba(255, 255, 255, 1)'
+        # print(rbc, '===', bc)
+        assert rbc == bc

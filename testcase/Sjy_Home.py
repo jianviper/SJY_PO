@@ -4,6 +4,7 @@ import unittest
 from common.get_config import get_url
 from pages.Page_Home import HomePage
 from parts.tool_page import *
+from random import randint
 
 '''
 Create on 2020-3-17
@@ -65,6 +66,31 @@ class HomeTest(unittest.TestCase):
         public_createProject(self.hp_PO, self.projectName)
         self.hp_PO.go_del()
         self.assertEqual('删除成功', self.hp_PO.get_tips())
+
+    def test_userInfo(self):
+        #修改昵称，更改密码查看手机号码是否正确
+        public_login(self.hp_PO, self.username, self.password)
+        self.assertTrue(public_check(self.hp_PO, self.hp_PO.btn_user_loc))
+        el_click(self.hp_PO, self.hp_PO.btn_user_loc)  #点击头像
+        el_click(self.hp_PO, self.hp_PO.menu_userInfo_loc)  #点击个人中心菜单
+        self.assertTrue(public_check(self.hp_PO, self.hp_PO.userCenterText_loc))
+        el_click(self.hp_PO, self.hp_PO.btn_nickEdit_loc)
+        name = randint(10, 99)
+        #设置昵称，随机的末两位
+        self.hp_PO.send_keys(self.hp_PO.input_nick_loc, 'test_145000000{0}'.format(name))
+        el_click(self.hp_PO, self.hp_PO.btn_nickSubmit_loc)
+        photo_name = get_text(self.hp_PO, self.hp_PO.photo_name_loc)  #头像昵称
+        self.assertEqual(str(name), photo_name)
+        #------修改密码的手机号-------
+        phone = get_text(self.hp_PO, self.hp_PO.phone_loc)
+        el_click(self.hp_PO, self.hp_PO.btn_pwdEdit_loc)
+        pwd_phone = get_text(self.hp_PO, self.hp_PO.input_phone_loc)  #修改密码界面的手机号
+        print(phone, pwd_phone)
+        el_click(self.hp_PO, self.hp_PO.btn_headerClose_loc)
+        header_name = get_text(self.hp_PO, self.hp_PO.headerName_loc)  #右上角头像昵称
+        self.assertEqual(header_name, str(name))
+
+        sleep(3)
 
 
 if __name__ == "__main__":

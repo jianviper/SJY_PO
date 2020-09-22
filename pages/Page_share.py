@@ -16,6 +16,7 @@ class SharePage(BasePage):
     tool_loc = (By.CLASS_NAME, 'work_tool')
     header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
     code_image_loc = (By.CLASS_NAME, 'code_image')
+    first_proTitle_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text>.item_title')
     last_proTitle_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')

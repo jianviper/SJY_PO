@@ -55,7 +55,7 @@ class ShareTest(unittest.TestCase):
         else:
             self.assertTrue(public_check(self.share_PO, self.share_PO.code_image_loc))
             public_login(self.share_PO, '14500000001', self.password)
-        self.assertTrue(public_check(self.share_PO, self.share_PO.last_proTitle_loc, text=self.projectName))
+        self.assertTrue(public_check(self.share_PO, self.share_PO.first_proTitle_loc, text=self.projectName))
         public_delProject(self.share_PO)
         public_logout(self.share_PO)
         public_login(self.share_PO, self.username, self.password)

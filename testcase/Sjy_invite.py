@@ -45,8 +45,7 @@ class InviteTest(unittest.TestCase):
         self.invite_PO.click_joinInvi()  #点击加入邀请
         public_login(self.invite_PO, self.username2, self.password)  #登录另一账号
         #检查加入邀请是否成功
-        self.assertTrue(public_check(self.invite_PO, self.invite_PO.lastProjectName_loc, text=self.projectName))
-        public_intoProject(self.invite_PO)  #进入刚加入的项目
+        self.assertTrue(public_check(self.invite_PO, self.invite_PO.tool_loc))
         self.assertEqual('比幕鱼 - {0}'.format(self.projectName), self.invite_PO.driver.title)
         self.assertTrue(public_check(self.invite_PO, self.invite_PO.el_textNote_loc))
         self.invite_PO.exit_project()  #退出画布
