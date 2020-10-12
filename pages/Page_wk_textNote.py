@@ -16,7 +16,7 @@ summary:工作台页面的元素对象和操作方法
 
 class WorkerTextNote(BasePage):
     #定位器，通过元素属性定位元素对象
-    lastProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text')
+    lastProject_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text')
     header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
 
     tool_loc = (By.CLASS_NAME, 'work_tool')

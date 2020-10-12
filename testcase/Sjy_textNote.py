@@ -6,6 +6,8 @@ from pages.Page_wk_textNote import WorkerTextNote
 from parts.tool_worker import *
 from parts.tool_page import tiyan
 
+from factory.elementFactory import ElementCreater
+
 '''
 Create on 2020-4-7
 author:linjian
@@ -22,6 +24,7 @@ class textNoteTest(unittest.TestCase):
         self.text_PO = WorkerTextNote(base_url=self.url)
         self.projectName = project_name()
         self.textContent = textNote_Content()
+        self.textNote = ElementCreater().create_element('text', self.text_PO)
         self.text_PO.open()
 
     def tearDown(self) -> None:
@@ -45,7 +48,7 @@ class textNoteTest(unittest.TestCase):
         # self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)  #多选
-        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_del_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.btn_del_loc)
         #是否删除成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='del', step=num)
@@ -85,13 +88,13 @@ class textNoteTest(unittest.TestCase):
         poi_src = public_getElPosition(self.text_PO, self.text_PO.el_textNote_loc)
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)  #多选
-        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_jianqie_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.btn_jianqie_loc)
         #检查是否剪切成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         left_click(self.text_PO, 500, 200, self.text_PO.header_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
         self.assertIs(public_check(self.text_PO, self.text_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.text_PO, actionEl=self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, action=self.text_PO.btn_zhantie_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         poi_dst = public_getElPosition(self.text_PO, self.text_PO.el_textNote_loc)
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
@@ -144,7 +147,7 @@ class textNoteTest(unittest.TestCase):
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)
         #右键-复制
-        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, actionEl=self.text_PO.btn_copy_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.btn_copy_loc)
         #右键-粘贴
         rightClick(self.text_PO, 450, 10, self.text_PO.el_textNote_loc, self.text_PO.btn_zhantie_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num * 2)
@@ -176,6 +179,13 @@ class textNoteTest(unittest.TestCase):
             rightClick(self.text_PO, el=self.text_PO.el_textNote_loc)  #右键点击
             self.text_PO.getc(i, self.textContent)
             sleep(1)
+
+    def test_factory(self):
+        public_init(self.text_PO, self.username, self.password, self.projectName)
+        self.textNote.add()
+        self.textNote.public_textInput(self.textContent)
+
+        sleep(3)
 
 
 if __name__ == "__main__":

@@ -34,7 +34,7 @@ class TemplatePage(BasePage):
     btn_submit_loc = (By.CSS_SELECTOR, '.sure-btn.is-plain.submit-info')
     btn_submit2_loc = (By.CSS_SELECTOR, '.sure-btn.submit-info')
 
-    lastProjectName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
+    lastProjectName_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text>.item_title')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页

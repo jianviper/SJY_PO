@@ -13,7 +13,7 @@ summary:模版的测试用例
 '''
 
 
-class InviteTest(unittest.TestCase):
+class TemplateTest(unittest.TestCase):
     def setUp(self) -> None:
         urls = get_url()  #return [url,home_url]
         self.url, self.home_url = urls[0], urls[1]
@@ -85,4 +85,7 @@ class InviteTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(TemplateTest('test_addTemplate'))
+    unittest.TextTestRunner().run(suite)

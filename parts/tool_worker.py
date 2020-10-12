@@ -106,6 +106,10 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
         assert public_check(PO, checkEL)
 
 
+def get_token_js(PO):
+    token = PO.driver.execute_script('return document.cookie;')
+    print('token:{0}'.format(token))
+
 def public_add(PO, els, **kwargs):
     '''
     通过websocket添加元素
@@ -168,35 +172,37 @@ def left_click(PO, x=0, y=0, el=None):
     sleep(1.5)
 
 
-def rightClick(PO, x=0, y=0, el=None, actionEl=None):
+def rightClick(PO, x=0, y=0, el=None, action=None):
     '''
     右键点击,可以指定元素及其相对位置，也可右键菜单操作
     :param PO:
     :param x: x偏移量
     :param y: y偏移量
     :param el: 在哪个元素上右键点击
-    :param actionEl: 右键菜单的选项
+    :param action: 右键菜单的选项
     :return:
     '''
-    action = ActionChains(PO.driver)
+    actionC = ActionChains(PO.driver)
     if x and y and el:  #在指定元素的相对位置
         if el == (By.CLASS_NAME, 'menu_item'):
             x = 700
-        action.move_to_element_with_offset(PO.find_element(*el), x, y).context_click().perform()
+        actionC.move_to_element_with_offset(PO.find_element(*el), x, y).context_click().perform()
     elif el:  #在指定元素上
-        action.context_click(PO.find_element(*el)).perform()
+        actionC.context_click(PO.find_element(*el)).perform()
     else:  #在鼠标当前位置
-        action.context_click().perform()
+        actionC.context_click().perform()
     sleep(1.0)
-    if actionEl:
-        PO.find_element(*actionEl).click()
+    if action:
+        PO.find_element(*action).click()
         sleep(1.5)
 
 
 def double_click(PO, el):
     #双击元素
+    sleep(1)
     action = ActionChains(PO.driver)
-    action.double_click(PO.find_element(*el)).perform()
+    if PO.find_element(*el):
+        action.double_click(PO.find_element(*el)).perform()
 
 
 def click_trash(PO):  #打开废纸篓
@@ -235,24 +241,6 @@ def elDrag(PO, el=None, start=None, end=None):
     else:
         action.drag_and_drop(PO.find_element(*start), PO.find_element(*end)).perform()
     sleep(1)
-
-
-'''
-def drag_and_drop(PO):
-    PO.driver.set_script_timeout(20)
-    jq_url = 'https://libs.baidu.com/jquery/2.1.4/jquery.min.js'
-    with open('../parts/jquery_loader_helper.js') as f:
-        load_jquery_js = f.read()
-        # print(load_jquery_js)
-    with open('../parts/drag_and_drop_helper.js') as f:
-        drag_and_drop_js = f.read()
-        # print(drag_and_drop_js)
-
-    PO.driver.execute_async_script(load_jquery_js, jq_url)
-    print('gogogo')
-    PO.driver.execute_script(
-        drag_and_drop_js + '$(".relation_bottom").simulateDragDrop({"dropTarget":".img"});')
-'''
 
 
 def public_textInput(PO, text):

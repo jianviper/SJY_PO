@@ -94,8 +94,8 @@ def public_createProject(PO, name):
 
 
 def public_intoProject(PO, el=None):
-    # lastProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text')
-    firstProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text')
+    # lastProject_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text')
+    firstProject_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_text')
     work_tool = (By.CLASS_NAME, 'work_tool')
     if el:
         firstProject_loc = el
@@ -108,9 +108,9 @@ def public_delProject(PO, home_url=None, flag=True):
     if not flag:
         return
     sleep(3)
-    firstPro_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')
-    firstProMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_set')
-    # lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
+    firstPro_loc = (By.CSS_SELECTOR, '.home_content>:first-child')
+    firstProMenu_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_set')
+    # lastProjectMenu_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_set')
     btn_del_loc = (By.CSS_SELECTOR, '.footBtn.delBtn')
     text_proName_loc = (By.CSS_SELECTOR, '.header_subtitle>span')
     input_proName_loc = (By.CSS_SELECTOR, '.form_item>input[type=text]')
@@ -263,14 +263,19 @@ def tiyan(PO):  #进入体验模式
 
 
 def el_click(PO, el):
+    sleep(1)
     if PO.find_element(*el):
         return PO.find_element(*el).click()
     else:
         assert Exception("function get_text() 元素不存在!")
 
 
-def get_text(PO, el):
+def get_text(PO, el, type=None):
+    sleep(1)
     if PO.find_element(*el):
-        return PO.find_element(*el).text
+        if not type:
+            return PO.find_element(*el).text
+        else:
+            return PO.find_element(*el).get_attribute('value')
     else:
         assert Exception("function get_text() 元素不存在!")

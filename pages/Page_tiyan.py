@@ -28,7 +28,7 @@ class TiyanPage(BasePage):
     btn_finish_loc = (By.CLASS_NAME, 'button_adopt')
     btn_skip_loc = (By.CLASS_NAME, 'button_skip')
 
-    lastProjectName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
+    lastProjectName_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text>.item_title')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页

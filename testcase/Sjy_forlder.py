@@ -36,7 +36,7 @@ class Forldertest(unittest.TestCase):
         public_revoke(self.f_PO, self.f_PO.el_folder_loc, step=num)
         if num > 1:
             selection(self.f_PO, self.f_PO.el_folder_loc)
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fdel_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fdel_loc)
         #是否删除成功
         self.assertFalse(public_check(self.f_PO, self.f_PO.el_folder_loc))
         public_revoke(self.f_PO, self.f_PO.el_folder_loc, type='del', step=num)
@@ -64,7 +64,7 @@ class Forldertest(unittest.TestCase):
         self.assertIs(public_check(self.f_PO, self.f_PO.el_divs_loc, islen=True), 4)
         el_click(self.f_PO, self.f_PO.btn_bread_loc)
         #复制，粘贴
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fcopy_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fcopy_loc)
         rightClick(self.f_PO, 400, 150, self.f_PO.header_loc, self.f_PO.btn_paste_loc)
         self.assertIs(public_check(self.f_PO, self.f_PO.el_divs_loc, islen=True), 2)
         #进入粘贴后的文件夹
@@ -92,13 +92,13 @@ class Forldertest(unittest.TestCase):
         poi_src = public_getElPosition(self.f_PO, self.f_PO.el_folder_loc)
         if num > 1:
             selection(self.f_PO, self.f_PO.el_folder_loc)
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fjianqie_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fjianqie_loc)
         #检查是否剪切成功
         self.assertFalse(public_check(self.f_PO, self.f_PO.el_folder_loc))
         left_click(self.f_PO, 50, -50, el=self.f_PO.tool_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
         self.assertIs(public_check(self.f_PO, self.f_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.f_PO, actionEl=self.f_PO.btn_paste_loc)
+        rightClick(self.f_PO, action=self.f_PO.btn_paste_loc)
         self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), num)
         poi_dst = public_getElPosition(self.f_PO, self.f_PO.el_folder_loc)
         public_revoke(self.f_PO, self.f_PO.el_folder_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
@@ -130,7 +130,7 @@ class Forldertest(unittest.TestCase):
         #检查是否上传成功
         self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 2)
         selection(self.f_PO, self.f_PO.el_folder_loc)
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fdel_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fdel_loc)
         #是否删除成功
         self.assertFalse(public_check(self.f_PO, self.f_PO.el_folder_loc))
         # click_trash(self.f_PO)  #打开废纸篓进行恢复
@@ -174,7 +174,7 @@ class Forldertest(unittest.TestCase):
         self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 2)
         selection(self.f_PO, self.f_PO.el_folder_loc)
         #右键-复制
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fcopy_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fcopy_loc)
         #右键-粘贴
         rightClick(self.f_PO, 450, 10, self.f_PO.el_folder_loc, self.f_PO.btn_paste_loc)
         #检查个数
@@ -194,7 +194,7 @@ class Forldertest(unittest.TestCase):
         '''改变文件夹颜色'''
         public_addTool(self.f_PO, self.f_PO.tool_folder_loc, self.f_PO.el_folder_loc)
         src = public_getAttrs(self.f_PO, self.f_PO.el_folderImg_loc, 'src')[0]
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_color_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_color_loc)
         green_src = get('folder', 'icon')
         self.assertFalse(public_check(self.f_PO, self.f_PO.right_menu_loc))
         dst = public_getAttrs(self.f_PO, self.f_PO.el_folderImg_loc, 'src')[0]
@@ -219,7 +219,7 @@ class Forldertest(unittest.TestCase):
         addWithLine(self.f_PO, [('f', 1), ('t', 1)], self.f_PO.el_folder_loc, self.f_PO.el_textNote_loc)
         selection(self.f_PO, [self.f_PO.el_folder_loc, self.f_PO.el_textNote_loc])
         #复制，粘贴
-        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, actionEl=self.f_PO.btn_fcopy_loc)
+        rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fcopy_loc)
         rightClick(self.f_PO, 500, 150, self.f_PO.header_loc, self.f_PO.btn_paste_loc)
         self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 2)
         #self.assertIs(public_check(self.f_PO, self.f_PO.el_line_loc, islen=True, driver=True), 2)
@@ -229,4 +229,7 @@ class Forldertest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(Forldertest('test_copyWL'))
+    unittest.TextTestRunner().run(suite)

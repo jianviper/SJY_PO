@@ -27,7 +27,7 @@ class InvitePage(BasePage):
 
     inviUrl_loc = (By.ID, 'inviUrl')
     inviName_loc = (By.CSS_SELECTOR, '.invitation_content>p>span:last-child')
-    lastProjectName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
+    lastProjectName_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text>.item_title')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页

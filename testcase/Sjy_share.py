@@ -42,7 +42,7 @@ class ShareTest(unittest.TestCase):
         tip = '当前只能浏览，登录后可保存并编辑该内容'
         if status:  #如果要登录先
             tip = '当前只能浏览，保存后可编辑该内容'
-            public_login(self.share_PO, '14500000001', self.password)
+            public_login(self.share_PO, '14500000051', self.password)
         self.share_PO.driver.get(shareUrl)
         self.assertFalse(public_check(self.share_PO, self.share_PO.tool_loc))
         print(title, self.share_PO.driver.title)
@@ -54,7 +54,8 @@ class ShareTest(unittest.TestCase):
             self.share_PO.driver.get(self.home_url)
         else:
             self.assertTrue(public_check(self.share_PO, self.share_PO.code_image_loc))
-            public_login(self.share_PO, '14500000001', self.password)
+            public_login(self.share_PO, '14500000051', self.password)
+        self.share_PO.driver.get(self.home_url)
         self.assertTrue(public_check(self.share_PO, self.share_PO.first_proTitle_loc, text=self.projectName))
         public_delProject(self.share_PO)
         public_logout(self.share_PO)
@@ -66,7 +67,7 @@ class ShareTest(unittest.TestCase):
 
         sleep(3)
 
-    def test_loggedShare(self):
+    def te1st_loggedShare(self):
         '''先登录，再打开分享页'''
         self.share(1)
 

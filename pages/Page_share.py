@@ -16,13 +16,13 @@ class SharePage(BasePage):
     tool_loc = (By.CLASS_NAME, 'work_tool')
     header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
     code_image_loc = (By.CLASS_NAME, 'code_image')
-    first_proTitle_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text>.item_title')
-    last_proTitle_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
+    first_proTitle_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_text>.item_title')
+    last_proTitle_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text>.item_title')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_shareUrl_loc = (By.ID, 'shareUrl')
     el_save_text_loc = (By.CLASS_NAME, 'save_text')
-    el_wb_loc = (By.CSS_SELECTOR, '.home_content.clearfix>div:last-child')
+    el_wb_loc = (By.CSS_SELECTOR, '.home_content>div:last-child')
 
     btn_userout_loc = (By.CLASS_NAME, 'userout')
     btn_saveButton_loc = (By.CLASS_NAME, 'save_button')

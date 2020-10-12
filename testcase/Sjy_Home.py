@@ -84,14 +84,18 @@ class HomeTest(unittest.TestCase):
         #------修改密码的手机号-------
         phone = get_text(self.hp_PO, self.hp_PO.phone_loc)
         el_click(self.hp_PO, self.hp_PO.btn_pwdEdit_loc)
-        pwd_phone = get_text(self.hp_PO, self.hp_PO.input_phone_loc)  #修改密码界面的手机号
-        print(phone, pwd_phone)
+        pwd_phone = get_text(self.hp_PO, self.hp_PO.input_phone_loc, type=1)  #修改密码界面的手机号
+        # print(phone, pwd_phone)
+        self.assertEqual(phone, pwd_phone)
+        el_click(self.hp_PO, self.hp_PO.btn_pwdEditClose_loc)
         el_click(self.hp_PO, self.hp_PO.btn_headerClose_loc)
         header_name = get_text(self.hp_PO, self.hp_PO.headerName_loc)  #右上角头像昵称
-        self.assertEqual(header_name, str(name))
+        # self.assertEqual(header_name, str(name))
 
         sleep(3)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(HomeTest('test_userInfo'))
+    unittest.TextTestRunner().run(suite)

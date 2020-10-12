@@ -31,18 +31,18 @@ class RevokeTest(unittest.TestCase):
 
     def createNote(self, tool=None, el=None):
         #新建元素，设置对应元素的复制和剪切
-        cut = self.revoke_PO.btn_cut_loc
-        copy = self.revoke_PO.btn_copy_loc
+        cut = self.revoke_PO.menu_cut_loc
+        copy = self.revoke_PO.menu_copy_loc
         if tool == 'img':
             public_add(self.revoke_PO, [('i', 1)])
-            cut = self.revoke_PO.btn_imgCut_loc
-            copy = self.revoke_PO.btn_imgCopy_loc
+            cut = self.revoke_PO.menu_imgCut_loc
+            copy = self.revoke_PO.menu_imgCopy_loc
         else:
             public_addTool(self.revoke_PO, tool, el)
             left_click(self.revoke_PO, 50, 100, self.revoke_PO.header_loc)
         if tool == self.revoke_PO.tool_folder_loc:
-            cut = self.revoke_PO.btn_fcut_loc
-            copy = self.revoke_PO.btn_fcopy_loc
+            cut = self.revoke_PO.menu_fcut_loc
+            copy = self.revoke_PO.menu_fcopy_loc
         return {"copy": copy, "cut": cut}
 
     def creatAndInput(self, tool=None, el=None, **kwargs):
@@ -50,17 +50,17 @@ class RevokeTest(unittest.TestCase):
         # public_addTool(self.revoke_PO, self.revoke_PO.tool_text_loc, self.revoke_PO.el_textNote_loc)
         self.createNote(tool, el)
         left_click(self.revoke_PO, 50, 100, self.revoke_PO.header_loc)
-        self.revoke_PO.do_revoke()  #撤销
+        do_revoke(self.revoke_PO)  #撤销
         #检查撤销是否成功，成功则文本便签不存在
         self.assertFalse(public_check(self.revoke_PO, el))
-        self.revoke_PO.do_recovery()  #恢复
+        do_recovery(self.revoke_PO)  #恢复
         #检查恢复是否成功，成功则文本便签存在
         self.assertTrue(public_check(self.revoke_PO, el))
         if kwargs.get('type') == 'text':
             public_textInput(self.revoke_PO, self.textContent)
-            self.revoke_PO.do_revoke()  #撤销
+            do_revoke(self.revoke_PO)  #撤销
             self.assertTrue(self.revoke_PO.get_textContent() == '')
-            self.revoke_PO.do_recovery()
+            do_recovery(self.revoke_PO)  #恢复
             self.assertTrue(self.revoke_PO.get_textContent() != '')
         sleep(3)
 
@@ -77,12 +77,12 @@ class RevokeTest(unittest.TestCase):
     def test_imgNote(self):
         '''图片便签新建的撤销与恢复'''
         public_init(self.revoke_PO, self.username, self.password, self.projectName)
-        self.creatAndInput('img', self.revoke_PO.el_imgDIV_loc)
+        self.creatAndInput('img', self.revoke_PO.el_imgNote_loc)
 
     def test_ty_imgNote(self):
         '''体验模式下，图片便签的新建，撤销与恢复'''
         tiyan(self.revoke_PO)
-        self.creatAndInput('img', self.revoke_PO.el_imgDIV_loc)
+        self.creatAndInput('img', self.revoke_PO.el_imgNote_loc)
 
     def test_folder(self):
         '''文件夹新建后，撤销与恢复'''
@@ -98,7 +98,7 @@ class RevokeTest(unittest.TestCase):
         cut = self.createNote(tool, el)
         #获取元素初始位置
         poi_src = public_getElPosition(self.revoke_PO, el)[0]
-        rightClick(self.revoke_PO, el=el, actionEl=cut)
+        rightClick(self.revoke_PO, el=el, action=cut)
         #检查剪切是否成功
         self.assertFalse(public_check(self.revoke_PO, el))
         #剪切后左键点击画布，检查是否会有文件夹多出（BUG点）
@@ -106,15 +106,15 @@ class RevokeTest(unittest.TestCase):
         self.assertIs(public_check(self.revoke_PO, self.revoke_PO.el_divs_loc, islen=True), 0)
         #在指定位置粘贴-------------------
         rightClick(self.revoke_PO, 700, 200, self.revoke_PO.header_loc,
-                   actionEl=self.revoke_PO.btn_paste_loc)
+                   action=self.revoke_PO.menu_paste_loc)
         self.assertTrue(public_check(self.revoke_PO, el))
         #获取元素剪切粘贴后的位置
         poi_dst = public_getElPosition(self.revoke_PO, el)[0]
         print('{0}\r\n{1}'.format(poi_src, poi_dst))
-        self.revoke_PO.do_revoke()  #执行撤销
+        do_revoke(self.revoke_PO)  #执行撤销
         poi_src2 = public_getElPosition(self.revoke_PO, el)[0]
         self.assertTrue(poi_src == poi_src2)  #如果撤销正常，和初始位置一样
-        self.revoke_PO.do_recovery()  #执行恢复
+        do_recovery(self.revoke_PO)  #执行恢复
         poi_dst2 = public_getElPosition(self.revoke_PO, el)[0]
         self.assertTrue(poi_dst == poi_dst2)  #如果恢复正常，和粘贴后位置一样
 
@@ -124,7 +124,7 @@ class RevokeTest(unittest.TestCase):
 
     def test_imgNote(self):
         public_init(self.revoke_PO, self.username, self.password, self.projectName)
-        self.cutAndPaste('img', self.revoke_PO.el_imgDIV_loc)
+        self.cutAndPaste('img', self.revoke_PO.el_imgNote_loc)
 
     def test_folder(self):
         public_init(self.revoke_PO, self.username, self.password, self.projectName)

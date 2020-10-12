@@ -34,8 +34,8 @@ class LinkTest(unittest.TestCase):
         public_add(self.link_PO, [('t', 1), ('f', 1)])
         # self.link_PO.driver.refresh()
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_divs_loc))
-        self.link_PO.el_click(self.link_PO.el_textNote_loc)
-        elDrag(self.link_PO, start=self.link_PO.btn_relbtm_loc, end=self.link_PO.el_folder_loc)
+        el_click(self.link_PO, self.link_PO.el_textNote_loc)
+        elDrag(self.link_PO, start=self.link_PO.btn_relB_loc, end=self.link_PO.el_folder_loc)
         # self.link_PO.driver.refresh()
 
         sleep(5)
@@ -44,7 +44,7 @@ class LinkTest(unittest.TestCase):
         #从起点元素拉出关联线，再新建元素
         public_init(self.link_PO, self.username, self.password, self.projectName)
         public_add(self.link_PO, [(type, 1)])
-        self.link_PO.el_click(start)
+        el_click(self.link_PO, start)
         menu1, menu2 = None, None
         if start == self.link_PO.el_textNote_loc:  #如果起点是文本便签
             menu1 = self.link_PO.menu_forlder_loc
@@ -56,14 +56,14 @@ class LinkTest(unittest.TestCase):
             menu1 = self.link_PO.menu_text_loc
             menu2 = self.link_PO.menu_forlder_loc
         #拉出关联线
-        elDrag(self.link_PO, self.link_PO.btn_relbtm_loc, 0, 100)
-        self.link_PO.el_click(menu1)  #点击菜单选择添加的元素
+        elDrag(self.link_PO, self.link_PO.btn_relB_loc, 0, 100)
+        el_click(self.link_PO, menu1)  #点击菜单选择添加的元素
         left_click(self.link_PO, 100, 100, self.link_PO.header_loc)
         self.assertTrue(public_check(self.link_PO, self.link_PO.el_line_loc, driver=True))
-        self.link_PO.el_click(start)
+        el_click(self.link_PO, start)
         #拉出关联线
-        elDrag(self.link_PO, self.link_PO.btn_relrgt_loc, 100, 0)
-        self.link_PO.el_click(menu2)  #点击菜单选择添加的元素
+        elDrag(self.link_PO, self.link_PO.btn_relR_loc, 100, 0)
+        el_click(self.link_PO, menu2)  #点击菜单选择添加的元素
         left_click(self.link_PO, 100, 100, self.link_PO.header_loc)
         self.link_PO.driver.refresh()
         self.assertIs(public_check(self.link_PO, self.link_PO.el_line_loc, islen=True, driver=True), 2)
@@ -71,11 +71,11 @@ class LinkTest(unittest.TestCase):
     def cutAndPaste(self):
         #框选剪切粘贴
         selection(self.link_PO, self.link_PO.el_divs_loc)
-        rightClick(self.link_PO, el=self.link_PO.el_textNote_loc, actionEl=self.link_PO.btn_cut_loc)
+        rightClick(self.link_PO, el=self.link_PO.el_textNote_loc, action=self.link_PO.menu_cut_loc)
         self.assertFalse(public_check(self.link_PO, self.link_PO.el_divs_loc))
         self.assertFalse(public_check(self.link_PO, self.link_PO.el_line_loc, attr='data-id', driver=True))
         #粘贴，判断元素和关联线数量
-        rightClick(self.link_PO, 200, 300, self.link_PO.header_loc, self.link_PO.btn_paste_loc)
+        rightClick(self.link_PO, 200, 300, self.link_PO.header_loc, self.link_PO.menu_paste_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 3)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_line_loc, islen=True, driver=True), 2)
 
@@ -84,9 +84,9 @@ class LinkTest(unittest.TestCase):
         self.link_PO.driver.refresh()
         public_check(self.link_PO, self.link_PO.el_divs_loc)
         selection(self.link_PO, self.link_PO.el_divs_loc)
-        rightClick(self.link_PO, el=self.link_PO.el_textNote_loc, actionEl=self.link_PO.btn_copy_loc)
+        rightClick(self.link_PO, el=self.link_PO.el_textNote_loc, action=self.link_PO.menu_copy_loc)
         #粘贴，判断元素和关联线数量
-        rightClick(self.link_PO, 400, 100, self.link_PO.header_loc, self.link_PO.btn_paste_loc)
+        rightClick(self.link_PO, 400, 100, self.link_PO.header_loc, self.link_PO.menu_paste_loc)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_divs_loc, islen=True), 6)
         self.assertIs(public_check(self.link_PO, self.link_PO.el_line_loc, islen=True, driver=True), 4)
 

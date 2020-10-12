@@ -15,8 +15,8 @@ class HomePage(BasePage):
     #定位器，通过元素属性定位元素对象
     delProjectName_loc = (By.CSS_SELECTOR, '.header_subtitle>span')  #删除要确认的名称
     Tips_loc = (By.XPATH, '//*[@class="ant-message"]/span//span')
-    num_project_loc = (By.CSS_SELECTOR, '.home_content.clearfix>div')  #项目数量
-    firstProject_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')  #第一个项目
+    num_project_loc = (By.CSS_SELECTOR, '.home_content>div')  #项目数量
+    firstProject_loc = (By.CSS_SELECTOR, '.home_content>:first-child')  #第一个项目
     win_bind_loc = (By.CLASS_NAME, 'ant-modal-body')  #
     log_content_loc = (By.CLASS_NAME, 'log_content')
     log_loc = (By.CSS_SELECTOR, '.log.log_open')
@@ -37,11 +37,12 @@ class HomePage(BasePage):
     btn_nickEdit_loc = (By.CSS_SELECTOR, '.content_info>li:first-child>div:nth-child(3)>.header_edit')
     btn_nickSubmit_loc = (By.CSS_SELECTOR, '.name_form>:last-child>.sure-btn.submit-info')
     btn_pwdEdit_loc = (By.CSS_SELECTOR, '.content_info>li:nth-child(3)>div>.header_edit')
+    btn_pwdEditClose_loc = (By.CSS_SELECTOR, '.form_button>button:first-child')
     btn_headerClose_loc = (By.CLASS_NAME, 'header_close')
     btn_createProject_loc = (By.CSS_SELECTOR, '.home_header>.sure-btn.submit-info')
     #CRD:创建，重命名，删除 按钮
     btn_CR_loc = (By.CSS_SELECTOR, '.add_footer.modal_foot>:last-child>.sure-btn.submit-info')
-    btn_projectMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_set>img')
+    btn_projectMenu_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_set>img')
     btn_menu_rename_loc = (By.CSS_SELECTOR, '.item_menu>li:first-child')
     btn_del_loc = (By.CSS_SELECTOR, '.footBtn.delBtn')
     btn_delSubmit_loc = (By.CSS_SELECTOR, '.add_footer>.sure-btn.submit-info')
@@ -52,11 +53,11 @@ class HomePage(BasePage):
     menu_userInfo_loc = (By.CSS_SELECTOR, '.meny_level2>li:nth-child(3)')  #个人中心
     menu_update_loc = (By.CSS_SELECTOR, '.meny_level2>li:nth-child(5)')  #点击更新日志
 
-    firstPro_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child')
-    firstProMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_set')
-    firstProName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:first-child>.item_text>.item_title')
-    lastProName_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_text>.item_title')
-    lastProMenu_loc = (By.CSS_SELECTOR, '.home_content.clearfix>:last-child>.item_set')
+    firstPro_loc = (By.CSS_SELECTOR, '.home_content>:first-child')
+    firstProMenu_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_set')
+    firstProName_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_text>.item_title')
+    lastProName_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text>.item_title')
+    lastProMenu_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_set')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页

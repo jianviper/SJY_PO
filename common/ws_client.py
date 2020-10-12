@@ -16,7 +16,7 @@ def ws_creatClient(token, canvasId):
 
 
 def ws_creat(PO):
-    token = get_token(PO)
+    token = PO.driver.get_cookie('token')['value']
     url = PO.driver.current_url
     canvasId = re.search(r'(id=)\d+', url).group().split('=')[1]
     url = get('websocket', 'ws')
@@ -35,7 +35,6 @@ def ws_add(PO, type, poix, poiy, **kwargs):
     :param kwargs:
     :return:
     '''
-    # token = get_token(PO)
     url = PO.driver.current_url
     canvasId = re.search(r'(id=)\d+', url).group().split('=')[1]
     # ws = ws_creatClient(token, canvasId)
@@ -71,9 +70,9 @@ def ws_add(PO, type, poix, poiy, **kwargs):
                              "bgColor": color_list[random.randint(0, 4)]})
         elif type == 'FILE_LABEL_ADD':
             fileId = None
-            if 'test' in url:
+            if url.find('test') >= 0:
                 fileId = '32486103420375040'
-            elif 'app' in url:
+            elif url.find('app') >= 0 or url.find('pre') >= 0:
                 fileId = '32543435433054208'
             send_msg = {"type": "FILE_LABEL_ADD", "id": get_ID(PO), "fileId": fileId, "poiX": poix,
                         "poiY": poiy, "title": "websocket.docx"}
@@ -85,7 +84,7 @@ def ws_add(PO, type, poix, poiy, **kwargs):
 
 
 def WSupload_img(PO, el, attr_name):
-    token = get_token(PO)
+    token = PO.driver.get_cookie('token')['value']
     url = PO.driver.current_url
     # poi = public_getElPosition(PO, el)
     poi = []
@@ -143,7 +142,7 @@ def get_last(PO):
 
 
 def api_add(PO, type, num=1):
-    #已弃用
+    #####已弃用######
     #type--1文件夹，2文本，4图片便签
     #url = 'https://app.bimuyu.tech/work?id=81115&workId=20639&name=22'
     url = create_apiUrl(PO)
@@ -176,23 +175,12 @@ def create_apiUrl(PO):
     return api_url
 
 
-def get_token(PO):
-    cookies = PO.driver.get_cookies()
-    token = ''
-    for i in cookies:
-        for key, value in i.items():
-            if value == 'token':
-                token = i['value']
-    return token
-
-
 def get_ID(PO):
     url = "{0}id/get".format(create_apiUrl(PO))
-    token = get_token(PO)
+    token = PO.driver.get_cookie('token')['value']
     data = {"size": 1}
     header = {"Content-Type": "application/x-www-form-urlencoded", 'token': token}
     resp = requests.post(url, data, headers=header, verify=False)
-    # print(resp.text)
     el_id = eval(resp.text)["list"][0]
     return el_id
 

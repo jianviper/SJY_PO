@@ -36,21 +36,21 @@ class CombinationTest(unittest.TestCase):
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_textNote_loc))
         #框选，右键剪切，粘贴
-        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgDIV_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_imgDIV_loc, actionEl=self.comb_PO.btn_imgCut_loc)
+        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgNote_loc])
+        rightClick(self.comb_PO, el=self.comb_PO.el_imgNote_loc, action=self.comb_PO.menu_imgCut_loc)
         left_click(self.comb_PO, 50, 100, self.comb_PO.header_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.comb_PO, 400, 150, self.comb_PO.header_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 400, 150, self.comb_PO.header_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_textNote_loc))
 
         #框选，右键复制，粘贴
-        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgDIV_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_imgDIV_loc, actionEl=self.comb_PO.btn_imgCopy_loc)
+        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgNote_loc])
+        rightClick(self.comb_PO, el=self.comb_PO.el_imgNote_loc, action=self.comb_PO.menu_imgCopy_loc)
         left_click(self.comb_PO, 50, -80, self.comb_PO.tool_mouse_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 2)
-        rightClick(self.comb_PO, 200, 400, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 200, 400, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertIs(len(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src')), 2)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_textNote_loc, islen=True), 2)
@@ -73,19 +73,19 @@ class CombinationTest(unittest.TestCase):
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_textNote_loc))
         #框选，右键剪切，粘贴
         selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_folder_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_folder_loc, actionEl=self.comb_PO.btn_fcut_loc)
+        rightClick(self.comb_PO, el=self.comb_PO.el_folder_loc, action=self.comb_PO.menu_fcut_loc)
         left_click(self.comb_PO, 50, -80, self.comb_PO.tool_mouse_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.comb_PO, 200, 10, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 200, 10, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_folder_loc))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_textNote_loc))
         #框选，右键复制，粘贴
         selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_folder_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_folder_loc, actionEl=self.comb_PO.btn_fcopy_loc)
+        rightClick(self.comb_PO, el=self.comb_PO.el_folder_loc, action=self.comb_PO.menu_fcopy_loc)
         left_click(self.comb_PO, 50, -80, self.comb_PO.tool_mouse_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 2)
-        rightClick(self.comb_PO, 200, 400, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 200, 400, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_folder_loc, islen=True), 2)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_textNote_loc, islen=True), 2)
@@ -107,20 +107,20 @@ class CombinationTest(unittest.TestCase):
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_folder_loc))
         #框选，右键剪切，粘贴
-        selection(self.comb_PO, [self.comb_PO.el_folder_loc, self.comb_PO.el_imgDIV_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_imgDIV_loc, actionEl=self.comb_PO.btn_imgCut_loc)
+        selection(self.comb_PO, [self.comb_PO.el_folder_loc, self.comb_PO.el_imgNote_loc])
+        rightClick(self.comb_PO, el=self.comb_PO.el_imgNote_loc, action=self.comb_PO.menu_imgCut_loc)
         left_click(self.comb_PO, 50, -80, self.comb_PO.tool_mouse_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.comb_PO, 200, 10, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 200, 10, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_folder_loc))
         #框选，右键复制，粘贴
-        selection(self.comb_PO, [self.comb_PO.el_folder_loc, self.comb_PO.el_imgDIV_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_imgDIV_loc, actionEl=self.comb_PO.btn_imgCopy_loc)
+        selection(self.comb_PO, [self.comb_PO.el_folder_loc, self.comb_PO.el_imgNote_loc])
+        rightClick(self.comb_PO, el=self.comb_PO.el_imgNote_loc, action=self.comb_PO.menu_imgCopy_loc)
         left_click(self.comb_PO, 50, -80, self.comb_PO.tool_mouse_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 2)
-        rightClick(self.comb_PO, 600, -20, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 600, -20, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertIs(len(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src')), 2)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_folder_loc, islen=True), 2)
@@ -142,20 +142,20 @@ class CombinationTest(unittest.TestCase):
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_textNote_loc))
         #框选，右键剪切，粘贴
-        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgDIV_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_imgDIV_loc, actionEl=self.comb_PO.btn_imgCut_loc)
+        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgNote_loc])
+        rightClick(self.comb_PO, el=self.comb_PO.el_imgNote_loc, action=self.comb_PO.menu_imgCut_loc)
         left_click(self.comb_PO, 50, -50, self.comb_PO.tool_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.comb_PO, 200, 10, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 200, 10, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src'))
         self.assertTrue(public_check(self.comb_PO, self.comb_PO.el_textNote_loc))
         #框选，右键复制，粘贴
-        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgDIV_loc])
-        rightClick(self.comb_PO, el=self.comb_PO.el_imgDIV_loc, actionEl=self.comb_PO.btn_imgCopy_loc)
+        selection(self.comb_PO, [self.comb_PO.el_textNote_loc, self.comb_PO.el_imgNote_loc])
+        rightClick(self.comb_PO, el=self.comb_PO.el_imgNote_loc, action=self.comb_PO.menu_imgCopy_loc)
         left_click(self.comb_PO, 50, -50, self.comb_PO.tool_loc)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_divs_loc, islen=True), 2)
-        rightClick(self.comb_PO, 200, 400, self.comb_PO.tool_loc, actionEl=self.comb_PO.btn_paste_loc)
+        rightClick(self.comb_PO, 200, 400, self.comb_PO.tool_loc, action=self.comb_PO.menu_paste_loc)
         #检查是否粘贴成功
         self.assertIs(len(public_check(self.comb_PO, self.comb_PO.el_img_loc, attr='src')), 2)
         self.assertIs(public_check(self.comb_PO, self.comb_PO.el_textNote_loc, islen=True), 2)
