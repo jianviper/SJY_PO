@@ -67,7 +67,7 @@ class ShareTest(unittest.TestCase):
 
         sleep(3)
 
-    def te1st_loggedShare(self):
+    def test_loggedShare(self):
         '''先登录，再打开分享页'''
         self.share(1)
 
