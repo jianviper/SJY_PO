@@ -8,13 +8,6 @@ from selenium.webdriver.common.by import By
 import re, time, json, requests, random
 
 
-def ws_creatClient(token, canvasId):
-    url = get('websocket', 'ws')
-    wsUrl = url + '?token={0}&canvasId={1}'.format(token, canvasId)
-    ws = create_connection(wsUrl)
-    return ws
-
-
 def ws_creat(PO):
     token = PO.driver.get_cookie('token')['value']
     url = PO.driver.current_url
@@ -30,8 +23,8 @@ def ws_add(PO, type, poix, poiy, **kwargs):
     通过websocket添加同步元素
     :param PO:
     :param type: 元素类型
-    :param poix: 元素x坐标
-    :param poiy: 元素y坐标
+    :param poix: 元素x坐标,默认传进来200
+    :param poiy: 元素y坐标,默认传进来150
     :param kwargs:
     :return:
     '''
@@ -84,14 +77,13 @@ def ws_add(PO, type, poix, poiy, **kwargs):
 
 
 def WSupload_img(PO, el, attr_name):
-    token = PO.driver.get_cookie('token')['value']
     url = PO.driver.current_url
     # poi = public_getElPosition(PO, el)
     poi = []
     el_id = get_attrs(PO, el, attr_name)
     #url = 'https://app.bimuyu.tech/work?id=81115&workId=20639&name=22'
     canvasId = re.search(r'(id=)\d+', url).group().split('=')[1]
-    ws = ws_creatClient(token, canvasId)
+    ws = ws_creat(PO)
     img_url = ["https://hetao-note.oss-cn-hangzhou.aliyuncs.com/16217/5CxWGwys5aZdEwTfaNrFzTmx2pcz2njp.png",
                "https://hetao-note.oss-cn-hangzhou.aliyuncs.com/16217/cm3ANpMCi36zsBe8kb6bacdsPEsZCyrH.jpg",
                "https://hetao-note.oss-cn-hangzhou.aliyuncs.com/16217/s5X2dCphQkzc3WPtrBSix5cxjt4W776K.png",

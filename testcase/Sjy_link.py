@@ -93,9 +93,9 @@ class LinkTest(unittest.TestCase):
     def test_textNote(self):
         '''新建文本便签，拉出关联线'''
         self.addLine('t', self.link_PO.el_textNote_loc)
-        poi_src = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_src = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         self.cutAndPaste()  #剪切，粘贴
-        poi_dst = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_dst = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst, driver=True)
         self.copyAndPaste()  #复制，粘贴
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='copy', driver=True, num=2)
@@ -103,9 +103,9 @@ class LinkTest(unittest.TestCase):
     def test_folder(self):
         '''新建文件夹，拉出关联线'''
         self.addLine('f', self.link_PO.el_folder_loc)
-        poi_src = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_src = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         self.cutAndPaste()  #剪切，粘贴
-        poi_dst = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_dst = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst, driver=True)
         self.copyAndPaste()  #复制，粘贴
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='copy', driver=True, num=2)
@@ -113,9 +113,9 @@ class LinkTest(unittest.TestCase):
     def test_file(self):
         '''添加文件，拉出关联线'''
         self.addLine('file', self.link_PO.el_file_loc)
-        poi_src = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_src = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         self.cutAndPaste()  #剪切，粘贴
-        poi_dst = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_dst = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst, driver=True)
         self.copyAndPaste()  #复制，粘贴
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='copy', driver=True, num=2)
@@ -123,9 +123,9 @@ class LinkTest(unittest.TestCase):
     def test_imgNote(self):
         '''新建图片便签，拉出关联线'''
         self.addLine('i', self.link_PO.el_img_loc)
-        poi_src = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_src = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         self.cutAndPaste()  #剪切，粘贴
-        poi_dst = public_getElPosition(self.link_PO, self.link_PO.el_line_loc, driver=True)
+        poi_dst = public_getElPoi(self.link_PO, self.link_PO.el_line_loc, driver=True)
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst, driver=True)
         self.copyAndPaste()  #复制，粘贴
         public_revoke(self.link_PO, self.link_PO.el_line_loc, type='copy', driver=True, num=2)

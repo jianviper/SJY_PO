@@ -26,8 +26,8 @@ class WorkerForlder(BasePage):
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
-    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
-    tool_recovery_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
+    tool_recovery_loc = (By.CSS_SELECTOR, '.actionBox>div:last-child')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')

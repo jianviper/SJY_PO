@@ -2,11 +2,9 @@
 #coding:utf-8
 import unittest
 from common.get_config import get_url
-from parts.tool_page import tiyan
 from parts.tools_element import ElementTool
 from parts.tools_page import PageTool
 from pages.Page_worker import WorkerPage
-from time import sleep
 
 '''
 Create on 2020-9-30

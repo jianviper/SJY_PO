@@ -97,7 +97,7 @@ class RevokeTest(unittest.TestCase):
         '''便签的剪切粘贴的撤销和恢复'''
         cut = self.createNote(tool, el)
         #获取元素初始位置
-        poi_src = public_getElPosition(self.revoke_PO, el)[0]
+        poi_src = public_getElPoi(self.revoke_PO, el)[0]
         rightClick(self.revoke_PO, el=el, action=cut)
         #检查剪切是否成功
         self.assertFalse(public_check(self.revoke_PO, el))
@@ -109,13 +109,13 @@ class RevokeTest(unittest.TestCase):
                    action=self.revoke_PO.menu_paste_loc)
         self.assertTrue(public_check(self.revoke_PO, el))
         #获取元素剪切粘贴后的位置
-        poi_dst = public_getElPosition(self.revoke_PO, el)[0]
+        poi_dst = public_getElPoi(self.revoke_PO, el)[0]
         print('{0}\r\n{1}'.format(poi_src, poi_dst))
         do_revoke(self.revoke_PO)  #执行撤销
-        poi_src2 = public_getElPosition(self.revoke_PO, el)[0]
+        poi_src2 = public_getElPoi(self.revoke_PO, el)[0]
         self.assertTrue(poi_src == poi_src2)  #如果撤销正常，和初始位置一样
         do_recovery(self.revoke_PO)  #执行恢复
-        poi_dst2 = public_getElPosition(self.revoke_PO, el)[0]
+        poi_dst2 = public_getElPoi(self.revoke_PO, el)[0]
         self.assertTrue(poi_dst == poi_dst2)  #如果恢复正常，和粘贴后位置一样
 
     def test_textNoteCut(self):

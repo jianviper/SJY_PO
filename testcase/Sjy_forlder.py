@@ -89,7 +89,7 @@ class Forldertest(unittest.TestCase):
     def cut(self, num):
         public_addTool(self.f_PO, self.f_PO.tool_folder_loc, self.f_PO.el_folder_loc, num=num)
         self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), num)
-        poi_src = public_getElPosition(self.f_PO, self.f_PO.el_folder_loc)
+        poi_src = public_getElPoi(self.f_PO, self.f_PO.el_folder_loc)
         if num > 1:
             selection(self.f_PO, self.f_PO.el_folder_loc)
         rightClick(self.f_PO, el=self.f_PO.el_folder_loc, action=self.f_PO.btn_fjianqie_loc)
@@ -100,7 +100,7 @@ class Forldertest(unittest.TestCase):
         self.assertIs(public_check(self.f_PO, self.f_PO.el_divs_loc, islen=True), 0)
         rightClick(self.f_PO, action=self.f_PO.btn_paste_loc)
         self.assertIs(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), num)
-        poi_dst = public_getElPosition(self.f_PO, self.f_PO.el_folder_loc)
+        poi_dst = public_getElPoi(self.f_PO, self.f_PO.el_folder_loc)
         public_revoke(self.f_PO, self.f_PO.el_folder_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
     def test_cut(self):

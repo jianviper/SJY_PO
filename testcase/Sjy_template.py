@@ -2,7 +2,7 @@
 #coding:utf-8
 import unittest
 from common.get_config import get_url
-from pages.Page_template import TemplatePage
+from pages.Page_wk_template import TemplatePage
 from parts.tool_worker import *
 from parts.tool_page import tiyan
 

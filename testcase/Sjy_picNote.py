@@ -69,7 +69,7 @@ class ImgNoteTest(unittest.TestCase):
     def cut(self, num):
         public_add(self.pic_PO, [('i', num)])
         self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_img_loc, attr='src'))
-        poi_src = public_getElPosition(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+        poi_src = public_getElPoi(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         if num > 1:
             selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)  #多选，下一步进行剪切
         rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgCut_loc)
@@ -80,7 +80,7 @@ class ImgNoteTest(unittest.TestCase):
         self.assertIs(public_check(self.pic_PO, self.pic_PO.el_divs_loc, islen=True), 0)
         rightClick(self.pic_PO, action=self.pic_PO.btn_Paste_loc)
         self.assertIs(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc, islen=True), num)
-        poi_dst = public_getElPosition(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+        poi_dst = public_getElPoi(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
     def test_cut(self):

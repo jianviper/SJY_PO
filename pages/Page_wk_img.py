@@ -20,8 +20,8 @@ class WokerPic(BasePage):
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
-    tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
-    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
+    tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_imgDIV_loc = (By.CSS_SELECTOR, '.work_image.work_element')

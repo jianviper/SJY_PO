@@ -17,7 +17,7 @@ class PageTool():
         self.po = po
         pass
 
-    def project_name(self):  #生成项目名称
+    def project_name(self) -> str:  #生成项目名称
         return 'AT_{0}'.format(strftime("%Y-%m-%d %H:%M", localtime()))
 
     def textNote_Content(self):  #生成文本便签内容
@@ -26,16 +26,16 @@ class PageTool():
     def forlder_title(self):  #生成文件夹标题
         return 'F_{0}'.format(strftime("%Y-%m-%d_%H:%M:%S", localtime()))
 
-    def wait_tips(self, el=None):
+    def wait_tips(self, el=None, sec=2, max=5):
         Tips_loc = (By.CSS_SELECTOR, '.ant-message>span>.ant-message-notice')
 
         i, ele = 0, Tips_loc
         if el:
             ele = el
         # print('wait_tips')
-        while not self.po.find_element(*ele, waitsec=2):
+        while not self.po.find_element(*ele, waitsec=sec):
             print('wait:{0}'.format(i))
-            if i > 5:
+            if i > max:
                 break
             i += 1
             # sleep(1.5)
@@ -123,6 +123,7 @@ class PageTool():
         from selenium.webdriver.common.action_chains import ActionChains
         action = ActionChains(self.po.driver)
         action.move_to_element(self.po.find_element(*firstPro_loc)).perform()
+        sleep(1.5)
         self.po.find_element(*firstProMenu_loc).click()
         self.po.find_element(*btn_del_loc).click()
         self.po.find_element(*input_proName_loc).send_keys(self.po.find_element(*text_proName_loc).text)

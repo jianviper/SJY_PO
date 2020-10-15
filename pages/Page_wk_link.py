@@ -15,7 +15,7 @@ class LinkPage(BasePage):
     #定位器，通过元素属性定位元素对象
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
 
-    tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(4)')
+    tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
 
     btn_invite_loc = (By.CLASS_NAME, 'menbercompoment')

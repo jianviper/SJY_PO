@@ -3,7 +3,7 @@
 import unittest, logging
 from common.get_config import get_url
 from common.create_UUID import create_uuid
-from pages.Page_tiyan import TiyanPage
+from pages.Page_wk_tiyan import TiyanPage
 from parts.tool_worker import *
 
 '''

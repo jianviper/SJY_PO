@@ -21,10 +21,11 @@ class WorkerTextNote(BasePage):
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
-    tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(4)')
+    tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
     tool_textfont_loc = (By.CSS_SELECTOR, '.tool_item:first-child>img')
-    tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
-    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
+    tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
+    text_tool = (By.CLASS_NAME, 'work_text_tool')  #富文本工具栏
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
@@ -33,10 +34,10 @@ class WorkerTextNote(BasePage):
     el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>img')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
 
-    btn_jianqie_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
-    btn_copy_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(2)')
-    btn_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
-    btn_zhantie_loc = (By.CLASS_NAME, 'menu_item')
+    menu_cut_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(1)')
+    menu_copy_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(2)')
+    menu_del_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(3)')
+    menu_paste_loc = (By.CLASS_NAME, 'menu_item')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页

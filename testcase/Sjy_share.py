@@ -2,7 +2,7 @@
 #coding:utf-8
 import unittest
 from common.get_config import get_url
-from pages.Page_share import SharePage
+from pages.Page_wk_share import SharePage
 from parts.tool_worker import *
 
 '''

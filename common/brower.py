@@ -26,6 +26,10 @@ class BrowerSet(object):
     def set(self):
         if self.bn == 'chrome':
             options = webdriver.ChromeOptions()
+            store_path = r'C:\Users\SJY-J\Downloads'
+            prefs = {'download.default_directory': store_path,
+                     'profile.default_content_settings.popups': 0}
+            options.add_experimental_option('prefs', prefs)
             options.add_argument('lang=zh_CN.UTF-8')
             options.add_argument('--headless')  #无界面浏览器
             options.add_argument('--disable-gpu')

@@ -21,7 +21,7 @@ def public_getElSize(PO, el):  #获取元素的尺寸
         return p_list
 
 
-def public_getElPosition(PO, el, **kwargs):  #获取元素位置
+def public_getElPoi(PO, el, **kwargs):  #获取元素位置
     '''{"x":222,"y":333}'''
     if kwargs.get('driver'):
         find = PO.driver.find_elements_by_css_selector(el)
@@ -93,8 +93,10 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
     '''
     x, y, margin, height = 200, 150, 0, 0  #初始位置
     # header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
-    if kwargs.get('x') and kwargs.get('y'):
-        x, y = kwargs.get('x', 200), kwargs.get('y', 10)
+    if kwargs.get('x'):
+        x = kwargs.get('x', 200)
+    if kwargs.get('y'):
+        y = kwargs.get('y', 150)
     for i in range(num):
         PO.find_element(*toolEL).click()
         if i > 0:  #添加了一个元素之后
@@ -103,12 +105,13 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
         left_click(PO, x, y + (height + margin) * i, el=header_loc)
         sleep(1)
         left_click(PO, 50, 100, header_loc)
-        assert public_check(PO, checkEL)
+        #assert public_check(PO, checkEL)
 
 
 def get_token_js(PO):
     token = PO.driver.execute_script('return document.cookie;')
     print('token:{0}'.format(token))
+
 
 def public_add(PO, els, **kwargs):
     '''
@@ -312,20 +315,20 @@ def public_revoke(PO, el=None, **kwargs):
     elif kwargs.get('type') == 'cut':  #元素剪切
         do_revoke(PO, kwargs.get('step', 1))
         if len(kwargs.get('poi_src')) > 1:  #当有多个元素的时候
-            poi = public_getElPosition(PO, el, driver=kwargs.get('driver'))
+            poi = public_getElPoi(PO, el, driver=kwargs.get('driver'))
             assert len(kwargs.get('poi_src')) == len(poi)
             for p in poi:
                 assert p in kwargs.get('poi_src')
         else:
-            assert public_getElPosition(PO, el, driver=kwargs.get('driver')) == kwargs.get('poi_src')
+            assert public_getElPoi(PO, el, driver=kwargs.get('driver')) == kwargs.get('poi_src')
         do_recovery(PO, kwargs.get('step', 1))
         if len(kwargs.get('poi_dst')) > 1:  #当有多个元素的时候
-            poi = public_getElPosition(PO, el, driver=kwargs.get('driver'))
+            poi = public_getElPoi(PO, el, driver=kwargs.get('driver'))
             assert len(kwargs.get('poi_dst')) == len(poi)
             for p in poi:
                 assert p in kwargs.get('poi_dst')
         else:
-            assert public_getElPosition(PO, el, driver=kwargs.get('driver')) == kwargs.get('poi_dst')
+            assert public_getElPoi(PO, el, driver=kwargs.get('driver')) == kwargs.get('poi_dst')
     elif kwargs.get('type') == 'copy':  #元素复制
         do_revoke(PO, kwargs.get('step', 1))
         if kwargs.get('driver'):

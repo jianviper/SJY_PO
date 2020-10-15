@@ -120,6 +120,8 @@ class ElementTool(object):
         x, y, margin, height = kwargs.get('x', 200), kwargs.get('y', 150), 50, 0  #初始位置
         type = None
         ws = None
+        if els == 'all':
+            els = [('t', 1), ('i', 1), ('f', 1), ('file', 1)]
         try:
             ws = ws_creat(self.PO)
             for el in els:

@@ -15,7 +15,7 @@ summary:文本便签的测试用例
 '''
 
 
-class textNoteTest(unittest.TestCase):
+class TextNoteTest(unittest.TestCase):
     def setUp(self) -> None:
         urls = get_url()  #return [url,home_url]
         self.url, self.home_url = urls[0], urls[1]
@@ -24,7 +24,6 @@ class textNoteTest(unittest.TestCase):
         self.text_PO = WorkerTextNote(base_url=self.url)
         self.projectName = project_name()
         self.textContent = textNote_Content()
-        self.textNote = ElementCreater().create_element('text', self.text_PO)
         self.text_PO.open()
 
     def tearDown(self) -> None:
@@ -48,7 +47,7 @@ class textNoteTest(unittest.TestCase):
         # self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)  #多选
-        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.btn_del_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.menu_del_loc)
         #是否删除成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='del', step=num)
@@ -85,18 +84,18 @@ class textNoteTest(unittest.TestCase):
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         public_textInput(self.text_PO, self.textContent)  #点击文本便签，再输入文本
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
-        poi_src = public_getElPosition(self.text_PO, self.text_PO.el_textNote_loc)
+        poi_src = public_getElPoi(self.text_PO, self.text_PO.el_textNote_loc)
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)  #多选
-        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.btn_jianqie_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.menu_cut_loc)
         #检查是否剪切成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         left_click(self.text_PO, 500, 200, self.text_PO.header_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
         self.assertIs(public_check(self.text_PO, self.text_PO.el_divs_loc, islen=True), 0)
-        rightClick(self.text_PO, action=self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, action=self.text_PO.menu_paste_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
-        poi_dst = public_getElPosition(self.text_PO, self.text_PO.el_textNote_loc)
+        poi_dst = public_getElPoi(self.text_PO, self.text_PO.el_textNote_loc)
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
     def test_cut(self):
@@ -147,9 +146,9 @@ class textNoteTest(unittest.TestCase):
         if num > 1:
             selection(self.text_PO, self.text_PO.el_textNote_loc)
         #右键-复制
-        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.btn_copy_loc)
+        rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.menu_copy_loc)
         #右键-粘贴
-        rightClick(self.text_PO, 450, 10, self.text_PO.el_textNote_loc, self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, 450, 10, self.text_PO.el_textNote_loc, self.text_PO.menu_paste_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num * 2)
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='copy', num=num)
@@ -157,7 +156,7 @@ class textNoteTest(unittest.TestCase):
         self.text_PO.driver.get(self.home_url)
         public_createProject(self.text_PO, '[copy]' + self.projectName[6:].replace(' ', ''))
         public_intoProject(self.text_PO)
-        rightClick(self.text_PO, 500, 10, self.text_PO.tool_loc, self.text_PO.btn_zhantie_loc)
+        rightClick(self.text_PO, 500, 10, self.text_PO.tool_loc, self.text_PO.menu_paste_loc)
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
         public_revoke(self.text_PO, self.text_PO.el_textNote_loc)
@@ -171,7 +170,7 @@ class textNoteTest(unittest.TestCase):
         self.copy(2)
 
     def test_setBgColor(self):
-        #设置文本便签背景色,判断颜色设置是否正确
+        '''设置文本便签背景色,判断颜色设置是否正确'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
         public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=1)
         public_textInput(self.text_PO, self.textContent)
@@ -180,13 +179,26 @@ class textNoteTest(unittest.TestCase):
             self.text_PO.getc(i, self.textContent)
             sleep(1)
 
-    def test_factory(self):
+    def test_richText_tool(self):
+        '''富文本工具栏位置检查'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
-        self.textNote.add()
-        self.textNote.public_textInput(self.textContent)
-
-        sleep(3)
+        #文本便签位于顶部位置，富文本工具栏在其下方显示
+        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, y=130)
+        double_click(self.text_PO, self.text_PO.el_textNote_loc)
+        poi_text_tool = public_getElPoi(self.text_PO, self.text_PO.text_tool)
+        self.assertTrue(poi_text_tool[0]['y'] > 190)
+        left_click(self.text_PO, 100, 100, self.text_PO.header_loc)
+        rightClick(self.text_PO, self.text_PO.el_textNote_loc, action=self.text_PO.menu_del_loc)
+        #文本便签位于底部位置，富文本工具栏在其上方显示
+        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, y=800)
+        double_click(self.text_PO, self.text_PO.el_textNote_loc)
+        poi_text_tool = public_getElPoi(self.text_PO, self.text_PO.text_tool)
+        self.assertTrue(poi_text_tool[0]['y'] < 760)
+        left_click(self.text_PO, 100, 100, self.text_PO.header_loc)
 
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(TextNoteTest('test_richText_tool'))
+    unittest.TextTestRunner().run(suite)

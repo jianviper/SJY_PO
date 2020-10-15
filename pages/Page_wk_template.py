@@ -17,7 +17,7 @@ class TemplatePage(BasePage):
     #定位器，通过元素属性定位元素对象
     header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
     tool_loc = (By.CLASS_NAME, 'work_tool')
-    tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
+    tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
 
     el_tempImg_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>div:first-child')
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
