@@ -120,7 +120,7 @@ class ImgNoteTest(unittest.TestCase):
         public_delProject(self.pic_PO, self.home_url)
 
     def rotate(self):
-        '''旋转图片'''
+        #旋转图片
         public_add(self.pic_PO, [('i', 1)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgRorate_loc)
@@ -130,15 +130,17 @@ class ImgNoteTest(unittest.TestCase):
         public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='rotate', size1=size1, size2=size2)
 
     def test_rotate(self):
+        '''旋转图片'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
         self.rotate()
 
     def test_ty_rotate(self):
+        '''体验模式-旋转图片'''
         tiyan(self.pic_PO)
         self.rotate()
 
     def multi_rotate(self):
-        '''多选，旋转'''
+        #多选旋转
         public_add(self.pic_PO, [('i', 2)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
@@ -150,15 +152,17 @@ class ImgNoteTest(unittest.TestCase):
         # public_revoke(self.pic_PO,self.pic_PO.el_imgDIV_loc)
 
     def test_multi_rotate(self):
+        '''多选，旋转'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
         self.multi_rotate()
 
     def test_ty_multi_rotate(self):
+        '''体验模式-多选，旋转'''
         tiyan(self.pic_PO)
         self.multi_rotate()
 
     def origin(self):
-        '''原图尺寸'''
+        #原图尺寸
         public_add(self.pic_PO, [('i', 1)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgOrigin_loc)
@@ -168,15 +172,17 @@ class ImgNoteTest(unittest.TestCase):
         public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='origin', size1=size1, size2=size2)
 
     def test_origin(self):
+        '''原图尺寸'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
         self.origin()
 
     def test_ty_origin(self):
+        '''体验模式-原图尺寸'''
         tiyan(self.pic_PO)
         self.origin()
 
     def multi_origin(self):
-        '''原图尺寸'''
+        #多选，原图尺寸
         public_add(self.pic_PO, [('i', 2)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
@@ -187,10 +193,12 @@ class ImgNoteTest(unittest.TestCase):
             self.assertTrue(size1[i]['height'] < size2[i]['height'])
 
     def test_multi_origin(self):
+        '''多选，原图尺寸'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
         self.multi_origin()
 
     def test_ty_multi_origin(self):
+        '''体验模式-多选，原图尺寸'''
         tiyan(self.pic_PO)
         self.multi_origin()
 

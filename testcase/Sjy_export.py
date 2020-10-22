@@ -29,7 +29,7 @@ class Export(unittest.TestCase):
         self.pg.public_tearDown(self.url, self.home_url, self.username, self.password)
         self.ex_PO.driver.quit()
 
-    def te1st_page_export(self):
+    def test_page_export(self):
         '''本页导出'''
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add('all')

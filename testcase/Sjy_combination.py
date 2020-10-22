@@ -9,7 +9,7 @@ from parts.tool_page import tiyan
 '''
 Create on 2020-4-7
 author:linjian
-summary:邀请/加入的测试用例
+summary:不同类型元素组合操作的测试用例
 '''
 
 

@@ -48,8 +48,9 @@ def ws_add(PO, type, poix, poiy, **kwargs):
         #组织发送数据,根据类型加入数据
         if type == "TEXT_LABEL_ADD":
             utime = time.strftime('%Y-%m-%d %H:%M:%S')
+            content = 'AutoTestContent-{0}'.format(utime)
             send_msg.update(
-                {"type": "TEXT_LABEL_ADD", "content": 'AutoTestContent-{0}'.format(utime), "poiW": 350, "poiH": 60})
+                {"type": "TEXT_LABEL_ADD", "content": kwargs.get('text', content), "poiW": 350, "poiH": 60})
         elif type == "IMAGE_LABEL_ADD":
             send_msg.update({"type": "IMAGE_LABEL_ADD",
                              "img": img_url[random.randint(0, 3)],

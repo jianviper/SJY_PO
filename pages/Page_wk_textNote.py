@@ -92,6 +92,7 @@ class WorkerTextNote(BasePage):
         self.find_element(*color_item).click()
         sleep(1)
         text = get_text(self, self.el_textNote_loc)
+        print(text, '\r\n', textContent)
         assert text == textContent
         bc = self.find_element(*self.el_textNote_loc).value_of_css_property('background-color')
         if cid == 1:

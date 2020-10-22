@@ -71,6 +71,7 @@ class WorkerForlder(BasePage):
         return self.find_element(*self.el_fTitle_loc).text
 
     def enter(self, index=0):  #进入文件夹
-        action = ActionChains(self.driver)
-        action.double_click(self.find_elements(*self.el_folder_loc)[index]).perform()
-        sleep(2)
+        if self.find_elements(*self.el_folder_loc):
+            action = ActionChains(self.driver)
+            action.double_click(self.find_elements(*self.el_folder_loc)[index]).perform()
+            sleep(2)

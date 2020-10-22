@@ -28,6 +28,7 @@ class TemplatePage(BasePage):
     el_job_loc = (By.CSS_SELECTOR, '.no-input.data-job>.searchInput.form-line')
     el_notfind_loc = (By.CSS_SELECTOR, '.helpOut.pointer_cursor.flex_bteween')
     el_warnTitle_loc = (By.CLASS_NAME, 'warn_title')
+    el_tempMenu_loc = (By.CSS_SELECTOR, '.workTempalte.default_cursor.flex_bteween.tpl_menu')
 
     btn_useTemp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>.sure-btn.is-plain.use-tpl')
     btn_search_loc = (By.CLASS_NAME, 'iconsearch')
@@ -43,7 +44,7 @@ class TemplatePage(BasePage):
 
     def choose_template(self):
         self.find_element(*self.tool_temp_loc).click()
-        sleep(2)
+        sleep(1)
 
     def add_temp(self):
         self.choose_template()

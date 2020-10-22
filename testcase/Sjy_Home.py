@@ -68,7 +68,7 @@ class HomeTest(unittest.TestCase):
         self.assertEqual('删除成功', self.hp_PO.get_tips())
 
     def test_userInfo(self):
-        #修改昵称，更改密码查看手机号码是否正确
+        '''修改昵称，更改密码查看手机号码是否正确'''
         public_login(self.hp_PO, self.username, self.password)
         self.assertTrue(public_check(self.hp_PO, self.hp_PO.btn_user_loc))
         el_click(self.hp_PO, self.hp_PO.btn_user_loc)  #点击头像

@@ -18,8 +18,8 @@ class BasePage(object):
 
     def __init__(self, brower_name='chrome', base_url=''):
         # logger = logging.getLogger()
-        logging.basicConfig(level=logging.INFO,
-                            format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+        # logging.basicConfig(level=logging.WARN,
+        #                     format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         self.baseurl = base_url
         #供选择浏览器，默认谷歌
         BS = BrowerSet(brower_name)

@@ -82,7 +82,7 @@ class Forldertest(unittest.TestCase):
         self.copy()
 
     def test_ty_copy(self):
-        '''体验模式下复制粘贴文件夹'''
+        '''体验模式-复制粘贴文件夹'''
         tiyan(self.f_PO)
         self.copy()
 
@@ -229,7 +229,7 @@ class Forldertest(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # unittest.main()
-    suite = unittest.TestSuite()
-    suite.addTest(Forldertest('test_copyWL'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(Forldertest('test_ty_add_folder'))
+    # unittest.TextTestRunner().run(suite)

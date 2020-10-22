@@ -18,6 +18,7 @@ def public_getElSize(PO, el):  #获取元素的尺寸
     if PO.find_elements(*el):
         for e in PO.find_elements(*el):
             p_list.append(e.size)
+            print(e.size)
         return p_list
 
 
@@ -102,10 +103,10 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
         if i > 0:  #添加了一个元素之后
             size = public_getElSize(PO, checkEL)[i - 1]
             height, margin = size['height'], 50
-        left_click(PO, x, y + (height + margin) * i, el=header_loc)
+        left_click(PO, x, y + (height + margin) * i, header_loc)
         sleep(1)
         left_click(PO, 50, 100, header_loc)
-        #assert public_check(PO, checkEL)
+        # assert public_check(PO, checkEL)
 
 
 def get_token_js(PO):
@@ -143,7 +144,7 @@ def public_add(PO, els, **kwargs):
                 type = 'FILE_LABEL_ADD'
                 el_height = 110
             for i in range(el[1]):
-                ws_add(PO, type, x, y, ws=ws)  #请求websocket
+                ws_add(PO, type, x, y, ws=ws, text=kwargs.get('text'))  #请求websocket
                 y = y + el_height + margin
                 sleep(1)
         PO.driver.refresh()
@@ -169,8 +170,6 @@ def left_click(PO, x=0, y=0, el=None):
     elif x and y:  #在当前鼠标位置的相对偏移位置
         action.move_by_offset(x, y).click().perform()
     elif el:  #在指定元素上
-        print('cccc')
-        # PO.find_element(*el).click()
         action.click(PO.find_element(*el)).perform()
     sleep(1.5)
 
@@ -203,8 +202,8 @@ def rightClick(PO, x=0, y=0, el=None, action=None):
 def double_click(PO, el):
     #双击元素
     sleep(1)
-    action = ActionChains(PO.driver)
     if PO.find_element(*el):
+        action = ActionChains(PO.driver)
         action.double_click(PO.find_element(*el)).perform()
 
 
@@ -262,8 +261,9 @@ def public_textInput(PO, text):
     if len(PO.find_elements(*PO.el_textNote_loc)) > 0:
         # header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
         el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
-        action = ActionChains(PO.driver)
         for e in PO.find_elements(*el_textContent_loc):
+            print(e)
+            action = ActionChains(PO.driver)
             action.double_click(e).perform()
             sleep(1)
             left_click(PO, 50, 100, header_loc)

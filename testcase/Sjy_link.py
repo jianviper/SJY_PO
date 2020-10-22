@@ -30,6 +30,7 @@ class LinkTest(unittest.TestCase):
         self.link_PO.driver.quit()
 
     def test_link(self):
+        '''两个元素之间添加关联线'''
         public_init(self.link_PO, self.username, self.password, self.projectName)
         public_add(self.link_PO, [('t', 1), ('f', 1)])
         # self.link_PO.driver.refresh()

@@ -56,13 +56,9 @@ class TemplateTest(unittest.TestCase):
         self.search()
         public_delProject(self.temp_PO, self.home_url)
 
-    def test_ty_search(self):
-        '''体验模式-模板正常搜索'''
-        tiyan(self.temp_PO)
-        self.search()
-
     def searchAndSubmit(self):
-        self.temp_PO.choose_template()
+        el_click(self.temp_PO, self.temp_PO.tool_temp_loc)
+        self.assertTrue(public_check(self.temp_PO, self.temp_PO.el_tempMenu_loc))
         self.temp_PO.do_search("python")  #执行搜索
         self.assertTrue(public_check(self.temp_PO, self.temp_PO.el_secondtext_loc))
         self.temp_PO.click_submit()
@@ -85,7 +81,7 @@ class TemplateTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # unittest.main()
-    suite = unittest.TestSuite()
-    suite.addTest(TemplateTest('test_addTemplate'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(TemplateTest('test_addTemplate'))
+    # unittest.TextTestRunner().run(suite)

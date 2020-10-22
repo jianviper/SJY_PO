@@ -233,7 +233,7 @@ def tiyan(PO):  #进入体验模式
     host = re.search(r'(\w+\.){2}\w+', PO.driver.current_url).group()
 
     if host == 'app.bimuyu.tech':
-        tiyan_loc = (By.CLASS_NAME, 'content_login')
+        tiyan_loc = (By.CLASS_NAME, 'buttons_signup')
         PO.driver.get('http://bimuyu.tech/')
         PO.find_element(*tiyan_loc).click()
     else:
@@ -247,7 +247,6 @@ def tiyan(PO):  #进入体验模式
             PO.driver.get(url)
             sleep(3)
     wait_tips(PO, PO.tool_loc)
-    # print(PO.driver.title)
     # assert '比幕鱼 - 体验' == PO.driver.title
     sleep(1)
     if PO.find_element(*btn_skip_loc):
@@ -265,7 +264,7 @@ def tiyan(PO):  #进入体验模式
 def el_click(PO, el):
     sleep(1)
     if PO.find_element(*el):
-        return PO.find_element(*el).click()
+        PO.find_element(*el).click()
     else:
         assert Exception("function get_text() 元素不存在!")
 

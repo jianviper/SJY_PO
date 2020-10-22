@@ -32,7 +32,8 @@ class TextNoteTest(unittest.TestCase):
 
     def addAndDel(self, num):
         #添加文本便签,若成功，添加内容
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
+        public_add(self.text_PO, [('t', num)], text='')
         #是否新建成功
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         sleep(3)
@@ -50,7 +51,7 @@ class TextNoteTest(unittest.TestCase):
         rightClick(self.text_PO, el=self.text_PO.el_textNote_loc, action=self.text_PO.menu_del_loc)
         #是否删除成功
         self.assertFalse(public_check(self.text_PO, self.text_PO.el_textNote_loc))
-        public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='del', step=num)
+        public_revoke(self.text_PO, self.text_PO.el_textNote_loc, type='del')
         # click_trash(self.text_PO)  #打开废纸篓进行恢复
         # recovery(self.text_PO)
         #是否恢复成功
@@ -80,7 +81,8 @@ class TextNoteTest(unittest.TestCase):
 
     def cut(self, num):
         #剪切，粘贴
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
+        public_add(self.text_PO, [('t', num)], text='')
         self.assertIs(public_check(self.text_PO, self.text_PO.el_textNote_loc, islen=True), num)
         public_textInput(self.text_PO, self.textContent)  #点击文本便签，再输入文本
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNoteText_loc, self.textContent))
@@ -123,7 +125,8 @@ class TextNoteTest(unittest.TestCase):
     def tes1t_drag(self):
         '''拖动到文件夹内'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc)
+        public_add(self.text_PO, [('t', 1)], text='')
         #是否新建成功
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         public_textInput(self.text_PO, self.textContent)  #点击文本便签，再输入文本
@@ -137,9 +140,10 @@ class TextNoteTest(unittest.TestCase):
         public_delProject(self.text_PO, self.home_url)
 
     def copy(self, num):
-        '''复制/粘贴，跨项目'''
+        #复制/粘贴，跨项目
         public_init(self.text_PO, self.username, self.password, self.projectName)
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=num)
+        public_add(self.text_PO, [('t', num)], text='')
         #是否新建成功
         self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         public_textInput(self.text_PO, self.textContent)  #点击文本便签，再输入文本
@@ -164,15 +168,20 @@ class TextNoteTest(unittest.TestCase):
         public_delProject(self.text_PO, self.home_url)
 
     def test_copy(self):
+        '''复制/粘贴，跨项目'''
         self.copy(1)
 
     def test_multiCopy(self):
+        '''多选，复制/粘贴，跨项目'''
         self.copy(2)
 
     def test_setBgColor(self):
         '''设置文本便签背景色,判断颜色设置是否正确'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=1)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, num=1)
+        public_add(self.text_PO, [('t', 1)], text='')
+        #是否新建成功
+        self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         public_textInput(self.text_PO, self.textContent)
         for i in range(1, 9):
             rightClick(self.text_PO, el=self.text_PO.el_textNote_loc)  #右键点击
@@ -183,14 +192,19 @@ class TextNoteTest(unittest.TestCase):
         '''富文本工具栏位置检查'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
         #文本便签位于顶部位置，富文本工具栏在其下方显示
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, y=130)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, y=130)
+        public_add(self.text_PO, [('t', 1)], text='')
+        self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNote_loc))
+        public_textInput(self.text_PO, self.textContent)
         double_click(self.text_PO, self.text_PO.el_textNote_loc)
         poi_text_tool = public_getElPoi(self.text_PO, self.text_PO.text_tool)
         self.assertTrue(poi_text_tool[0]['y'] > 190)
-        left_click(self.text_PO, 100, 100, self.text_PO.header_loc)
+        self.text_PO.driver.refresh()
+        self.assertTrue(public_check(self.text_PO, self.text_PO.el_textNote_loc))
         rightClick(self.text_PO, self.text_PO.el_textNote_loc, action=self.text_PO.menu_del_loc)
         #文本便签位于底部位置，富文本工具栏在其上方显示
-        public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, y=800)
+        # public_addTool(self.text_PO, self.text_PO.tool_text_loc, self.text_PO.el_textNote_loc, y=800)
+        public_add(self.text_PO, [('t', 1)], text='', y=800)
         double_click(self.text_PO, self.text_PO.el_textNote_loc)
         poi_text_tool = public_getElPoi(self.text_PO, self.text_PO.text_tool)
         self.assertTrue(poi_text_tool[0]['y'] < 760)
