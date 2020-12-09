@@ -21,53 +21,23 @@ class ImgNoteTest(unittest.TestCase):
         self.password = '123456'
         self.pic_PO = WokerPic(base_url=self.url)
         self.projectName = project_name()
-        self.textContent = textNote_Content()
+        self.textContent = text_Content()
         self.pic_PO.open()
 
     def tearDown(self) -> None:
         public_tearDown(self.pic_PO, self.url, self.home_url, self.username, self.password)
         self.pic_PO.driver.quit()
 
-    def Del(self, num):
-        #删除图片便签
-        public_add(self.pic_PO, [('i', num)])
+    def test_add(self):
+        '''添加图片便签'''
+        public_init(self.pic_PO, self.username, self.password, self.projectName)
+        ws_add(self.pic_PO, [('i', 1)])
         self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_img_loc, attr='src'))
-        public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, step=num)
-        if num > 1:
-            selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgDel_loc)
-        #是否删除成功
-        self.assertFalse(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc))
-        public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='del')
-        # click_trash(self.pic_PO)  #打开废纸篓进行恢复
-        # recovery(self.pic_PO)
-        #检查恢复是否成功
-        # self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc, islen=True) == 1)
-
-    def test_del(self):
-        '''单张删除/恢复'''
-        public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.Del(1)
-        public_delProject(self.pic_PO, self.home_url)
-
-    def test_ty_del(self):
-        '''体验模式-单张删除/恢复'''
-        tiyan(self.pic_PO)
-        self.Del(1)
-
-    def test_multiDel(self):
-        '''多选删除/恢复'''
-        public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.Del(2)
-        public_delProject(self.pic_PO, self.home_url)
-
-    def test_ty_multiDel(self):
-        '''体验模式-多选删除/恢复'''
-        tiyan(self.pic_PO)
-        self.Del(2)
+        el_click(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+        self.assertTrue(public_check(self.pic_PO, self.pic_PO.tool_imgTool_loc))
 
     def cut(self, num):
-        public_add(self.pic_PO, [('i', num)])
+        ws_add(self.pic_PO, [('i', num)])
         self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_img_loc, attr='src'))
         poi_src = public_getElPoi(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         if num > 1:
@@ -77,17 +47,16 @@ class ImgNoteTest(unittest.TestCase):
         self.assertFalse(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc))
         left_click(self.pic_PO, 200, 50, el=self.pic_PO.tool_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
-        self.assertIs(public_check(self.pic_PO, self.pic_PO.el_divs_loc, islen=True), 0)
+        self.assertEqual(public_check(self.pic_PO, self.pic_PO.el_divs_loc, islen=True), 0)
         rightClick(self.pic_PO, action=self.pic_PO.btn_Paste_loc)
-        self.assertIs(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc, islen=True), num)
+        self.assertEqual(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc, islen=True), num)
         poi_dst = public_getElPoi(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
+        public_revoke_recovery(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='cut', poi_src=poi_src, poi_dst=poi_dst)
 
     def test_cut(self):
         '''单张剪切/粘贴'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
         self.cut(1)
-        public_delProject(self.pic_PO, self.home_url)
 
     def test_ty_cut(self):
         '''体验模式-单张剪切/粘贴'''
@@ -104,106 +73,105 @@ class ImgNoteTest(unittest.TestCase):
         tiyan(self.pic_PO)
         self.cut(2)
 
+    def copy(self, num):
+        #图片便签的复制粘贴
+        ws_add(self.pic_PO, [('i', num)])
+        self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_img_loc, attr='src'))
+        poi_src = public_getElPoi(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+        if num > 1:
+            selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)  #多选，下一步进行复制
+        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgCopy_loc)
+        left_click(self.pic_PO, 600, 100, el=self.pic_PO.header_loc)
+        rightClick(self.pic_PO, action=self.pic_PO.btn_Paste_loc)
+        self.assertEqual(public_check(self.pic_PO, self.pic_PO.el_imgDIV_loc, islen=True), num * 2)
+        public_revoke_recovery(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='copy', num=num)
+
+    def test_copy(self):
+        '''单张复制，粘贴'''
+        public_init(self.pic_PO, self.username, self.password, self.projectName)
+        self.copy(1)
+
+    def test_multiCopy(self):
+        '''多张复制，粘贴'''
+        public_init(self.pic_PO, self.username, self.password, self.projectName)
+        self.copy(2)
+
     def tes1t_drag(self):
         '''拖动到文件夹内'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
-        public_add(self.pic_PO, [('i', 1)])
+        ws_add(self.pic_PO, [('i', 1)])
         self.pic_PO.driver.refresh()
         self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_img_loc, attr='src'))
         #添加文件夹
         public_addTool(self.pic_PO, self.pic_PO.tool_folder_loc, self.pic_PO.el_folder_loc, x=300, y=500)
         self.assertTrue(public_check(self.pic_PO, self.pic_PO.el_folder_loc))
-        #拖动文本便签到文件夹内
+        #拖动文本到文件夹内
         elDrag(self.pic_PO, self.pic_PO.el_img_loc, self.pic_PO.el_folder_loc)
-        # self.assertFalse(public_check(self.pic_PO,self.pic_PO.el_textNote_loc))
+        # self.assertFalse(public_check(self.pic_PO,self.pic_PO.el_text_loc))
 
         public_delProject(self.pic_PO, self.home_url)
 
-    def rotate(self):
-        #旋转图片
-        public_add(self.pic_PO, [('i', 1)])
+    def rotate(self, type):
+        #旋转图片,type:1 右键-旋转,type:2 工具栏-旋转
+        ws_add(self.pic_PO, [('i', 1)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgRorate_loc)
+        if type == 1:  #右键-旋转
+            rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgRorate_loc)
+        elif type == 2:  #工具栏-旋转
+            el_click(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+            el_click(self.pic_PO, self.pic_PO.btn_tool_rorate_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         self.assertTrue(size1[0]['height'] == size2[0]['width'])
         self.assertTrue(size2[0]['height'] == size1[0]['width'])
-        public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='rotate', size1=size1, size2=size2)
+        public_revoke_recovery(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='rotate', size1=size1, size2=size2)
 
-    def test_rotate(self):
-        '''旋转图片'''
+    def test_right_rotate(self):
+        '''右键-旋转图片'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.rotate()
+        self.rotate(1)
 
-    def test_ty_rotate(self):
-        '''体验模式-旋转图片'''
-        tiyan(self.pic_PO)
-        self.rotate()
-
-    def multi_rotate(self):
-        #多选旋转
-        public_add(self.pic_PO, [('i', 2)])
-        size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgMRorate_loc)
-        size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        for i in range(size1.__len__()):
-            self.assertTrue(size1[i]['width'] == size2[i]['height'])
-            self.assertTrue(size1[i]['height'] == size2[i]['width'])
-        # public_revoke(self.pic_PO,self.pic_PO.el_imgDIV_loc)
-
-    def test_multi_rotate(self):
-        '''多选，旋转'''
+    def test_tool_rotate(self):
+        '''工具栏-旋转图片'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.multi_rotate()
+        self.rotate(2)
 
-    def test_ty_multi_rotate(self):
-        '''体验模式-多选，旋转'''
+    def tes1t_ty_rotate(self):
+        '''体验模式-右键-旋转图片'''
         tiyan(self.pic_PO)
-        self.multi_rotate()
+        self.rotate(1)
 
-    def origin(self):
-        #原图尺寸
-        public_add(self.pic_PO, [('i', 1)])
+    def origin(self, type):
+        #原图尺寸,type:1 右键,type:2 工具栏
+        ws_add(self.pic_PO, [('i', 1)])
         size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgOrigin_loc)
+        if type == 1:
+            rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgOrigin_loc)
+        elif type == 2:
+            el_click(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+            el_click(self.pic_PO, self.pic_PO.btn_tool_orign_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
         self.assertTrue(size1[0]['width'] < size2[0]['width'])
         self.assertTrue(size1[0]['height'] < size2[0]['height'])
-        public_revoke(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='origin', size1=size1, size2=size2)
+        public_revoke_recovery(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='origin', size1=size1, size2=size2)
 
-    def test_origin(self):
-        '''原图尺寸'''
+    def test_right_origin(self):
+        '''右键-原图尺寸'''
         public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.origin()
+        self.origin(1)
 
-    def test_ty_origin(self):
+    def test_tool_origin(self):
+        '''工具栏-原图尺寸'''
+        public_init(self.pic_PO, self.username, self.password, self.projectName)
+        self.origin(2)
+
+    def tes1t_ty_origin(self):
         '''体验模式-原图尺寸'''
         tiyan(self.pic_PO)
-        self.origin()
-
-    def multi_origin(self):
-        #多选，原图尺寸
-        public_add(self.pic_PO, [('i', 2)])
-        size1 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        selection(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        rightClick(self.pic_PO, el=self.pic_PO.el_imgDIV_loc, action=self.pic_PO.btn_imgMOrigin_loc)
-        size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
-        for i in range(size1.__len__()):
-            self.assertTrue(size1[i]['width'] < size2[i]['width'])
-            self.assertTrue(size1[i]['height'] < size2[i]['height'])
-
-    def test_multi_origin(self):
-        '''多选，原图尺寸'''
-        public_init(self.pic_PO, self.username, self.password, self.projectName)
-        self.multi_origin()
-
-    def test_ty_multi_origin(self):
-        '''体验模式-多选，原图尺寸'''
-        tiyan(self.pic_PO)
-        self.multi_origin()
+        self.origin(1)
 
 
 if __name__ == '__main__':
-    unittest.main()
-    # suite=unittest.TestSuite()
-    # suite.addTest(ImgNoteTest('multi_origin'))
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(ImgNoteTest('test_add'))
+    unittest.TextTestRunner().run(suite)

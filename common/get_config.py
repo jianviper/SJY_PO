@@ -17,9 +17,9 @@ def get_url():
     url = 'http{0}://{1}.bimuyu.tech/login'
     home = 'http{0}://{1}.bimuyu.tech/home'
     host = config.get('host', 'host')
-    if host == 'app':
+    if host == 'app' or host == 'test':
         return [url.format('s', host), home.format('s', host)]
-    elif host == 'pre' or host == 'test':
+    elif host == 'pre':
         return [url.format('', host), home.format('', host)]
     # print(config.sections())
     #

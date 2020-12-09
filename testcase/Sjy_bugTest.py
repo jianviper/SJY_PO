@@ -23,7 +23,7 @@ class BugTest(unittest.TestCase):
         self.password = '123456'
         self.bug_PO = WorkerPage(base_url=self.url)
         self.projectName = project_name()
-        self.textContent = textNote_Content()
+        self.textContent = text_Content()
         self.bug_PO.open()
 
     def tearDown(self) -> None:
@@ -33,27 +33,22 @@ class BugTest(unittest.TestCase):
     def cutCopy(self):
         #添加图片便签
         # public_addTool(self.bug_PO, self.bug_PO.tool_img_loc, self.bug_PO.el_imgDIV_loc)
-        public_add(self.bug_PO, [('i', 1)])
+        ws_add(self.bug_PO, [('i', 1)])
         self.assertTrue(public_check(self.bug_PO, self.bug_PO.el_img_loc, attr='src'))
-        #添加文本便签
+        #添加文本
         public_addTool(self.bug_PO, self.bug_PO.tool_text_loc, self.bug_PO.tool_text_loc, x=200, y=400)
-        public_textInput(self.bug_PO, self.textContent)  #点击文本便签，再输入文本
-        #先剪切图片再复制文本便签，再点击画布
+        public_textInput(self.bug_PO, self.textContent)  #点击文本，再输入文本
+        #先剪切图片再复制文本，再点击画布
         rightClick(self.bug_PO, el=self.bug_PO.el_imgNote_loc, action=self.bug_PO.menu_imgCut_loc)
-        rightClick(self.bug_PO, el=self.bug_PO.el_textNote_loc, action=self.bug_PO.menu_copy_loc)
+        rightClick(self.bug_PO, el=self.bug_PO.el_text_loc, action=self.bug_PO.menu_copy_loc)
         left_click(self.bug_PO, 100, -100, self.bug_PO.tool_mouse_loc)
         #检查是否有文件夹产生
         self.assertFalse(public_check(self.bug_PO, self.bug_PO.el_folder_loc))
 
     def test_cutCopy(self):
-        '''先右键剪切一个图片便签，再右键复制一个文本便签，再左键点击画布空白处
+        '''先右键剪切一个图片便签，再右键复制一个文本，再左键点击画布空白处
         https://www.teambition.com/task/5eb90afe593a4a001a00128e'''
         public_init(self.bug_PO, self.username, self.password, self.projectName)
-        self.cutCopy()
-
-    def test_ty_cutCopy(self):
-        '''体验模式-先右键剪切一个图片便签，再右键复制一个文本便签，再左键点击画布空白处'''
-        tiyan(self.bug_PO)
         self.cutCopy()
 
 

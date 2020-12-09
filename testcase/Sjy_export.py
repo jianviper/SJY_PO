@@ -3,8 +3,8 @@
 import unittest
 from common.get_config import get_url
 from pages.Page_worker import WorkerPage
-from parts.tools_element import ElementTool
-from parts.tools_page import PageTool
+from parts.fc_tool_worker import WorkerTool
+from parts.fc_tool_page import PageTool
 
 '''
 Create on 2020-10-15
@@ -22,7 +22,7 @@ class Export(unittest.TestCase):
         self.ex_PO = WorkerPage(base_url=self.url)
         self.pg = PageTool(self.ex_PO)
         self.projectName = self.pg.project_name()
-        self.ele_tool = ElementTool(self.ex_PO)
+        self.ele_tool = WorkerTool(self.ex_PO)
         self.ex_PO.open()
 
     def tearDown(self) -> None:
@@ -33,6 +33,8 @@ class Export(unittest.TestCase):
         '''本页导出'''
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add('all')
+        self.ex_PO.driver.refresh()
+        self.assertTrue(self.pg.public_check(self.ex_PO.el_divs_loc))
         self.ex_PO.page_export()
         self.pg.wait_tips(self.ex_PO.tip_page_export_loc, sec=1, max=10)
         self.assertTrue(self.ex_PO.check_file(self.projectName.replace(':', '_')))
@@ -42,10 +44,13 @@ class Export(unittest.TestCase):
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add('all')
         self.ele_tool.selection(self.ex_PO.el_divs_loc)
-        self.ele_tool.rightClick(el=self.ex_PO.el_textNote_loc, action=self.ex_PO.menu_export_loc)
+        self.ele_tool.rightClick(el=self.ex_PO.el_text_loc, action=self.ex_PO.menu_export_loc)
         self.pg.wait_tips(self.ex_PO.tip_select_export_loc, sec=1, max=10)
         self.assertTrue(self.ex_PO.check_file(self.projectName.replace(':', '_')))
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(Export('test_page_export'))
+    unittest.TextTestRunner().run(suite)

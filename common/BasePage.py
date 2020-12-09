@@ -43,11 +43,12 @@ class BasePage(object):
             return self.driver.find_element(*loc)
         except:
             print(u"%s%s 页面中未找到%s元素" % (check, self, loc))
+            return False
 
     def find_elements(self, *loc, waitsec=10, check=''):
         try:
             WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
-            #WebDriverWait(self.driver, 10).until(EC.visibility_of_all_elements_located(*loc))
+            # WebDriverWait(self.driver, 10).until(EC.visibility_of_all_elements_located(*loc))
             return self.driver.find_elements(*loc)
         except:
             print(u"%s%s 页面中未找到%s元素" % (check, self, loc))

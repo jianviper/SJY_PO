@@ -22,7 +22,7 @@ class InviteTest(unittest.TestCase):
         self.password = '123456'
         self.invite_PO = InvitePage(base_url=self.url)
         self.projectName = project_name()
-        self.textContent = textNote_Content()
+        self.textContent = text_Content()
         self.invite_PO.open()
 
     def tearDown(self) -> None:
@@ -36,7 +36,8 @@ class InviteTest(unittest.TestCase):
         :return:
         '''
         public_init(self.invite_PO, self.username, self.password, self.projectName)
-        public_addTool(self.invite_PO, self.invite_PO.tool_text_loc, self.invite_PO.el_textNote_loc)
+        public_addTool(self.invite_PO, self.invite_PO.tool_text_loc, self.invite_PO.el_text_loc)
+        public_textInput(self.invite_PO, self.textContent)
         self.invite_PO.click_invite()
         if type == 0:
             self.invite_PO.choose_reader()
@@ -53,7 +54,7 @@ class InviteTest(unittest.TestCase):
         #检查加入邀请是否成功
         self.assertTrue(public_check(self.invite_PO, self.invite_PO.tool_loc))
         self.assertEqual('比幕鱼 - {0}'.format(self.projectName), self.invite_PO.driver.title)
-        self.assertTrue(public_check(self.invite_PO, self.invite_PO.el_textNote_loc))
+        self.assertTrue(public_check(self.invite_PO, self.invite_PO.el_text_loc))
         public_addTool(self.invite_PO, self.invite_PO.tool_forlder_loc, self.invite_PO.el_forlder_loc)
         if type == 0:
             self.assertFalse(public_check(self.invite_PO, self.invite_PO.el_forlder_loc))

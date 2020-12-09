@@ -32,9 +32,35 @@ class FileTest(unittest.TestCase):
         :param num:文件数量
         :return:
         '''
+        ws_add(self.file_PO, [('file', num)])
+        self.assertTrue(public_check(self.file_PO, self.file_PO.el_fileview_loc))
+        size = public_getElSize(self.file_PO, self.file_PO.el_file_loc)
+        for s in size:
+            self.assertTrue(int(s['height']), 987)
+            self.assertTrue(int(s['width']), 700)
+
+    def test_add(self):
         public_init(self.file_PO, self.username, self.password, self.projectName)
-        public_add(self.file_PO, [('file', num)])
-        self.assertTrue(public_check(self.file_PO, self.file_PO.el_file_loc))
+        self.add(2)
+        self.assertEqual(public_check(self.file_PO, self.file_PO.el_file_loc, islen=True), 2)
+        file_title = get_text(self.file_PO, self.file_PO.el_fileTitle_loc)
+        self.assertEqual(file_title, 'websocket.docx')
+
+    def test_fileTool(self):
+        public_init(self.file_PO, self.username, self.password, self.projectName)
+        self.add(1)
+        el_click(self.file_PO, self.file_PO.el_fileview_loc)
+        self.assertTrue(public_check(self.file_PO, self.file_PO.el_fileTool_loc))
+        el_click(self.file_PO, self.file_PO.btn_nextPage_loc)
+        self.assertEqual('2', get_text(self.file_PO, self.file_PO.pageCode_loc))
+
+    def test_ty_fileTool(self):
+        tiyan(self.file_PO)
+        self.add(1)
+        el_click(self.file_PO, self.file_PO.el_fileview_loc)
+        self.assertTrue(public_check(self.file_PO, self.file_PO.el_fileTool_loc))
+        el_click(self.file_PO, self.file_PO.btn_nextPage_loc)
+        self.assertEqual('2', get_text(self.file_PO, self.file_PO.pageCode_loc))
 
     def copy(self, num):
         '''
@@ -43,18 +69,16 @@ class FileTest(unittest.TestCase):
         :return:
         '''
         self.add(num)
+        if num > 1:
+            selection(self.file_PO, self.file_PO.el_file_loc)
         rightClick(self.file_PO, el=self.file_PO.el_file_loc, action=self.file_PO.menu_copy_loc)
         left_click(self.file_PO, 80, 100, el=self.file_PO.header_loc)
-        rightClick(self.file_PO, x=400, y=150, action=self.file_PO.menu_paste_loc)
-        self.assertIs(public_check(self.file_PO, self.file_PO.el_file_loc, islen=True), num * 2)
-        selection(self.file_PO, self.file_PO.el_file_loc)
-        rightClick(self.file_PO, el=self.file_PO.el_file_loc, action=self.file_PO.menu_copy_loc)
-        left_click(self.file_PO, 50, -50, el=self.file_PO.tool_loc)
-        rightClick(self.file_PO, x=200, y=400, action=self.file_PO.menu_paste_loc)
-        self.assertIs(public_check(self.file_PO, self.file_PO.el_file_loc, islen=True), num * 4)
+        rightClick(self.file_PO, x=1000, y=100, el=self.file_PO.header_loc, action=self.file_PO.menu_paste_loc)
+        self.assertEqual(public_check(self.file_PO, self.file_PO.el_file_loc, islen=True), num * 2)
 
     def test_copy(self):
         '''单个复制'''
+        public_init(self.file_PO, self.username, self.password, self.projectName)
         self.copy(1)
 
     def tes1t_multiCopy(self):
@@ -73,60 +97,41 @@ class FileTest(unittest.TestCase):
         rightClick(self.file_PO, el=self.file_PO.el_file_loc, action=self.file_PO.menu_cut_loc)
         left_click(self.file_PO, 50, -50, el=self.file_PO.tool_loc)
         #剪切成功后左键点击画布，检查是否有出现元素（BUG点）
-        self.assertIs(public_check(self.file_PO, self.file_PO.el_divs_loc, islen=True), 0)
+        self.assertEqual(public_check(self.file_PO, self.file_PO.el_divs_loc, islen=True), 0)
         rightClick(self.file_PO, x=400, y=150, action=self.file_PO.menu_paste_loc)
-        self.assertIs(public_check(self.file_PO, self.file_PO.el_divs_loc, islen=True), num)
+        self.assertEqual(public_check(self.file_PO, self.file_PO.el_divs_loc, islen=True), num)
 
     def test_cut(self):
         '''单个剪切'''
+        public_init(self.file_PO, self.username, self.password, self.projectName)
         self.cut(1)
 
-    def test_multiCut(self):
+    def tes1t_multiCut(self):
         '''多选剪切'''
         self.cut(2)
 
     def copyWithLine(self):
         self.add(2)
-        self.file_PO.el_click(self.file_PO.el_file_loc)
+        el_click(self.file_PO, self.file_PO.el_file_loc)
 
-    def test_pullRelAddEl(self):
+    def tes1t_pullRelAddEl(self):
         '''拉出关联线，添加元素'''
         self.add(1)
-        self.file_PO.el_click(self.file_PO.el_file_loc)
+        el_click(self.file_PO, self.file_PO.el_file_loc)
         #拉出关联线
         elDrag(self.file_PO, self.file_PO.btn_relright_loc, 100, 0)
-        self.file_PO.el_click(self.file_PO.menu_forlder_loc)  #添加文件夹
+        el_click(self.file_PO, self.file_PO.menu_forlder_loc)  #添加文件夹
         left_click(self.file_PO, 100, 100, self.file_PO.header_loc)
-        self.file_PO.el_click(self.file_PO.el_file_loc)
+        el_click(self.file_PO, self.file_PO.el_file_loc)
         #拉出关联线
         elDrag(self.file_PO, self.file_PO.btn_relbtm_loc, 0, 100)
-        self.file_PO.el_click(self.file_PO.menu_text_loc)  #添加文本便签
+        el_click(self.file_PO, self.file_PO.menu_text_loc)  #添加文本
         left_click(self.file_PO, 100, 100, self.file_PO.header_loc)
-        self.assertIs(public_check(self.file_PO, self.file_PO.el_line_loc, islen=True), 2)
-
-    def test_prePage(self):
-        '''预览文件,置顶，关闭'''
-        public_init(self.file_PO, self.username, self.password, self.projectName)
-        public_add(self.file_PO, [('file', 1), ('f', 1)])
-        #右键-预览
-        # rightClick(self.file_PO, el=self.file_PO.el_file_loc, action=self.file_PO.menu_pre_loc)
-        double_click(self.file_PO, self.file_PO.el_file_loc)  #双击打开
-        # tips = self.file_PO.get_text(self.file_PO.tips_loc)  #获取失败提示
-        # self.assertTrue(public_check(self.file_PO, self.file_PO.el_prePage_loc), msg=tips)
-        self.assertTrue(public_check(self.file_PO, self.file_PO.arrow_loc))
-        sleep(2)
-        el_click(self.file_PO, self.file_PO.el_preTop_loc)
-        double_click(self.file_PO, self.file_PO.el_forlder_loc)
-        self.assertTrue(public_check(self.file_PO, self.file_PO.tool_loc))
-        self.assertTrue(public_check(self.file_PO, self.file_PO.arrow_loc))
-        sleep(2)
-        self.file_PO.el_click(self.file_PO.btn_fileclose_loc)  #关闭预览
-        self.file_PO.driver.refresh()
-        self.assertFalse(public_check(self.file_PO, self.file_PO.el_prePage_loc))
+        self.assertEqual(public_check(self.file_PO, self.file_PO.el_line_loc, islen=True), 2)
 
 
 if __name__ == '__main__':
-    #unittest.main()
-    suite = unittest.TestSuite()
-    suite.addTest(FileTest('test_prePage'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(FileTest('test_ty_fileTool'))
+    # unittest.TextTestRunner().run(suite)

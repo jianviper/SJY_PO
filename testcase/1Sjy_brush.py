@@ -45,7 +45,7 @@ class WorkerTest(unittest.TestCase):
         self.brush_PO.driver.refresh()
         sleep(2)
         #检查是否绘制成功
-        self.assertIs(self.lineNum, public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True))
+        self.assertEqual(self.lineNum, public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True))
 
     def test_eraser(self):
         '''使用橡皮擦'''
@@ -58,7 +58,7 @@ class WorkerTest(unittest.TestCase):
             i -= 1
             sleep(0.6)
         #检查是否绘制成功
-        self.assertIs(self.lineNum, public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True))
+        self.assertEqual(self.lineNum, public_check(self.brush_PO, self.brush_PO.el_line_loc, islen=True))
         self.brush_PO.choose_tool(self.brush_PO.tool_pen_loc)
         self.brush_PO.choose_tool(self.brush_PO.tool_eraser_loc)
         print(self.linexy[0])

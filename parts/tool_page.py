@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-from time import sleep, strftime, localtime, time
+from time import sleep, strftime, localtime
 from selenium.webdriver.common.by import By
 from common.create_UUID import create_uuid
 import re, requests
@@ -11,30 +11,28 @@ summary:页面的公用方法
 
 
 def project_name():  #生成项目名称
-    return 'AT_{0}'.format(strftime("%Y-%m-%d %H:%M", localtime()))
+    #AT_2020-7-16 16:44:26
+    return 'AT_{0}'.format(strftime("%Y-%m-%d_%H:%M", localtime()))
 
 
-def textNote_Content():  #生成文本便签内容
+def text_Content():  #生成文本便签内容
     return 'AutoTestContent-{0}'.format(strftime("%Y-%m-%d_%H:%M:%S", localtime()))
 
 
-def forlder_title():  #生成文件夹标题
+def folder_title():  #生成文件夹标题
     return 'F_{0}'.format(strftime("%Y-%m-%d_%H:%M:%S", localtime()))
 
 
-def wait_tips(PO, el=None):
+def wait_tips(PO, el=None, sec=2, max=5):
     Tips_loc = (By.CSS_SELECTOR, '.ant-message>span>.ant-message-notice')
-
     i, ele = 0, Tips_loc
     if el:
         ele = el
-    # print('wait_tips')
     while not PO.find_element(*ele, waitsec=2):
         print('wait:{0}'.format(i))
-        if i > 5:
+        if i > max:
             break
         i += 1
-        # sleep(1.5)
 
 
 def public_init(PO, username, password, proName, el=None):
@@ -59,9 +57,9 @@ def public_login(PO, username, password):
     # print('点击登录后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
     wait_tips(PO)
     # print('wait后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
-    check_updateLog(PO)
+    #check_updateLog(PO)
     # print('更新提示{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
-    check_bind(PO)
+    #check_bind(PO)
     # print('绑定弹窗{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
 
 
@@ -96,11 +94,14 @@ def public_createProject(PO, name):
 def public_intoProject(PO, el=None):
     # lastProject_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text')
     firstProject_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_text')
+    yuqun_loc = (By.CLASS_NAME, 'yuqun')
+    yqclose_loc = (By.CSS_SELECTOR, '.planC_header>.header_close')
     work_tool = (By.CLASS_NAME, 'work_tool')
-    if el:
-        firstProject_loc = el
+    if el: firstProject_loc = el
     PO.find_element(*firstProject_loc).click()
     assert PO.find_element(*work_tool)
+    # if PO.find_element(*yuqun_loc, waitsec=3):  #关闭鱼群计划
+    #     PO.find_element(*yqclose_loc).click()
 
 
 def public_delProject(PO, home_url=None, flag=True):
@@ -121,6 +122,7 @@ def public_delProject(PO, home_url=None, flag=True):
     from selenium.webdriver.common.action_chains import ActionChains
     action = ActionChains(PO.driver)
     action.move_to_element(PO.find_element(*firstPro_loc)).perform()
+    sleep(1.5)
     PO.find_element(*firstProMenu_loc).click()
     PO.find_element(*btn_del_loc).click()
     PO.find_element(*input_proName_loc).send_keys(PO.find_element(*text_proName_loc).text)
@@ -154,6 +156,13 @@ def check_bind(PO):  #绑定弹窗
 
 
 def get_attrs(PO, el, attr_name, **kwargs):
+    '''
+    获取元素的属性值
+    :param el:
+    :param attr_name:属性名称
+    :param kwargs: driver:True使用原生元素定位
+    :return:
+    '''
     attrList = []
     if kwargs.get('driver'):
         if PO.driver.find_element_by_css_selector(el):
@@ -230,6 +239,7 @@ def tiyan(PO):  #进入体验模式
     btn_skip_loc = (By.CLASS_NAME, 'button_skip')
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_home_loc = (By.CLASS_NAME, 'home_title')
+    tool_loc = (By.CSS_SELECTOR, 'work_tool')
     host = re.search(r'(\w+\.){2}\w+', PO.driver.current_url).group()
 
     if host == 'app.bimuyu.tech':
@@ -246,7 +256,7 @@ def tiyan(PO):  #进入体验模式
             url = 'http://{0}/login?uuid={1}'.format(host, create_uuid())
             PO.driver.get(url)
             sleep(3)
-    wait_tips(PO, PO.tool_loc)
+    public_check(PO, tool_loc)
     # assert '比幕鱼 - 体验' == PO.driver.title
     sleep(1)
     if PO.find_element(*btn_skip_loc):
@@ -265,11 +275,19 @@ def el_click(PO, el):
     sleep(1)
     if PO.find_element(*el):
         PO.find_element(*el).click()
+        sleep(1)
     else:
         assert Exception("function get_text() 元素不存在!")
 
 
 def get_text(PO, el, type=None):
+    '''
+    获取元素文本
+    :param PO:
+    :param el:
+    :param type:True通过属性获取，False直接获取text
+    :return:
+    '''
     sleep(1)
     if PO.find_element(*el):
         if not type:

@@ -33,7 +33,7 @@ class ShareTest(unittest.TestCase):
         :return:
         '''
         public_init(self.share_PO, self.username, self.password, self.projectName)
-        public_add(self.share_PO, [('t', 1), ('i', 1), ('f', 1)])
+        ws_add(self.share_PO, 'all')
         title = self.share_PO.driver.title
         self.share_PO.el_click(self.share_PO.btn_userout_loc)
         shareUrl = self.share_PO.get_value(self.share_PO.el_shareUrl_loc)

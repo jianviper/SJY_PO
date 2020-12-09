@@ -24,7 +24,7 @@ class TiyanTest(unittest.TestCase):
         self.password = '123456'
         self.tiyan_PO = TiyanPage(base_url=self.tiyan_url)
         self.projectName = project_name()
-        self.textContent = textNote_Content()
+        self.textContent = text_Content()
         self.tiyan_PO.open()
 
     def tearDown(self) -> None:

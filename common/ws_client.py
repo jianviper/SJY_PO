@@ -18,7 +18,7 @@ def ws_creat(PO):
     return ws
 
 
-def ws_add(PO, type, poix, poiy, **kwargs):
+def WS_add(PO, type, poix, poiy, **kwargs):
     '''
     通过websocket添加同步元素
     :param PO:
@@ -43,35 +43,46 @@ def ws_add(PO, type, poix, poiy, **kwargs):
         "status": "edit",
         "id": get_ID(PO),
     }
-    color_list = ['#508ceb', '#71c846', '#dd4a4a', '#ffd14d', '#666d77']
+    folder_color = ['#508ceb', '#71c846', '#dd4a4a', '#ffd14d', '#666d77']
+    note_color = ['#fcfca5', '#f9c88f', '#f7a18d', '#9add7c', '#98d3f4', '#998aed']
     try:
         #组织发送数据,根据类型加入数据
-        if type == "TEXT_LABEL_ADD":
-            utime = time.strftime('%Y-%m-%d %H:%M:%S')
-            content = 'AutoTestContent-{0}'.format(utime)
-            send_msg.update(
-                {"type": "TEXT_LABEL_ADD", "content": kwargs.get('text', content), "poiW": 350, "poiH": 60})
-        elif type == "IMAGE_LABEL_ADD":
+        if type == "TEXT_LABEL_ADD":  #文本
+            send_msg.update({"type": "TEXT_LABEL_ADD",
+                             "content": kwargs.get('text'),
+                             "poiW": None,
+                             "poiH": 39
+                             })
+        elif type == "NOTE_LABEL_ADD":  #便签
+            send_msg.update({"type": "NOTE_LABEL_ADD",
+                             "bgColor": note_color[random.randint(0, 5)],
+                             "scale": {"left": 0, "top": 0, "scale": 1, "ex": 0, "yf": 0},
+                             "poiW": 200,
+                             "poiH": 200,
+                             })
+        elif type == "IMAGE_LABEL_ADD":  #图片便签
+            img = img_url[random.randint(0, 3)]
             send_msg.update({"type": "IMAGE_LABEL_ADD",
-                             "img": img_url[random.randint(0, 3)],
+                             "img": img,
                              "transform": 0,
                              "poiW": 350,
                              "poiH": 150,
+                             "title": img
                              })
-        elif type == "CANVAS_ADD":
+        elif type == "CANVAS_ADD":  #文件夹
             send_msg.update({"type": "CANVAS_ADD",
                              "name": "标题",
-                             "bgColor": color_list[random.randint(0, 4)]})
-        elif type == 'FILE_LABEL_ADD':
+                             "bgColor": folder_color[random.randint(0, 4)]
+                             })
+        elif type == 'FILE_LABEL_ADD':  #文件
             fileId = None
             if url.find('test') >= 0:
-                fileId = '32486103420375040'
+                fileId = '65181418191458304'
             elif url.find('app') >= 0 or url.find('pre') >= 0:
-                fileId = '32543435433054208'
-            send_msg = {"type": "FILE_LABEL_ADD", "id": get_ID(PO), "fileId": fileId, "poiX": poix,
-                        "poiY": poiy, "title": "websocket.docx"}
+                fileId = '68441297693839360'
+            send_msg.update({"type": "FILE_LABEL_ADD", "fileId": fileId, "title": "websocket.docx"})
         # print(send_msg)
-        print('{0}__send_msg:{1}'.format(type, send_msg))
+        print('【{0}】:{1}'.format(type, send_msg))
         ws.send(json.dumps(send_msg))  #执行发送
     except BaseException as e:
         print(e)
@@ -102,27 +113,6 @@ def WSupload_img(PO, el, attr_name):
             time.sleep(1.5)
     finally:
         ws.close()
-
-
-'''
-def get_last_el(PO):
-    text_el = (By.CSS_SELECTOR, '.work_text.work_element')
-    img_el = (By.CSS_SELECTOR, '.work_image.work_element')
-    folder_el = (By.CSS_SELECTOR, '.work_file.work_element')
-
-    if PO.find_element(*text_el):
-        poi = public_getElPosition(PO, text_el)
-        size = public_getElSize(PO, text_el)
-        print('text\r\n', poi, size)
-    if PO.find_element(*img_el):
-        poi = public_getElPosition(PO, img_el)
-        size = public_getElSize(PO, img_el)
-        print('img\r\n', poi, size)
-    if PO.find_element(*folder_el):
-        poi = public_getElPosition(PO, folder_el)
-        size = public_getElSize(PO, folder_el)
-        print('folder\r\n', poi, size)
-'''
 
 
 def get_last(PO):
@@ -160,9 +150,9 @@ def create_apiUrl(PO):
     url = PO.driver.current_url
     host = re.search(r'(\w+\.){2}\w+', url).group()
     # print('host:',host)
-    api_url = "http://{0}:8080/hetaoNoteApi/app/".format(host)
+    api_url = "https://{0}:8080/hetaoNoteApi/app/".format(host)
     if host == 'app.bimuyu.tech':
-        api_url = 'https://api.hetaonote.com:8080/hetaoNoteApi/app/'
+        api_url = 'https://api.bimuyu.tech/api/app/'
     elif host == 'pre.bimuyu.tech':
         api_url = 'http://pre.api.bimuyu.tech/hetaoNoteApi/app/'
     return api_url

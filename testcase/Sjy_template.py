@@ -22,7 +22,7 @@ class TemplateTest(unittest.TestCase):
         self.password = '123456'
         self.temp_PO = TemplatePage(base_url=self.url)
         self.projectName = project_name()
-        self.textContent = textNote_Content()
+        self.textContent = text_Content()
         self.temp_PO.open()
 
     def tearDown(self) -> None:
@@ -31,8 +31,8 @@ class TemplateTest(unittest.TestCase):
 
     def add_template(self):
         self.temp_PO.add_temp()
-        self.assertIs(4, public_check(self.temp_PO, self.temp_PO.el_divs_loc, islen=True))
-        public_revoke(self.temp_PO, self.temp_PO.el_divs_loc)
+        self.assertEqual(4, public_check(self.temp_PO, self.temp_PO.el_divs_loc, islen=True))
+        public_revoke_recovery(self.temp_PO, self.temp_PO.el_divs_loc)
 
     def test_add_template(self):
         '''添加模板'''
@@ -72,7 +72,6 @@ class TemplateTest(unittest.TestCase):
         '''模版搜不到，提交自定义模板'''
         public_init(self.temp_PO, self.username, self.password, self.projectName)
         self.searchAndSubmit()
-        public_delProject(self.temp_PO, self.home_url)
 
     def test_ty_addTemplate(self):
         '''体验模式-模版搜不到，提交自定义模板'''
@@ -81,7 +80,7 @@ class TemplateTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
-    # suite = unittest.TestSuite()
-    # suite.addTest(TemplateTest('test_addTemplate'))
-    # unittest.TextTestRunner().run(suite)
+    # unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(TemplateTest('test_addTemplate'))
+    unittest.TextTestRunner().run(suite)

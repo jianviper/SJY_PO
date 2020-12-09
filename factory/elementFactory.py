@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-from parts.tools_element import ElementTool
+from parts.fc_tool_worker import WorkerTool
 
 
 class ElementFactory(object):
@@ -21,13 +21,13 @@ class ElementCreater(object):
         return element
 
 
-class TextNote(ElementTool):
+class TextNote(WorkerTool):
     '''文本便签工厂'''
 
     def __init__(self, PO):
         super().__init__(PO)
 
-    def add(*args, **kwargs):
+    def tool_add(*args, **kwargs):
         print('add textnote')
 
     @classmethod

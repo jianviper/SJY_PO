@@ -15,7 +15,7 @@ summary:工作台页面文件夹相关的元素对象和操作方法
 '''
 
 
-class WorkerForlder(BasePage):
+class Folder(BasePage):
     action = None
     #定位器，通过元素属性定位元素对象
     lastProject_loc = (By.CSS_SELECTOR, '.home_content>:last-child>.item_text')
@@ -26,11 +26,11 @@ class WorkerForlder(BasePage):
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
-    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
     tool_recovery_loc = (By.CSS_SELECTOR, '.actionBox>div:last-child')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
-    el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
+    el_text_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
     el_fTitle_loc = (By.CLASS_NAME, 'content_title2')
     el_titleInput_loc = (By.CSS_SELECTOR, '.content_title.ant-input')

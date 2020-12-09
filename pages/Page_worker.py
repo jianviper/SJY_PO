@@ -34,23 +34,25 @@ class WorkerPage(BasePage):
     tool_pen_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(2)')
     tool_eraser_loc = (By.CSS_SELECTOR, '.menu_item.menu_line.menu_pb.menu_flex>:last-child')
     tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
-    tool_textfont_loc = (By.CSS_SELECTOR, '.tool_item:first-child>img')
     tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
-    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
     tool_recovery_loc = (By.CSS_SELECTOR, '.actionBox>div:last-child')
-    tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(9)')
+    tool_temp_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(10)')
     #元素相关
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
-    el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
+    el_text_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
-    el_dline_loc = (By.CLASS_NAME, 'content_path')
+    el_note_loc = (By.CSS_SELECTOR, '.work_note.work_element')
+    el_drawPath_loc = (By.CLASS_NAME, 'content_path')
     el_imgNote_loc = (By.CSS_SELECTOR, '.work_image.work_element')
-    el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>img')  #图片
+    el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>.text_content>img')  #图片
+    el_imgText_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>.picTitle')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
     el_trashEL_loc = (By.CSS_SELECTOR, '.item_list>li')
     el_temp_loc = (By.CSS_SELECTOR, '.content.flex_bteween>div:first-child>div:first-child')
     el_shareUrl_loc = (By.ID, 'shareUrl')
     el_file_loc = (By.CSS_SELECTOR, '.work_wps.work_element')
+    el_relline_loc = (By.CSS_SELECTOR, '.svg_line>.content_line')
     el_line_loc = '.svg_line>.content_line'
     #右键菜单
     menu_tUp_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(4)')
@@ -126,7 +128,7 @@ class WorkerPage(BasePage):
         #本页导出
         action = ActionChains(self.driver)
         action.move_to_element(self.find_element(*self.btn_export_loc)).perform()
-        sleep(2)
-        print(self.find_element(*self.btn_page_export_loc))
+        sleep(1)
+        print('export:', self.find_element(*self.btn_page_export_loc))
         # action.click(self.find_element(*self.btn_page_export_loc)).perform()
         self.find_element(*self.btn_page_export_loc).click()

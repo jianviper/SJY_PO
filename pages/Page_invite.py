@@ -17,8 +17,8 @@ class InvitePage(BasePage):
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
-    tool_forlder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
-    el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
+    tool_forlder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
+    el_text_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_forlder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
 
     btn_invite_loc = (By.CLASS_NAME, 'userout')

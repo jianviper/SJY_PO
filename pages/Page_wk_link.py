@@ -16,7 +16,7 @@ class LinkPage(BasePage):
     svg_loc = (By.XPATH, '//*[@class="svg_content"]')
 
     tool_text_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)')
-    el_textNote_loc = (By.CSS_SELECTOR, '.work_text.work_element')
+    el_text_loc = (By.CSS_SELECTOR, '.work_text.work_element')
 
     btn_invite_loc = (By.CLASS_NAME, 'menbercompoment')
     btn_joinInvi_loc = (By.CSS_SELECTOR, '.invitation_submit.sure-btn')

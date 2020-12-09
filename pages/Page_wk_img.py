@@ -16,30 +16,28 @@ class WokerPic(BasePage):
     #定位器，通过元素属性定位元素对象
     headless_multiImg_loc = (By.CSS_SELECTOR, '.home_content>:first-child>.item_text')
     headless_img_loc = (By.CSS_SELECTOR, '.home_content>div:nth-child(2)')
-    svg_loc = (By.CLASS_NAME, 'svg_content')
+    header_loc = (By.CSS_SELECTOR, '.header.ant-layout-header')
 
     tool_loc = (By.CLASS_NAME, 'work_tool')
     tool_mouse_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(1)')
-    tool_img_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')
-    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(7)')
+    tool_imgTool_loc = (By.CLASS_NAME, 'imgTool')
+    tool_folder_loc = (By.CSS_SELECTOR, '.work_tool>div:nth-child(8)')
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_imgDIV_loc = (By.CSS_SELECTOR, '.work_image.work_element')
     # el_img_loc = (By.CLASS_NAME, 'imgContent')
-    el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>img')
+    el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>.text_content>img')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
 
     btn_imgupload_loc = (By.CLASS_NAME, 'box_img')
     btn_imgCut_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(1)')
     btn_imgCopy_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(2)')
-    btn_imgDel_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(3)')
     btn_imgOrigin_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(7)')
-    btn_imgMOrigin_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(9)')
     btn_imgRorate_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(8)')
-    btn_imgMRorate_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(10)')
     btn_imgReplace_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(9)')
-    btn_imgMReplace_loc = (By.CSS_SELECTOR, '.image_menu>li:nth-child(11)')
     btn_Paste_loc = (By.CLASS_NAME, 'menu_item')
+    btn_tool_orign_loc = (By.CSS_SELECTOR, '.imgTool>div:nth-child(1)')
+    btn_tool_rorate_loc = (By.CSS_SELECTOR, '.imgTool>div:nth-child(2)')
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页

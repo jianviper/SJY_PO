@@ -2,8 +2,8 @@
 #coding:utf-8
 import unittest
 from common.get_config import get_url
-from parts.tools_element import ElementTool
-from parts.tools_page import PageTool
+from parts.fc_tool_worker import WorkerTool
+from parts.fc_tool_page import PageTool
 from pages.Page_worker import WorkerPage
 
 '''
@@ -24,7 +24,7 @@ class InviteTest(unittest.TestCase):
         self.pg = PageTool(self.index_PO)
         self.projectName = self.pg.project_name()
         self.textContent = self.pg.textNote_Content()
-        self.ele_tool = ElementTool(self.index_PO)
+        self.ele_tool = WorkerTool(self.index_PO)
         self.index_PO.open()
 
     def tearDown(self) -> None:
@@ -37,12 +37,12 @@ class InviteTest(unittest.TestCase):
         self.ele_tool.ws_add([('t', 1), ('i', 1), ('f', 1), ('file', 1)])
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
         self.assertTrue(z_index == ['1', '2', '3', '4'])
-        #文本便签置顶
-        self.ele_tool.rightClick(el=self.index_PO.el_textNote_loc, action=self.index_PO.menu_tUp_loc)
+        #文本置顶
+        self.ele_tool.rightClick(el=self.index_PO.el_text_loc, action=self.index_PO.menu_tUp_loc)
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
         self.assertTrue(z_index == ['4', '1', '2', '3'])
-        #文本便签置底
-        self.ele_tool.rightClick(el=self.index_PO.el_textNote_loc, action=self.index_PO.menu_tDown_loc)
+        #文本置底
+        self.ele_tool.rightClick(el=self.index_PO.el_text_loc, action=self.index_PO.menu_tDown_loc)
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
         self.assertTrue(z_index == ['1', '2', '3', '4'])
         #图片便签置顶
@@ -78,12 +78,12 @@ class InviteTest(unittest.TestCase):
         self.assertTrue(z_index == ['1', '2', '3', '4'])
         self.ele_tool.selection(self.index_PO.el_divs_loc)
         #多选后设置置顶
-        self.ele_tool.rightClick(el=self.index_PO.el_textNote_loc, action=self.index_PO.menu_tUp_loc)
+        self.ele_tool.rightClick(el=self.index_PO.el_text_loc, action=self.index_PO.menu_tUp_loc)
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
         self.assertTrue(z_index == ['1', '2', '3', '4'])
         self.ele_tool.selection(self.index_PO.el_divs_loc)
         #多选后设置置底
-        self.ele_tool.rightClick(el=self.index_PO.el_textNote_loc, action=self.index_PO.menu_tDown_loc)
+        self.ele_tool.rightClick(el=self.index_PO.el_text_loc, action=self.index_PO.menu_tDown_loc)
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
         self.assertTrue(z_index == ['1', '2', '3', '4'])
 

@@ -22,7 +22,7 @@ class RevokeTest(unittest.TestCase):
         self.password = '123456'
         self.revoke_PO = WorkerPage(base_url=self.url)
         self.projectName = project_name()
-        self.textContent = textNote_Content()
+        self.textContent = text_Content()
         self.revoke_PO.open()
 
     def tearDown(self) -> None:
@@ -34,7 +34,7 @@ class RevokeTest(unittest.TestCase):
         cut = self.revoke_PO.menu_cut_loc
         copy = self.revoke_PO.menu_copy_loc
         if tool == 'img':
-            public_add(self.revoke_PO, [('i', 1)])
+            ws_add(self.revoke_PO, [('i', 1)])
             cut = self.revoke_PO.menu_imgCut_loc
             copy = self.revoke_PO.menu_imgCopy_loc
         else:
@@ -46,15 +46,15 @@ class RevokeTest(unittest.TestCase):
         return {"copy": copy, "cut": cut}
 
     def creatAndInput(self, tool=None, el=None, **kwargs):
-        #新建便签，撤销-恢复，若是文本便签，再输入内容，撤销-恢复
-        # public_addTool(self.revoke_PO, self.revoke_PO.tool_text_loc, self.revoke_PO.el_textNote_loc)
+        #新建便签，撤销-恢复，若是文本，再输入内容，撤销-恢复
+        # public_addTool(self.revoke_PO, self.revoke_PO.tool_text_loc, self.revoke_PO.el_text_loc)
         self.createNote(tool, el)
         left_click(self.revoke_PO, 50, 100, self.revoke_PO.header_loc)
         do_revoke(self.revoke_PO)  #撤销
-        #检查撤销是否成功，成功则文本便签不存在
+        #检查撤销是否成功，成功则文本不存在
         self.assertFalse(public_check(self.revoke_PO, el))
         do_recovery(self.revoke_PO)  #恢复
-        #检查恢复是否成功，成功则文本便签存在
+        #检查恢复是否成功，成功则文本存在
         self.assertTrue(public_check(self.revoke_PO, el))
         if kwargs.get('type') == 'text':
             public_textInput(self.revoke_PO, self.textContent)
@@ -65,14 +65,14 @@ class RevokeTest(unittest.TestCase):
         sleep(3)
 
     def test_textNote(self):
-        '''文本便签的新建，输入的撤销与恢复'''
+        '''文本的新建，输入的撤销与恢复'''
         public_init(self.revoke_PO, self.username, self.password, self.projectName)
-        self.creatAndInput(self.revoke_PO.tool_text_loc, self.revoke_PO.el_textNote_loc, type='text')
+        self.creatAndInput(self.revoke_PO.tool_text_loc, self.revoke_PO.el_text_loc, type='text')
 
     def test_ty_textNote(self):
-        '''体验模式下，文本便签的新建，输入的撤销与恢复'''
+        '''体验模式下，文本的新建，输入的撤销与恢复'''
         tiyan(self.revoke_PO)
-        self.creatAndInput(self.revoke_PO.tool_text_loc, self.revoke_PO.el_textNote_loc, type='text')
+        self.creatAndInput(self.revoke_PO.tool_text_loc, self.revoke_PO.el_text_loc, type='text')
 
     def test_imgNote(self):
         '''图片便签新建的撤销与恢复'''
@@ -103,7 +103,7 @@ class RevokeTest(unittest.TestCase):
         self.assertFalse(public_check(self.revoke_PO, el))
         #剪切后左键点击画布，检查是否会有文件夹多出（BUG点）
         left_click(self.revoke_PO, 50, 100, el=self.revoke_PO.header_loc)
-        self.assertIs(public_check(self.revoke_PO, self.revoke_PO.el_divs_loc, islen=True), 0)
+        self.assertEqual(public_check(self.revoke_PO, self.revoke_PO.el_divs_loc, islen=True), 0)
         #在指定位置粘贴-------------------
         rightClick(self.revoke_PO, 700, 200, self.revoke_PO.header_loc,
                    action=self.revoke_PO.menu_paste_loc)
@@ -120,7 +120,7 @@ class RevokeTest(unittest.TestCase):
 
     def test_textNoteCut(self):
         public_init(self.revoke_PO, self.username, self.password, self.projectName)
-        self.cutAndPaste(self.revoke_PO.tool_text_loc, self.revoke_PO.el_textNote_loc)
+        self.cutAndPaste(self.revoke_PO.tool_text_loc, self.revoke_PO.el_text_loc)
 
     def test_imgNote(self):
         public_init(self.revoke_PO, self.username, self.password, self.projectName)
