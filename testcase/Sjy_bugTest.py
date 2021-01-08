@@ -37,11 +37,12 @@ class BugTest(unittest.TestCase):
         self.assertTrue(public_check(self.bug_PO, self.bug_PO.el_img_loc, attr='src'))
         #添加文本
         public_addTool(self.bug_PO, self.bug_PO.tool_text_loc, self.bug_PO.tool_text_loc, x=200, y=400)
-        public_textInput(self.bug_PO, self.textContent)  #点击文本，再输入文本
         #先剪切图片再复制文本，再点击画布
         rightClick(self.bug_PO, el=self.bug_PO.el_imgNote_loc, action=self.bug_PO.menu_imgCut_loc)
+        self.assertFalse(public_check(self.bug_PO, self.bug_PO.el_imgNote_loc))
         rightClick(self.bug_PO, el=self.bug_PO.el_text_loc, action=self.bug_PO.menu_copy_loc)
-        left_click(self.bug_PO, 100, -100, self.bug_PO.tool_mouse_loc)
+        self.assertTrue(public_check(self.bug_PO, self.bug_PO.el_imgNote_loc))
+        left_click(self.bug_PO, 500, 100, self.bug_PO.header_loc)
         #检查是否有文件夹产生
         self.assertFalse(public_check(self.bug_PO, self.bug_PO.el_folder_loc))
 

@@ -31,7 +31,7 @@ class InviteTest(unittest.TestCase):
         self.pg.public_tearDown(self.url, self.home_url, self.username, self.password)
         self.index_PO.driver.quit()
 
-    def test_single_set(self):
+    def te1st_single_set(self):
         '''各个元素设置置顶置底操作'''
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add([('t', 1), ('i', 1), ('f', 1), ('file', 1)])
@@ -70,8 +70,8 @@ class InviteTest(unittest.TestCase):
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
         self.assertTrue(z_index == ['4', '3', '2', '1'])
 
-    def test_mutli_set(self):
-        '''对多个元素同时设置置顶或置底'''
+    def tes1t_mutli_set(self):
+        '''对多个元素同时设置置顶或置底(多选已经去掉置顶置底)'''
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add([('t', 1), ('i', 1), ('f', 1), ('file', 1)])
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
@@ -80,6 +80,7 @@ class InviteTest(unittest.TestCase):
         #多选后设置置顶
         self.ele_tool.rightClick(el=self.index_PO.el_text_loc, action=self.index_PO.menu_tUp_loc)
         z_index = self.ele_tool.getCss(self.index_PO.el_divs_loc, 'z-index')
+        print(z_index)
         self.assertTrue(z_index == ['1', '2', '3', '4'])
         self.ele_tool.selection(self.index_PO.el_divs_loc)
         #多选后设置置底

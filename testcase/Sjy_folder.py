@@ -182,7 +182,7 @@ class FolderTest(unittest.TestCase):
         rightClick(self.f_PO, 450, 10, self.f_PO.el_folder_loc, self.f_PO.btn_paste_loc)
         #检查个数
         self.assertEqual(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 4)
-        sleep(2)
+        '''
         self.f_PO.driver.get(self.home_url)
         #进行跨白板粘贴
         public_createProject(self.f_PO, '[copy]' + self.projectName[:13])
@@ -192,6 +192,7 @@ class FolderTest(unittest.TestCase):
         self.assertEqual(public_check(self.f_PO, self.f_PO.el_folder_loc, islen=True), 2)
 
         public_delProject(self.f_PO, self.home_url)
+        '''
 
     def changeColor(self):
         '''改变文件夹颜色'''
@@ -234,5 +235,5 @@ class FolderTest(unittest.TestCase):
 if __name__ == "__main__":
     # unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(FolderTest('test_copyWL'))
+    suite.addTest(FolderTest('test_ty_add_folder'))
     unittest.TextTestRunner().run(suite)

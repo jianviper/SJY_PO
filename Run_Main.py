@@ -8,7 +8,7 @@ summary:用例执行入口，统一管理
 '''
 
 test_dir = './testcase'
-discover = unittest.defaultTestLoader.discover(test_dir, pattern='Sjy_s*.py')
+discover = unittest.defaultTestLoader.discover(test_dir, pattern='Sjy_*.py')
 TestRunResultErrors = []
 
 if __name__ == '__main__':

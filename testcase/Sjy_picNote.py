@@ -121,6 +121,7 @@ class ImgNoteTest(unittest.TestCase):
             el_click(self.pic_PO, self.pic_PO.el_imgDIV_loc)
             el_click(self.pic_PO, self.pic_PO.btn_tool_rorate_loc)
         size2 = public_getElSize(self.pic_PO, self.pic_PO.el_imgDIV_loc)
+        #点击图片宽高会加2px
         self.assertTrue(size1[0]['height'] == size2[0]['width'])
         self.assertTrue(size2[0]['height'] == size1[0]['width'])
         public_revoke_recovery(self.pic_PO, self.pic_PO.el_imgDIV_loc, type='rotate', size1=size1, size2=size2)
@@ -171,7 +172,7 @@ class ImgNoteTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # unittest.main()
-    suite = unittest.TestSuite()
-    suite.addTest(ImgNoteTest('test_add'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(ImgNoteTest('test_add'))
+    # unittest.TextTestRunner().run(suite)

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
+import sys
 from time import sleep, strftime, localtime
 from selenium.webdriver.common.by import By
 from common.create_UUID import create_uuid
@@ -35,6 +36,37 @@ def wait_tips(PO, el=None, sec=2, max=5):
         i += 1
 
 
+def wait_text(PO, el=None, text=''):
+    i = 0
+    while i < 10:
+        if str(PO.find_element(*el).text).replace(' ', ''):
+            # print('wait_text:{0}'.format(PO.find_element(*el).text))
+            break
+        i += 1
+        sleep(1)
+
+
+def cooperation(po: list, **kwargs):
+    '''
+    协作测试
+    :param po:
+    :param kwargs:
+    :return:
+    '''
+    #获取浏览器最大化尺寸
+    width = po[0].driver.get_window_size().get("width")
+    height = po[0].driver.get_window_size().get("height")
+    #设置两个浏览器分屏1:1尺寸
+    po[0].set_w_size(width / 2 + 4, height)
+    po[0].set_w_poi(0, 0)
+    po[1].set_w_size(width / 2 + 4, height)
+    po[1].set_w_poi(width / 2 - 4, 0)
+    #初始化浏览器页面
+    public_init(po[0], 14500000050, 123456, kwargs.get('pro_name', project_name()))
+    public_login(po[1], 14500000051, 123456)
+    join_invite(po)  #进入协作
+
+
 def public_init(PO, username, password, proName, el=None):
     public_login(PO, username, password)
     public_createProject(PO, proName)
@@ -54,7 +86,7 @@ def public_login(PO, username, password):
     PO.find_element(*username_loc).send_keys(username)
     PO.find_element(*password_loc).send_keys(password)
     PO.find_element(*loginSubmit_loc).click()
-    # print('点击登录后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
+    print('点击登录后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
     wait_tips(PO)
     # print('wait后{0}'.format(strftime("%Y-%m-%d %H:%M:%S", localtime())))
     #check_updateLog(PO)
@@ -122,7 +154,7 @@ def public_delProject(PO, home_url=None, flag=True):
     from selenium.webdriver.common.action_chains import ActionChains
     action = ActionChains(PO.driver)
     action.move_to_element(PO.find_element(*firstPro_loc)).perform()
-    sleep(1.5)
+    sleep(1)
     PO.find_element(*firstProMenu_loc).click()
     PO.find_element(*btn_del_loc).click()
     PO.find_element(*input_proName_loc).send_keys(PO.find_element(*text_proName_loc).text)
@@ -191,36 +223,38 @@ def public_check(PO, el, text=None, islen=False, attr=None, **kwargs):
     :return:
     '''
     if text:
-        if PO.find_elements(*el, waitsec=3, check='【check】'):
-            for e in PO.find_elements(*el, waitsec=3, check='【check】'):
-                if e.text != text:
-                    return False
-            return True
+        for e in PO.find_elements(*el, waitsec=3, check='【checks】'):
+            if e.text != text:
+                return False
+        return True
     elif islen:  #返回个数
         if kwargs.get('driver'):
             sleep(3)
             return len(PO.driver.find_elements_by_css_selector(el))
             # return len(PO.driver.find_elements_by_xpath(el))
         else:
-            return len(PO.find_elements(*el, waitsec=3, check='【check】'))
+            return len(PO.find_elements(*el, waitsec=3, check='【checks】'))
     elif attr:  #检查是否有属性值
         return get_attrs(PO, el, attr, driver=kwargs.get('driver'))
     else:
         if kwargs.get("driver"):
             return PO.driver.find_element_by_css_selector(el)
         else:
-            return PO.find_element(*el, waitsec=5, check='【check】')
+            return PO.find_element(*el, waitsec=kwargs.get('sec', 5), check='【check】')
 
 
-def public_tearDown(PO, url, hurl, username, password):
-    if PO.driver.title == '比幕鱼 - 体验': return True
-    if PO.driver.title == '比幕鱼 - 注册登录':
-        public_login(PO, username, password)
-    if PO.driver.title != '比幕鱼 - 白板列表':
-        PO.driver.get(hurl)
-    if public_check(PO, (By.CLASS_NAME, 'item_text'), islen=True) > 2:
-        while (public_check(PO, (By.CLASS_NAME, 'item_text'), islen=True) > 2):
-            public_delProject(PO, hurl, flag=True)
+def public_tearDown(PO, url, home_url, username, password):
+    if type(PO) != list:
+        PO = [PO]
+    for po in PO:
+        if po.driver.title == '比幕鱼 - 体验': return True
+        if po.driver.title == '比幕鱼 - 注册登录':
+            public_login(po, username, password)
+        if po.driver.title != '比幕鱼 - 白板列表':
+            po.driver.get(home_url)
+        if public_check(po, (By.CLASS_NAME, 'item_text'), islen=True) > 2:
+            while (public_check(po, (By.CLASS_NAME, 'item_text'), islen=True) > 2):
+                public_delProject(po, home_url, flag=True)
 
 
 def quickReg(PO, host):
@@ -296,3 +330,26 @@ def get_text(PO, el, type=None):
             return PO.find_element(*el).get_attribute('value')
     else:
         assert Exception("function get_text() 元素不存在!")
+
+
+def get_screenshot(PO, filename='title'):
+    try:
+        PO.driver.save_screenshot('..\\screen\\{0}.png'.format(filename))
+    except BaseException as e:
+        print(e)
+
+
+def join_invite(po: list):
+    '''
+    加入邀请
+    :param po: po（浏览器）列表
+    :param project_name: 白板名称
+    :return:
+    '''
+    el_click(po[0], (By.CLASS_NAME, 'userout'))
+    inviUrl = po[0].find_element(*(By.ID, 'inviUrl')).get_attribute('value')
+    # print(inviUrl)
+    po[1].driver.get(inviUrl)
+    wait_text(po[1], (By.CSS_SELECTOR, '.invitation_content>p>span:last-child'))  #等待白板名称显示
+    el_click(po[1], (By.CSS_SELECTOR, '.invitation_submit.sure-btn'))  #点击加入邀请
+    assert public_check(po[1], po[1].tool_loc)

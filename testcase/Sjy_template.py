@@ -80,7 +80,7 @@ class TemplateTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    # unittest.main()
-    suite = unittest.TestSuite()
-    suite.addTest(TemplateTest('test_addTemplate'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(TemplateTest('test_addTemplate'))
+    # unittest.TextTestRunner().run(suite)

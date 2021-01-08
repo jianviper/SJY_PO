@@ -2,7 +2,7 @@
 #coding:utf-8
 import json
 from selenium.webdriver import ActionChains
-from common.ws_client import WS_add, ws_creat
+from common.ws_client import add_ws, ws_creat
 from parts.tool_page import *
 
 '''
@@ -37,11 +37,11 @@ def public_getElPoi(PO, el, **kwargs):  #获取元素位置
 
 def public_getAttrs(PO, el, attr_name):
     if PO.find_element(*el):
-        idList = []
+        value = []
         for e in PO.find_elements(*el):
-            id = e.get_attribute(attr_name)
-            idList.append(id)
-        return idList
+            v = e.get_attribute(attr_name)
+            value.append(v)
+        return value
 
 
 def public_getScrollPosi(PO):
@@ -113,7 +113,7 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
     margin, height = 0, 0
     x, y = kwargs.get('x', 200), kwargs.get('y', 150)  #初始位置
     for i in range(num):
-        PO.find_element(*toolEL).click()
+        el_click(PO, toolEL)
         if i > 0:  #添加了一个元素之后
             size = public_getElSize(PO, checkEL)[i - 1]
             height, margin = size['height'], 50
@@ -121,13 +121,22 @@ def public_addTool(PO, toolEL, checkEL, num=1, **kwargs):
         #检查是否新建成功
         if toolEL == (By.CSS_SELECTOR, '.work_tool>div:nth-child(5)'):
             assert bool(PO.find_element(*(By.CLASS_NAME, 'work_text_tool'))) == True
+            PO.find_elements(*(By.CLASS_NAME, 'text_content'))[0].send_keys(text_Content())
         elif toolEL == (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)'):
             assert bool(PO.find_element(*(By.CLASS_NAME, 'work_note_tool'))) == True
         sleep(1)
-        left_click(PO, 50, 100, header_loc)
+        left_click(PO, type='sync')
 
 
 def public_textAdd(PO, text, num=1, **kwargs):
+    '''
+    通过左侧工具栏添加文本，输入文字
+    :param PO:
+    :param text:
+    :param num:
+    :param kwargs:
+    :return:
+    '''
     x, y = kwargs.get('x', 200), kwargs.get('y', 150)
     jss = '''
                     var ds=document.getElementsByClassName('text_content'); 
@@ -153,7 +162,7 @@ def public_textAdd(PO, text, num=1, **kwargs):
             PO.find_elements(*(By.CLASS_NAME, 'text_content'))[0].send_keys(text)
         else:
             PO.find_elements(*(By.CLASS_NAME, 'text_content'))[0].send_keys(text_Content())
-        left_click(PO, 100, 100, header_loc)
+        left_click(PO, type='sync')
         sleep(1)
 
 
@@ -167,18 +176,17 @@ def public_noteAdd(PO, text=None, num=1, **kwargs):
     :return:
     '''
     x, y = kwargs.get('x', 200), kwargs.get('y', 130)
-    PO.find_element(*(By.CSS_SELECTOR, '.work_tool>div:nth-child(6)')).click()
-    sleep(1)
-    PO.left_click(x, y, PO.header_loc)
+    el_click(PO, (By.CSS_SELECTOR, '.work_tool>div:nth-child(6)'))
+    left_click(PO, type='sync')
     for i in range(num):
         if i > 0:
-            PO.left_click(x, y + 240 * i, PO.header_loc)
-            PO.double_click()
+            left_click(PO, x, y + 240 * i, PO.header_loc)
+            double_click(PO)
         sleep(1)
         if text:
-            PO.find_element(*(By.CLASS_NAME, 'item_t_bg')).click()
+            el_click(PO, (By.CLASS_NAME, 'item_t_bg'))
             PO.find_elements(*(By.CLASS_NAME, 'text_content'))[i].send_keys(text)
-        PO.left_click(100, 100, PO.header_loc)
+        left_click(PO, type='sync')
         sleep(1)
 
 
@@ -221,7 +229,7 @@ def ws_add(PO, els, **kwargs):
             for i in range(el[1]):
                 utime = strftime('%Y-%m-%d %H:%M:%S')
                 content = 'AutoTestContent-{0}'.format(utime)
-                WS_add(PO, type, x, y, ws=ws, text=kwargs.get('text', content))  #请求websocket
+                add_ws(PO, type, x, y, ws=ws, text=kwargs.get('text', content))  #请求websocket
                 y = y + el_y_margin + margin
                 sleep(1)
         PO.driver.refresh()
@@ -365,7 +373,8 @@ def do_revoke(PO, step=1):  #撤销
     try:
         ws = ws_creat(PO)
         data = {"type": "REVOKE"}
-        ws.send(json.dumps(data))
+        for i in range(step):
+            ws.send(json.dumps(data))
     except BaseException as e:
         print(e)
     finally:
@@ -378,7 +387,8 @@ def do_recovery(PO, step=1):  #恢复
     try:
         ws = ws_creat(PO)
         data = {"type": "RECOVERY"}
-        ws.send(json.dumps(data))
+        for i in range(step):
+            ws.send(json.dumps(data))
     except BaseException as e:
         print(e)
     finally:

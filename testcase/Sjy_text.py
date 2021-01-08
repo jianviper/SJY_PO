@@ -3,6 +3,7 @@
 import unittest
 from common.get_config import get_url
 from pages.Page_wk_text import Text
+from parts.threads import thread_open
 from parts.tool_worker import *
 from parts.tool_page import tiyan
 
@@ -20,27 +21,42 @@ class TextTest(unittest.TestCase):
         urls = get_url()  #return [url,home_url]
         self.url, self.home_url = urls[0], urls[1]
         self.username = '14500000050'
+        self.username2 = '14500000051'
         self.password = '123456'
         self.text_PO = Text(base_url=self.url)
+        self.text_PO2 = Text(base_url=self.url)
         self.projectName = project_name()
         self.textContent = text_Content()
-        self.text_PO.open()
+        # self.text_PO.open()
+        thread_open([self.text_PO, self.text_PO2])
 
     def tearDown(self) -> None:
-        public_tearDown(self.text_PO, self.url, self.home_url, self.username, self.password)
+        public_tearDown([self.text_PO, self.text_PO2], self.url, self.home_url, self.username, self.password)
         self.text_PO.driver.quit()
 
     def test_addAndSync(self):
-        '''添加文本，输入内容，点击画布同步，再刷新'''
+        '''添加多个文本，输入内容，点击画布同步，再刷新'''
         num = 3
         public_init(self.text_PO, self.username, self.password, self.projectName)
         public_textAdd(self.text_PO, self.textContent, num=num)
         self.text_PO.driver.refresh()
-        sleep(3)
         self.assertTrue(public_check(self.text_PO, self.text_PO.tool_loc))
         text = get_text(self.text_PO, self.text_PO.el_textInput_loc)
         self.assertEqual(text, self.textContent)
         self.assertEqual(num, public_check(self.text_PO, self.text_PO.el_text_loc, islen=True))
+
+    def test_cooperation(self):
+        '''协作，编辑锁定'''
+        cooperation([self.text_PO, self.text_PO2])
+        public_textAdd(self.text_PO, self.textContent)
+        double_click(self.text_PO, self.text_PO.el_text_loc)
+        self.assertTrue(public_check(self.text_PO2, self.text_PO.el_text_locked))
+        bgColor = public_getCSS(self.text_PO2, self.text_PO2.el_text_locked, 'background-color')[0]
+        self.assertEqual(bgColor, 'rgba(137, 140, 144, 0.7)')
+        self.text_PO2.driver.refresh()
+        self.assertTrue(public_check(self.text_PO2, self.text_PO.el_text_locked))
+        left_click(self.text_PO, type='sync')
+        self.assertFalse(public_check(self.text_PO2, self.text_PO.el_text_locked))
 
     def addAndDel(self, num):
         #添加文本,若成功，添加内容
@@ -268,16 +284,26 @@ class TextTest(unittest.TestCase):
         self.text_PO.check_rich_font(self.text_PO.rich_fontSize_loc)
 
     def test_rich_fontStyle(self):
-        '''富文本-加粗，斜体，下划线'''
+        '''富文本-加粗，斜体，下划线。加粗bug（要撤销两次）'''
         public_init(self.text_PO, self.username, self.password, self.projectName)
+        public_login(self.text_PO2, self.username2, self.password)
+        join_invite([self.text_PO, self.text_PO2])
         public_textAdd(self.text_PO, '666666')
-        #富文本-加粗
-        self.text_PO.check_rich_style(self.text_PO.rich_B_loc, 'font-weight', '700')
+        #富文本-加粗,bug（要撤销两次）
+        self.text_PO.check_rich_fontStyle(self.text_PO.rich_B_loc, 'font-weight', '700')
+        self.text_PO2.check_text_asyn('fontStyle', style='font-weight', value='700')
+        do_revoke(self.text_PO, step=2)
+        self.assertFalse(public_check(self.text_PO, self.text_PO.el_textSpan_loc))
         #富文本-斜体
-        self.text_PO.check_rich_style(self.text_PO.rich_italic_loc, 'fontStyle', 'italic')
+        self.text_PO.check_rich_fontStyle(self.text_PO.rich_italic_loc, 'fontStyle', 'italic')
+        self.text_PO2.check_text_asyn('fontStyle', style='fontStyle', value='italic')
+        do_revoke(self.text_PO)
+        self.assertFalse(public_check(self.text_PO, self.text_PO.el_textSpan_loc))
         #富文本-下划线
-        self.text_PO.check_rich_style(self.text_PO.rich_underline_loc, 'textDecorationLine', 'underline')
-        sleep(3)
+        self.text_PO.check_rich_fontStyle(self.text_PO.rich_underline_loc, 'textDecorationLine', 'underline')
+        self.text_PO2.check_text_asyn('fontStyle', style='textDecorationLine', value='underline')
+        do_revoke(self.text_PO)
+        self.assertFalse(public_check(self.text_PO, self.text_PO.el_textSpan_loc))
 
     def test_rich_fontColor(self):
         '''富文本-字体颜色'''
@@ -287,26 +313,31 @@ class TextTest(unittest.TestCase):
 
     def test_rich_textAlign(self):
         '''富文本-对齐方式'''
-        public_init(self.text_PO, self.username, self.password, self.projectName)
+        cooperation([self.text_PO, self.text_PO2])
         public_textAdd(self.text_PO, '666666')
         #富文本-居中
         self.text_PO.check_rich_align(self.text_PO.rich_centerA_loc, 'center')
+        self.text_PO2.check_text_asyn('align', value='center')
         #富文本-右对齐
         self.text_PO.check_rich_align(self.text_PO.rich_rightA_loc, 'right')
+        self.text_PO2.check_text_asyn('align', value='right')
         #富文本-左对齐
         self.text_PO.check_rich_align(self.text_PO.rich_leftA_loc, 'left')
+        self.text_PO2.check_text_asyn('align', value='left')
 
     def test_rich_sort(self):
         '''富文本-有序无序'''
-        public_init(self.text_PO, self.username, self.password, self.projectName)
+        cooperation([self.text_PO, self.text_PO2])
         text = '666666'
         public_textAdd(self.text_PO, text)
         #富文本-无序列表
         self.text_PO.check_rich_sort(self.text_PO.rich_sortDisorder_loc, text)
+        self.text_PO2.check_text_asyn('sort', el=self.text_PO2.el_text_ulsort)
         #富文本-有序列表
         self.text_PO.check_rich_sort(self.text_PO.rich_sortOrder_loc, text)
+        self.text_PO2.check_text_asyn('sort', el=self.text_PO2.el_text_olsort)
 
-    def test_input(self):
+    def te1st_input(self):
         public_init(self.text_PO, self.username, self.password, self.projectName)
         self.text_PO.find_element(*self.text_PO.tool_text_loc).click()
         sleep(1)
@@ -314,9 +345,8 @@ class TextTest(unittest.TestCase):
         self.text_PO.find_element(*self.text_PO.el_textInput_loc).send_keys(self.textContent)
 
 
-
 if __name__ == "__main__":
     # unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(TextTest('test_input'))
+    suite.addTest(TextTest('test_rich_sort'))
     unittest.TextTestRunner().run(suite)

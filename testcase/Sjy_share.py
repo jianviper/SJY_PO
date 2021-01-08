@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-import unittest
+import unittest, sys
 from common.get_config import get_url
 from pages.Page_wk_share import SharePage
 from parts.tool_worker import *
@@ -14,16 +14,16 @@ summary:分享的测试用例
 
 class ShareTest(unittest.TestCase):
     def setUp(self) -> None:
-        urls = get_url()  #return [url,home_url]
-        self.url, self.home_url = urls[0], urls[1]
+        urls = get_url()  #return [login_url,home_url]
+        self.login_url, self.home_url = urls[0], urls[1]
         self.username = '14500000050'
         self.password = '123456'
-        self.share_PO = SharePage(base_url=self.url)
+        self.share_PO = SharePage(base_url=self.login_url)
         self.projectName = project_name()
         self.share_PO.open()
 
     def tearDown(self) -> None:
-        public_tearDown(self.share_PO, self.url, self.home_url, self.username, self.password)
+        public_tearDown(self.share_PO, self.login_url, self.home_url, self.username, self.password)
         self.share_PO.driver.quit()
 
     def share(self, status):
@@ -55,7 +55,9 @@ class ShareTest(unittest.TestCase):
         else:
             self.assertTrue(public_check(self.share_PO, self.share_PO.code_image_loc))
             public_login(self.share_PO, '14500000051', self.password)
+            self.assertTrue(public_check(self.share_PO, self.share_PO.tool_loc))
         self.share_PO.driver.get(self.home_url)
+        sleep(3)
         self.assertTrue(public_check(self.share_PO, self.share_PO.first_proTitle_loc, text=self.projectName))
         public_delProject(self.share_PO)
         public_logout(self.share_PO)
@@ -64,8 +66,6 @@ class ShareTest(unittest.TestCase):
     def test_unloginShare(self):
         '''未登录，打开分享页'''
         self.share(0)
-
-        sleep(3)
 
     def test_loggedShare(self):
         '''先登录，再打开分享页'''

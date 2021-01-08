@@ -48,6 +48,12 @@ class Note(BasePage):
     def open(self):
         self._open(self.baseurl)
 
+    def set_w_size(self, width, height):
+        self._set_window_size(width, height)
+
+    def set_w_poi(self, x, y):
+        self._set_window_poi(x, y)
+
     def change_bgColor(self):
         #改变便签背景色，判断颜色是否正确
         for i in range(len(self.find_elements(*self.btn_color_loc))):

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from selenium.common.exceptions import ElementNotVisibleException, ElementNotSelectableException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from common.brower import BrowerSet
@@ -22,12 +23,11 @@ class BasePage(object):
         #                     format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
         self.baseurl = base_url
         #供选择浏览器，默认谷歌
-        BS = BrowerSet(brower_name)
-        self.driver = BS.set()
+        self.driver = BrowerSet(brower_name).set()
 
     #利用get打开页面，并可以扩展做一些检查
     #_open保证在使用import *时，该方法不会被导入，保证该方法为类私有的。
-    def _open(self, url):
+    def _open(self, url, set_win=False):
         self.driver.get(url)
         self.driver.maximize_window()
 
@@ -35,10 +35,19 @@ class BasePage(object):
     def open(self):
         self._open(self.baseurl)
 
+    def _set_window_size(self, width, height):
+        self.driver.set_window_size(width, height)
+
+    def _set_window_poi(self, x, y):
+        self.driver.set_window_position(x, y)
+
     #重写元素定位方法
     def find_element(self, *loc, waitsec=10, check=''):
         try:
-            WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
+            WebDriverWait(self.driver, waitsec, poll_frequency=1,
+                          ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException]).until(
+                EC.element_to_be_clickable(loc))
+            #WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
             #WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(loc))
             return self.driver.find_element(*loc)
         except:
@@ -47,7 +56,10 @@ class BasePage(object):
 
     def find_elements(self, *loc, waitsec=10, check=''):
         try:
-            WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
+            WebDriverWait(self.driver, waitsec, poll_frequency=1,
+                          ignored_exceptions=[ElementNotVisibleException, ElementNotSelectableException]).until(
+                EC.visibility_of_all_elements_located(loc))
+            # WebDriverWait(self.driver, waitsec).until(lambda driver: driver.find_element(*loc).is_displayed())
             # WebDriverWait(self.driver, 10).until(EC.visibility_of_all_elements_located(*loc))
             return self.driver.find_elements(*loc)
         except:

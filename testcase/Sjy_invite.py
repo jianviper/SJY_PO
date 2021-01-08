@@ -37,7 +37,6 @@ class InviteTest(unittest.TestCase):
         '''
         public_init(self.invite_PO, self.username, self.password, self.projectName)
         public_addTool(self.invite_PO, self.invite_PO.tool_text_loc, self.invite_PO.el_text_loc)
-        public_textInput(self.invite_PO, self.textContent)
         self.invite_PO.click_invite()
         if type == 0:
             self.invite_PO.choose_reader()

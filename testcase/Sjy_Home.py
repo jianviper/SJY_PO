@@ -92,10 +92,9 @@ class HomeTest(unittest.TestCase):
         header_name = get_text(self.hp_PO, self.hp_PO.headerName_loc)  #右上角头像昵称
         # self.assertEqual(header_name, str(name))
 
-        sleep(3)
-
 
 if __name__ == "__main__":
-    suite = unittest.TestSuite()
-    suite.addTest(HomeTest('test_userInfo'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(HomeTest('test_userInfo'))
+    # unittest.TextTestRunner().run(suite)

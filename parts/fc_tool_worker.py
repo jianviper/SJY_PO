@@ -3,7 +3,7 @@
 import json
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from common.ws_client import WS_add, ws_creat
+from common.ws_client import add_ws, ws_creat
 from time import sleep, strftime
 from .fc_tool_page import PageTool
 
@@ -187,7 +187,7 @@ class WorkerTool():
         margin = kwargs.get('margin', 50)  #元素之间的垂直距离
         type, ws = None, None
         if els == 'all':
-            els = [('t', 1), ('n', 1), ('i', 1), ('f', 1), ('file', 1)]
+            els = [('t', 1), ('n', 1), ('i', 1), ('f', 1)]
         try:
             ws = ws_creat(self.PO)
             for el in els:  #格式els:[("t",1),("i",2),("f",2)]
@@ -213,14 +213,16 @@ class WorkerTool():
                 for i in range(el[1]):
                     utime = strftime('%Y-%m-%d %H:%M:%S')
                     content = 'AutoTestContent-{0}'.format(utime)
-                    WS_add(self.PO, type, x, y, ws=ws, text=kwargs.get('text', content))  #请求websocket
+                    add_ws(self.PO, type, x, y, ws=ws, text=kwargs.get('text', content))  #请求websocket
                     y = y + el_y_margin + margin
                     sleep(1)
             self.PO.driver.refresh()
         except BaseException as e:
             print(e)
         finally:
-            if ws: ws.close()
+            if ws:
+                print('websocket is closing...')
+                ws.close()
 
     def left_click(self, x=0, y=0, el=None, type=None):
         '''
@@ -344,7 +346,8 @@ class WorkerTool():
         try:
             ws = ws_creat(self.PO)
             data = {"type": "REVOKE"}
-            ws.send(json.dumps(data))
+            for i in range(step):
+                ws.send(json.dumps(data))
         except BaseException as e:
             print(e)
         finally:
@@ -356,7 +359,8 @@ class WorkerTool():
         try:
             ws = ws_creat(self.PO)
             data = {"type": "RECOVERY"}
-            ws.send(json.dumps(data))
+            for i in range(step):
+                ws.send(json.dumps(data))
         except BaseException as e:
             print(e)
         finally:

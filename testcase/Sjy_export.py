@@ -29,7 +29,7 @@ class Export(unittest.TestCase):
         self.pg.public_tearDown(self.url, self.home_url, self.username, self.password)
         self.ex_PO.driver.quit()
 
-    def test_page_export(self):
+    def te1st_page_export(self):
         '''本页导出'''
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add('all')
@@ -43,14 +43,15 @@ class Export(unittest.TestCase):
         '''框选元素导出'''
         self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.ws_add('all')
+        self.ele_tool.double_click(self.ex_PO.el_text_loc)
         self.ele_tool.selection(self.ex_PO.el_divs_loc)
         self.ele_tool.rightClick(el=self.ex_PO.el_text_loc, action=self.ex_PO.menu_export_loc)
-        self.pg.wait_tips(self.ex_PO.tip_select_export_loc, sec=1, max=10)
+        self.pg.wait_tips(self.ex_PO.tip_select_export_loc, sec=1, max=5)
         self.assertTrue(self.ex_PO.check_file(self.projectName.replace(':', '_')))
 
 
 if __name__ == '__main__':
-    # unittest.main()
-    suite = unittest.TestSuite()
-    suite.addTest(Export('test_page_export'))
-    unittest.TextTestRunner().run(suite)
+    unittest.main()
+    # suite = unittest.TestSuite()
+    # suite.addTest(Export('test_page_export'))
+    # unittest.TextTestRunner().run(suite)

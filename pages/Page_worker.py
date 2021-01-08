@@ -27,6 +27,8 @@ class WorkerPage(BasePage):
     code_image_loc = (By.CLASS_NAME, 'code_image')
     tip_page_export_loc = (By.CLASS_NAME, 'occlusion_loading')
     tip_select_export_loc = (By.CLASS_NAME, 'export_occlusion')
+    inviUrl_loc = (By.ID, 'inviUrl')
+    invite_name_loc = (By.CSS_SELECTOR, '.invitation_content>p>span:last-child')
 
     #左侧工具栏
     tool_loc = (By.CLASS_NAME, 'work_tool')
@@ -43,7 +45,7 @@ class WorkerPage(BasePage):
     el_text_loc = (By.CSS_SELECTOR, '.work_text.work_element')
     el_textContent_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
     el_note_loc = (By.CSS_SELECTOR, '.work_note.work_element')
-    el_drawPath_loc = (By.CLASS_NAME, 'content_path')
+    el_drawPath_loc = (By.CSS_SELECTOR, '.work_svg.work_element.pointer')
     el_imgNote_loc = (By.CSS_SELECTOR, '.work_image.work_element')
     el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>.text_content>img')  #图片
     el_imgText_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>.picTitle')
@@ -56,7 +58,7 @@ class WorkerPage(BasePage):
     el_line_loc = '.svg_line>.content_line'
     #右键菜单
     menu_tUp_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(4)')
-    menu_export_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(5)')
+    menu_export_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(4)')
     menu_tDown_loc = (By.CSS_SELECTOR, '.text_menu>li:nth-child(5)')
     menu_fUp_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(4)')
     menu_fDown_loc = (By.CSS_SELECTOR, '.file_menu>li:nth-child(5)')
@@ -86,14 +88,24 @@ class WorkerPage(BasePage):
     btn_page_export_loc = (By.CSS_SELECTOR, '.export_menu>li:last-child')
     btn_revoke_loc = (By.CSS_SELECTOR, '.actionBox>div:first-child')
     btn_recovery_loc = (By.CSS_SELECTOR, '.actionBox>div:last-child')
-    btn_userout_loc = (By.CLASS_NAME, 'userout')
+    btn_userout_loc = (By.CLASS_NAME, 'userout')  #邀请
+    btn_joinInvi_loc = (By.CSS_SELECTOR, '.invitation_submit.sure-btn')
     btn_relB_loc = (By.CLASS_NAME, 'relation_bottom')
     btn_relR_loc = (By.CLASS_NAME, 'relation_right')
+
+    def __init__(self, name='chrome', base_url=''):
+        super().__init__(name, base_url)
 
     #通过继承覆盖（Overriding）方法：如果子类和父类的方法名相同，优先用子类自己的方法。
     #打开网页
     def open(self):
         self._open(self.baseurl)
+
+    def set_w_size(self, width, height):
+        self._set_window_size(width, height)
+
+    def set_w_poi(self, x, y):
+        self._set_window_poi(x, y)
 
     def draw_line(self):
         x, y = randint(80, self.X - 120), randint(190, self.Y - 100)
@@ -101,6 +113,17 @@ class WorkerPage(BasePage):
         pyautogui.moveTo(x, y)
         pyautogui.dragTo(dragx, dragy, 1.0, button='left')
         return ((x, y), (dragx, dragy))
+
+    def draw(self):
+        width = self.driver.get_window_size()['width']
+        height = self.driver.get_window_size()['height']
+        x, y = randint(150, width - 20), randint(100, height - 200)
+        end_x, end_y = randint(150, width - 20), randint(100, height - 200)
+        action = ActionChains(self.driver)
+        action.move_to_element_with_offset(self.find_element(*self.header_loc), x, y).click_and_hold()
+        action.move_to_element_with_offset(self.find_element(*self.header_loc), end_x, end_y).release()
+        action.perform()
+        return ((x, y), (end_x, end_y))
 
     def do_eraser(self, coordinate):
         sx, sy = coordinate[1][0], coordinate[0][1]
@@ -111,8 +134,6 @@ class WorkerPage(BasePage):
         pyautogui.doubleClick(sx, sy, duration=1)
         pyautogui.dragTo(ex, ey, 2.0, button='left')
 
-    def choose_tool(self, el):
-        self.find_element(*el).click()
 
     def get_textContent(self) -> str:
         return self.find_element(*self.el_textContent_loc).text
@@ -132,3 +153,20 @@ class WorkerPage(BasePage):
         print('export:', self.find_element(*self.btn_page_export_loc))
         # action.click(self.find_element(*self.btn_page_export_loc)).perform()
         self.find_element(*self.btn_page_export_loc).click()
+
+    def join_invite(self, po: list, project_name):
+        '''
+        加入邀请
+        :param po: po（浏览器）列表
+        :param project_name: 白板名称
+        :return:
+        '''
+        el_click(po[0], (By.CLASS_NAME, 'userout'))
+        inviUrl = po[0].find_element(*(By.ID, 'inviUrl')).get_attribute('value')
+        # print(inviUrl)
+        po[1].driver.get(inviUrl)
+        wait_text(po[1], (By.CSS_SELECTOR, '.invitation_content>p>span:last-child'))  #等待白板名称显示
+        assert public_check(po[1], (By.CSS_SELECTOR, '.invitation_content>p>span:last-child'), text=project_name)
+        el_click(po[1], (By.CSS_SELECTOR, '.invitation_submit.sure-btn'))  #点击加入邀请
+        assert public_check(po[1], po[1].tool_loc)
+        assert po[1].driver.title == '比幕鱼 - {0}'.format(project_name)

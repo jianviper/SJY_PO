@@ -29,9 +29,13 @@ class Text(BasePage):
 
     el_divs_loc = (By.CSS_SELECTOR, '.work_element')
     el_text_loc = (By.CSS_SELECTOR, '.work_text.work_element')
-    el_textInput_loc = (By.CLASS_NAME, 'text_content')
+    el_text_locked = (By.CSS_SELECTOR, '.work_text.work_element.work_edit')
+    el_textInput_loc = (By.CSS_SELECTOR, '.work_text.work_element>.text_content')
     el_textSpan_loc = (By.CSS_SELECTOR, '.text_content>span')
     el_textFont_loc = (By.CSS_SELECTOR, '.text_content>font')
+    el_text_align = (By.CSS_SELECTOR, '.text_content>:first-child')
+    el_text_ulsort = (By.CSS_SELECTOR, '.text_content>ul>li')
+    el_text_olsort = (By.CSS_SELECTOR, '.text_content>ol>li>span')
     el_imgDIV_loc = (By.CSS_SELECTOR, '.work_image.work_element')
     el_img_loc = (By.CSS_SELECTOR, '.work_image.work_element>div>.text_content>img')
     el_folder_loc = (By.CSS_SELECTOR, '.work_file.work_element')
@@ -57,6 +61,12 @@ class Text(BasePage):
     #打开网页
     def open(self):
         self._open(self.baseurl)
+
+    def set_w_size(self, width, height):
+        self._set_window_size(width, height)
+
+    def set_w_poi(self, x, y):
+        self._set_window_poi(x, y)
 
     def input_text2(self, text):
         if len(self.find_elements(*self.el_text_loc)) > 0:
@@ -109,7 +119,7 @@ class Text(BasePage):
                 assert bool(self.find_element(*self.richText_tool)) == True
                 left_click(self, 100, 100, self.header_loc)
 
-    def check_rich_style(self, richType, style_name, style_text):
+    def check_rich_fontStyle(self, richType, style_name, style_text):
         '''
         富文本设置检查。（加粗，斜体，下划线）
         :param richType: 富文本类型
@@ -118,16 +128,15 @@ class Text(BasePage):
         :return:
         '''
         double_click(self, self.el_text_loc)
-        double_click(self, self.el_text_loc)
+        from selenium.webdriver.common.keys import Keys
+        self.find_element(*self.el_textInput_loc).send_keys(Keys.CONTROL + 'a')
+        # double_click(self, self.el_textInput_loc)
         #富文本
         el_click(self, richType)
         left_click(self, 100, 100, self.header_loc)
         style = self.find_element(*self.el_textSpan_loc).value_of_css_property(style_name)
         print('style_name:{0}'.format(style))
         assert style == style_text
-        do_revoke(self)
-        print(self.find_element(*self.el_textSpan_loc, waitsec=3))
-        assert self.find_element(*self.el_textSpan_loc, waitsec=3) == False
 
     def check_rich_font(self, richType):
         '''
@@ -208,11 +217,10 @@ class Text(BasePage):
         :param alignText: 对齐方式值
         :return:
         '''
-        div_text = (By.CSS_SELECTOR, '.text_content>:first-child')
         double_click(self, self.el_text_loc)
         el_click(self, alignType)
         left_click(self, 100, 100, self.header_loc)  #点画布同步
-        text_align = self.find_element(*div_text).value_of_css_property('textAlign')
+        text_align = self.find_element(*self.el_text_align).value_of_css_property('textAlign')
         print('text_align:{0}'.format(text_align))
         assert text_align == alignText
 
@@ -223,10 +231,27 @@ class Text(BasePage):
         :param text:
         :return:
         '''
-        li_text = (By.CSS_SELECTOR, '.text_content>ul>li')
         double_click(self, self.el_text_loc)
         el_click(self, sortType)
         left_click(self, 100, 100, self.header_loc)  #点画布同步
         if sortType == self.rich_sortOrder_loc:
-            li_text = (By.CSS_SELECTOR, '.text_content>ol>li>span')
-        assert self.find_element(*li_text).text == text
+            assert self.find_element(*self.el_text_olsort).text == text
+        else:
+            assert self.find_element(*self.el_text_ulsort).text == text
+
+    def check_text_asyn(self, type, **kwargs):
+        '''
+        协作者检查同步是否正确
+        :param type: 操作类型
+        :param value: 对比值或参照物
+        :param kwargs:
+        :return:
+        '''
+        if type == 'align':  #富文本-对齐
+            text_align = self.find_element(*self.el_text_align).value_of_css_property('textAlign')
+            assert text_align == kwargs.get('value')
+        elif type == 'sort':  #富文本-有序、无序
+            assert self.find_element(*kwargs.get('el')).text
+        elif type == 'fontStyle':  #富文本-加粗、斜体、下划线
+            style_value = self.find_element(*self.el_textSpan_loc).value_of_css_property(kwargs.get('style'))
+            assert style_value == kwargs.get('value')

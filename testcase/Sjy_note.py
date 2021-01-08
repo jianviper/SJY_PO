@@ -7,6 +7,8 @@ from parts.fc_tool_worker import WorkerTool
 from parts.fc_tool_page import PageTool
 from time import sleep, ctime
 
+from parts.threads import thread_open
+
 '''
 Create on 2020-12-5
 author:linjian
@@ -21,18 +23,23 @@ class NoteTest(unittest.TestCase):
         self.username = '14500000050'
         self.password = '123456'
         self.note_PO = Note(base_url=self.url)
+        self.note_PO2 = Note(base_url=self.url)
         self.pg = PageTool(self.note_PO)
         self.projectName = self.pg.project_name()
         self.ele_tool = WorkerTool(self.note_PO)
-        self.note_PO.open()
+        # self.note_PO.open()
+        thread_open([self.note_PO, self.note_PO2])
 
     def tearDown(self) -> None:
         self.pg.public_tearDown(self.url, self.home_url, self.username, self.password)
         self.note_PO.driver.quit()
 
-    def add(self, num):
+    def add(self, num, ty=False):
         #添加便签，点击
-        self.pg.public_init(self.username, self.password, self.projectName)
+        if ty:
+            self.pg.tiyan()
+        else:
+            self.pg.public_init(self.username, self.password, self.projectName)
         self.ele_tool.note_add(num=num)
         self.assertTrue(self.pg.public_check(self.note_PO.el_note_loc))
         self.pg.el_click(self.note_PO.el_note_loc)
@@ -73,8 +80,8 @@ class NoteTest(unittest.TestCase):
         size2 = {'width': int(self.ele_tool.public_exJS(js_width)), 'height': int(self.ele_tool.public_exJS(js_height))}
         print(size1, '\r\n', size2)
 
-    def cut(self, num):
-        self.add(num)
+    def cut(self, num, **kwargs):
+        self.add(num, kwargs.get('ty'))
         if num > 1:
             self.ele_tool.selection(self.note_PO.el_note_loc)
         self.ele_tool.rightClick(el=self.note_PO.el_note_loc, action=self.note_PO.menu_cut_loc)
@@ -86,8 +93,7 @@ class NoteTest(unittest.TestCase):
         self.cut(2)
 
     def test_ty_cut(self):
-        self.pg.tiyan()
-        self.cut(2)
+        self.cut(2, ty=True)
 
     def copy(self, num):
         self.add(num)
@@ -136,5 +142,5 @@ class NoteTest(unittest.TestCase):
 if __name__ == '__main__':
     # unittest.main()
     suite = unittest.TestSuite()
-    suite.addTest(NoteTest('test_ty_rich_style'))
+    suite.addTest(NoteTest('test_rich_style'))
     unittest.TextTestRunner().run(suite)
